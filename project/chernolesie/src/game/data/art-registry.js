@@ -91,5 +91,6 @@ const IMPACT_BURST_SHEET = (function(){const i=new Image(); i.src='@@A:art/art-r
 const DUST_PLUME_SHEET   = (function(){const i=new Image(); i.src='@@A:art/art-registry/dust-plume-sheet.webp@@'; return i;})();
 
 // v7.35: листы, нарисованные под зоны оружия по заданиям из docs/art-briefs.md.
-// Мятный клин — взмах Косы Моры.
+// Мятный клин — взмах Косы Моры, рваный саван — Навий хвост.
 const KOSA_ZONE_SHEET    = (function(){const i=new Image(); i.src='@@A:art/art-registry/kosa-zone-sheet.webp@@'; return i;})();
+const NAVI_ZONE_SHEET    = (function(){const i=new Image(); i.src='@@A:art/art-registry/navi-zone-sheet.webp@@'; return i;})();

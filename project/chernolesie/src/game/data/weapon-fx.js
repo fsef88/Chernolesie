@@ -135,6 +135,7 @@ const WFX_SHEETS={};
 // заводится после загрузки реестра
 addEventListener('load',()=>{
  if(typeof KOSA_ZONE_SHEET!=='undefined')WFX_SHEETS.kosa={im:KOSA_ZONE_SHEET,brief:true};
+ if(typeof NAVI_ZONE_SHEET!=='undefined')WFX_SHEETS.navi={im:NAVI_ZONE_SHEET,brief:true};
 });
 function wfxSheet(id){
  const s=WFX_SHEETS[id];
