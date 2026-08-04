@@ -99,7 +99,7 @@ function drawZonePulses(dt){
   if(zx+z.R<-40||zy+z.R<-40||zx-z.R>W+40||zy-z.R>H+40)continue;
   // лист чуть расширяется на излёте — удар читается как волна, а не как
   // мигающая картинка на месте
-  zoneSheetStamp(zx,zy,z.R*(1+(1-k)*0.06),z.id,k,z.rot,z.arc);
+  zoneSheetStamp(zx,zy,z.R*(1+(1-k)*0.06),z.id,k,z.rot,z.arc,z.rays,z.halfW);
  }
 }
 
@@ -143,7 +143,7 @@ function wfxSheet(id){
  return (im&&im.complete&&im.naturalWidth)?s:null;
 }
 // Кадр листа по прогрессу 0..1 (0 — момент удара, 1 — конец вспышки).
-function zoneSheetStamp(x,y,R,id,k,rot,arc){
+function zoneSheetStamp(x,y,R,id,k,rot,arc,rays,halfW){
  const slot=wfxSheet(id);
  if(!slot)return false;
  const raw=slot.im||slot, brief=!!slot.brief;
@@ -152,6 +152,25 @@ function zoneSheetStamp(x,y,R,id,k,rot,arc){
  const sw=Math.floor((sh.naturalWidth||sh.width)/4), sy=Math.floor((sh.naturalHeight||sh.height)/2);
  const col=fi%4, row=fi>3?1:0;
  const d=R*2;
+ // ЛУЧЕВЫЕ ЗОНЫ рисуются иначе, чем площадные, и это не тонкость, а
+ // необходимость. Площадная зона — квадрат со стороной 2R, кадр ложится в
+ // него целиком. Луч же длиной R и шириной всего 60 px занял бы в таком
+ // квадрате шесть процентов высоты: почти весь рисунок ушёл бы в пустоту,
+ // а сам луч остался бы в несколько пикселей высотой.
+ // Поэтому у луча кадр натягивается ВДОЛЬ него: левый край кадра садится
+ // под ноги героя, правый — на остриё. Каждый луч рисуется своим кадром.
+ if(rays&&rays.length&&halfW>0){
+  const a=Math.min(0.82,k*1.4);
+  for(const ra of rays){
+   ctx.save();
+   ctx.translate(x,y);
+   ctx.rotate(ra);
+   ctx.globalAlpha=a;
+   ctx.drawImage(sh,col*sw,row*sy,sw,sy,0,-halfW,R,halfW*2);
+   ctx.restore();
+  }
+  return true;
+ }
  ctx.save();
  ctx.translate(x,y);
  // конусная зона: лист приходит веером примерно на 150°, а бьёт коса на 86°.
