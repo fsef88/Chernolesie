@@ -1372,6 +1372,10 @@
    ]
   },
   {
+   "file": "game/data/weapon-fx.js",
+   "note": "v7.33 цвет и форма каждого оружия + отпечаток зоны"
+  },
+  {
    "file": "game/systems/surges.js",
    "note": "Всплески: баннеры, ярость, камбэк",
    "srcLines": [

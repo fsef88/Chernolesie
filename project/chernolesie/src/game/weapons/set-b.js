@@ -8,6 +8,7 @@ function doKolokol(){
  // секунд и бьёт всех внутри по таймеру — игрок ставит звоны на маршруте отхода.
  const lvl=nwLvl('kolokol'),w=weapons.find(x=>x.id==='kolokol'),evo=w&&w.evo;
  const R=(150+30*lvl)*wArea('kolokol');
+ pulseZone(P.x,P.y,R,'kolokol',0.55);   // v7.33
  const dmg=(20+9*lvl)*wDmg('kolokol');
  const life=(evo?5.5:3.5)*wDur('kolokol');
  zones.push({x:P.x,y:P.y,r:R,t:life,max:life,dmg:dmg*(evo?1.4:1),_bell:true,_evo:!!evo});
@@ -103,6 +104,7 @@ function doNavi(){
  const lvl=nwLvl('navi'),w=weapons.find(x=>x.id==='navi'),evo=w&&w.evo;
  const fx=-(P.fx||1),fy=-(P.fy||0);            // строго ЗА спиной
  const R=(100+15*lvl)*wArea('navi');
+ pulseZone(P.x,P.y,R,'navi');   // v7.33
  const half=evo?1.0:0.65;
  const list=enemiesNear(P.x,P.y,R+20);
  let any=false;
@@ -210,6 +212,7 @@ function doKlyuka(){
  // намеренно живёт в красной зоне (см. документ, ч.6: Упырь + Клюка).
  if(P.synEdge&&P.hp<P.maxhp*0.35)klyukaCharge*=1.6;
  const R=(130+18*lvl)*wArea('klyuka');
+ pulseZone(P.x,P.y,R,'klyuka',0.5);   // v7.33
  const list=enemiesNear(P.x,P.y,R);
  if(!list.length)return false;
  const dmg=(18+8*lvl)*wDmg('klyuka')*(1+Math.min(2,klyukaCharge*0.12));
@@ -232,6 +235,7 @@ function doZerno(){
  // v6.39 жест: зерно: комья земли при посеве
  {for(let _i=0;_i<6;_i++){const _a=Math.random()*TAU;spawnParticle(P.x,P.y,Math.cos(_a)*100,Math.sin(_a)*100-40,rnd(.3,.6),'#6a4a28',280,0);}}
  const R=(80+12*lvl)*wArea('zerno');
+ pulseZone(P.x,P.y,R,'zerno');   // v7.33
  const delay=evo?1.1:1.7;
  zones.push({x:P.x,y:P.y,r:R,t:delay,max:delay,dmg:0,_seed:true,_evo:!!evo,
   _boomDmg:(30+13*lvl)*wDmg('zerno'),_r:R});

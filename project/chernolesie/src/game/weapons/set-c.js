@@ -17,6 +17,7 @@ function doKosti(){
  const st=Math.min(maxSt,kostiStacks);
  const rays=Math.max(3,Math.round((3+Math.floor(st/3))*wAmt('kosti')));
  const R=(80+12*lvl+st*5)*wArea('kosti');
+ pulseZone(P.x,P.y,R,'kosti');   // v7.33
  const list=enemiesNear(P.x,P.y,R+30);
  if(!list.length)return false;
  const dmg=(9+4*lvl)*(1+st*0.11)*wDmg('kosti');
@@ -80,6 +81,7 @@ function doZercalo(){
  const need=evo?18:30;
  if(zercaloPool<need)return false;
  const R=(190+26*lvl)*wArea('zercalo');
+ pulseZone(P.x,P.y,R,'zercalo',0.6);   // v7.33
  const fx=P.fx||1,fy=P.fy||0;
  const dirs=evo?[[fx,fy],[-fx,-fy]]:[[fx,fy]];   // «Кривда» бьёт и назад
  const total=zercaloPool*(evo?1.5:1.0)*wDmg('zercalo');

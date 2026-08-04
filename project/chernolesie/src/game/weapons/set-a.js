@@ -39,6 +39,7 @@ function doKosa(){
  {const _fa=Math.atan2(P.fy||0,P.fx||1);for(let _i=0;_i<7;_i++){const _a=_fa+rnd(-0.8,0.8);spawnParticle(P.x+Math.cos(_a)*40,P.y+Math.sin(_a)*40,Math.cos(_a)*140,Math.sin(_a)*140,rnd(.2,.45),'#bfe0ff',30,0);}}
  const evo=w&&w.evo;
  const R=(96+16*lvl)*wArea('kosa');
+ pulseZone(P.x,P.y,R,'kosa');   // v7.33: коса бьёт на 165% ширины кадра — покажем это
  const halfArc=(evo?1.15:0.75);
  const fx=P.fx||1,fy=P.fy||0;
  const list=enemiesNear(P.x,P.y,R+24);
