@@ -157,8 +157,8 @@ function drawZonePulses(dt){
 //  добавить строку сюда.
 // ============================================================
 const WFX_SHEETS={};
-// заводится после загрузки реестра: дымный серп ложится на взмах Косы
-addEventListener('load',()=>{ if(typeof SLASH_SMOKE_SHEET!=='undefined')WFX_SHEETS.kosa=SLASH_SMOKE_SHEET; });
+// заводится после загрузки реестра: мятный серп ложится на взмах Косы
+addEventListener('load',()=>{ if(typeof KOSA_ZONE_SHEET!=='undefined')WFX_SHEETS.kosa=KOSA_ZONE_SHEET; });
 function wfxSheet(id){
  const im=WFX_SHEETS[id];
  return (im&&im.complete&&im.naturalWidth)?im:null;

@@ -89,3 +89,7 @@ const activeExplosions=[];
 const SLASH_SMOKE_SHEET  = (function(){const i=new Image(); i.src='@@A:art/art-registry/slash-smoke-sheet.webp@@'; return i;})();
 const IMPACT_BURST_SHEET = (function(){const i=new Image(); i.src='@@A:art/art-registry/impact-burst-sheet.webp@@'; return i;})();
 const DUST_PLUME_SHEET   = (function(){const i=new Image(); i.src='@@A:art/art-registry/dust-plume-sheet.webp@@'; return i;})();
+
+// v7.35: первый лист, нарисованный под зону оружия по заданию из docs/art-briefs.md.
+// Мятный серп во всю ячейку — взмах Косы Моры, вместо дымного серпа-заглушки.
+const KOSA_ZONE_SHEET    = (function(){const i=new Image(); i.src='@@A:art/art-registry/kosa-zone-sheet.webp@@'; return i;})();
