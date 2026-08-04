@@ -114,7 +114,8 @@ function pulseZone(x,y,R,id,life){
  if(zonePulses.length>24)zonePulses.shift();   // предохранитель на плотной волне
  // большая зона гаснет быстрее: чем шире кольцо, тем дольше оно мозолит глаз
  const L=life||(R>300?0.3:0.42);
- zonePulses.push({x:x,y:y,R:R,id:id,t:L,max:L});
+ // угол фиксируется в момент удара: лист не должен крутиться на месте
+ zonePulses.push({x:x,y:y,R:R,id:id,t:L,max:L,rot:(typeof P!=='undefined'&&P.fx!=null)?Math.atan2(P.fy||0,P.fx||1):0});
 }
 function drawZonePulses(dt){
  for(let i=zonePulses.length-1;i>=0;i--){
@@ -127,6 +128,49 @@ function drawZonePulses(dt){
   if(zx+z.R<-40||zy+z.R<-40||zx-z.R>W+40||zy-z.R>H+40)continue;
   // кольцо чуть расширяется на излёте — так удар читается как волна,
   // а не как мигающий обод
-  zoneStamp(zx,zy,z.R*(1+(1-k)*0.06),z.id,Math.min(1,k*1.25));
+  // лист, если он заведён; иначе кольцо — так арт можно заводить по одному
+  if(!zoneSheetStamp(zx,zy,z.R*(1+(1-k)*0.06),z.id,k,z.rot))
+   zoneStamp(zx,zy,z.R*(1+(1-k)*0.06),z.id,Math.min(1,k*1.25));
  }
+}
+
+// ============================================================
+//  v7.34 ЛИСТЫ ЗОН — МЕСТО ПОД АРТ
+//
+//  Кодом дальше не вытянуть: кольцо остаётся кольцом, а в Vampire Survivors
+//  у каждого оружия свой СИЛУЭТ. Поэтому здесь заведены слоты: как только
+//  рядом появляется лист, зона начинает рисоваться им, а не кольцом.
+//
+//  Правила листа (те же, что у всех атласов эффектов в проекте):
+//   * сетка строго 4x2, восемь кадров, ячейка квадратная;
+//   * эффект вписан в ячейку ОТ КРАЯ ДО КРАЯ и центрирован — лист рисуется
+//     диаметром 2R, то есть кромка кадра ложится ровно на границу поражения;
+//   * фон magenta #FF00FF, снимается через tools/chromakey.py.
+//
+//  Пока файла нет, зона рисуется кольцом из zoneStamp — игра не ломается,
+//  и ассеты можно заводить по одному. Чтобы подключить новый лист: положить
+//  webp в assets/art/art-registry/, вписать в src/build.manifest.json и
+//  добавить строку сюда.
+// ============================================================
+const WFX_SHEETS={};
+function wfxSheet(id){
+ const im=WFX_SHEETS[id];
+ return (im&&im.complete&&im.naturalWidth)?im:null;
+}
+// Кадр листа по прогрессу 0..1 (0 — момент удара, 1 — конец вспышки).
+function zoneSheetStamp(x,y,R,id,k,rot){
+ const sh=wfxSheet(id);
+ if(!sh)return false;
+ const fi=Math.max(0,Math.min(7,Math.floor((1-k)*8)));
+ const sw=Math.floor(sh.naturalWidth/4), sy=Math.floor(sh.naturalHeight/2);
+ const col=fi%4, row=fi>3?1:0;
+ const d=R*2;
+ ctx.save();
+ ctx.translate(x,y);
+ if(rot)ctx.rotate(rot);
+ ctx.globalCompositeOperation='lighter';
+ ctx.globalAlpha=Math.min(1,k*1.2);
+ ctx.drawImage(sh,col*sw,row*sy,sw,sy,-R,-R,d,d);
+ ctx.restore();
+ return true;
 }
