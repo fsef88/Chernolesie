@@ -235,7 +235,9 @@ function doZerno(){
  // v6.39 жест: зерно: комья земли при посеве
  {for(let _i=0;_i<6;_i++){const _a=Math.random()*TAU;spawnParticle(P.x,P.y,Math.cos(_a)*100,Math.sin(_a)*100-40,rnd(.3,.6),'#6a4a28',280,0);}}
  const R=(80+12*lvl)*wArea('zerno');
- pulseZone(P.x,P.y,R,'zerno');   // v7.33
+ // v7.35: вспышка зоны перенесена в момент ВЗРЫВА (tickSeeds). Здесь она
+ // показывала круг R в момент посева, а зерно бьёт кругом 1.5R и через
+ // 1.1-1.7 с — картинка была и меньше настоящей, и не в тот момент.
  const delay=evo?1.1:1.7;
  zones.push({x:P.x,y:P.y,r:R,t:delay,max:delay,dmg:0,_seed:true,_evo:!!evo,
   _boomDmg:(30+13*lvl)*wDmg('zerno'),_r:R});
@@ -246,7 +248,9 @@ function tickSeeds(){
  for(let i=zones.length-1;i>=0;i--){
   const z=zones[i];
   if(!z._seed||z.t>0)continue;
-  const list=enemiesNear(z.x,z.y,z._r*1.5);
+  const BR=z._r*1.5;                       // настоящий радиус взрыва
+  pulseZone(z.x,z.y,BR,'zerno');           // v7.35: вспышка там и тогда, где рвёт
+  const list=enemiesNear(z.x,z.y,BR);
   for(const e of list){
    if(e.hp<=0||e.dying>0)continue;
    const dx=e.x-z.x,dy=e.y-z.y,d=Math.hypot(dx,dy)||1;

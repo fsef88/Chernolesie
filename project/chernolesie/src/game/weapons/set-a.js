@@ -42,7 +42,7 @@ function doKosa(){
  const halfArc=(evo?1.15:0.75);
  // v7.35: зона рисуется тем же конусом, по которому идёт попадание (см. dot ниже).
  // До этого рисовался полный круг — вчетверо больше, чем коса на самом деле бьёт.
- pulseZone(P.x,P.y,R,'kosa',0,halfArc);
+ pulseZone(P.x,P.y,R,'kosa',0,{arc:halfArc});
  const fx=P.fx||1,fy=P.fy||0;
  const list=enemiesNear(P.x,P.y,R+24);
  let hitAny=false;

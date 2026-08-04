@@ -52,8 +52,14 @@ function drawVihrStorm(){
  ctx.globalAlpha=k*0.85;
  if(typeof VIHR_VORTEX_SHEET !== 'undefined' && VIHR_VORTEX_SHEET.complete && VIHR_VORTEX_SHEET.naturalWidth){
   ctx.globalCompositeOperation='lighter';
+  // v7.35: петля идёт по кадрам 4-7, а не по всем восьми. Лист рисует полный
+  // цикл — рождение, пик, затухание, — а смерч висит на земле постоянно:
+  // прокрутка целиком заставляла его раз в цикл распадаться и собираться
+  // заново на месте. Кадры 4-7 — устойчивая воронка, разница между ними даёт
+  // вращение, а полного распада в кадре не случается.
+  const LOOP0=3, LOOPN=4;
   const prog = (time * 3.0) % 1.0;
-  const fIdx = Math.min(7, Math.floor(prog * 8));
+  const fIdx = LOOP0 + Math.min(LOOPN - 1, Math.floor(prog * LOOPN));
   const col = fIdx % 4, row = Math.floor(fIdx / 4);
   const sw = Math.floor(VIHR_VORTEX_SHEET.naturalWidth / 4);
   const sh = Math.floor(VIHR_VORTEX_SHEET.naturalHeight / 2);

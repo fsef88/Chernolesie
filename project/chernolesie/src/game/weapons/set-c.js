@@ -17,11 +17,16 @@ function doKosti(){
  const st=Math.min(maxSt,kostiStacks);
  const rays=Math.max(3,Math.round((3+Math.floor(st/3))*wAmt('kosti')));
  const R=(80+12*lvl+st*5)*wArea('kosti');
- pulseZone(P.x,P.y,R,'kosti');   // v7.33
  const list=enemiesNear(P.x,P.y,R+30);
  if(!list.length)return false;
  const dmg=(9+4*lvl)*(1+st*0.11)*wDmg('kosti');
  kostiRayA+=0.41;                                  // лучи проворачиваются каждый удар
+ // v7.35: венец бьёт короной ТОНКИХ лучей, а рисовался сплошной круг радиуса R —
+ // между лучами не задевает никого, и заполненный круг это скрывал. Рисуем ту же
+ // корону и теми же углами: pulseZone стоит после проворота, иначе картинка
+ // отставала бы от удара на один такт.
+ {const ra=[];for(let k=0;k<rays;k++)ra.push(kostiRayA+k*(TAU/rays));
+  pulseZone(P.x,P.y,R,'kosti',0,{rays:ra,halfW:22});}
  let any=false;
  for(let k=0;k<rays;k++){
   const a=kostiRayA+k*(TAU/rays);
@@ -81,9 +86,13 @@ function doZercalo(){
  const need=evo?18:30;
  if(zercaloPool<need)return false;
  const R=(190+26*lvl)*wArea('zercalo');
- pulseZone(P.x,P.y,R,'zercalo',0.6);   // v7.33
  const fx=P.fx||1,fy=P.fy||0;
  const dirs=evo?[[fx,fy],[-fx,-fy]]:[[fx,fy]];   // «Кривда» бьёт и назад
+ // v7.35: зерцало бьёт ЛУЧОМ, а рисовался полный круг радиуса R — картинка
+ // обещала удар вокруг, при попадании по узкой линии (см. проверку ниже:
+ // проекция на направление и отсечка по dist > e.r+30). Рисуем те же лучи.
+ pulseZone(P.x,P.y,R,'zercalo',0.6,
+  {rays:dirs.map(d=>Math.atan2(d[1],d[0])),halfW:30});
  const total=zercaloPool*(evo?1.5:1.0)*wDmg('zercalo');
  let hitAll=[];
  for(const d0 of dirs){

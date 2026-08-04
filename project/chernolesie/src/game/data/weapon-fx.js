@@ -82,9 +82,29 @@ function zoneStamp(x,y,R,id,a,opts){
  // сектор: полуугол меньше пи — значит зона конусная и замыкается на игроке
  const half=(o.arc>0&&o.arc<Math.PI)?o.arc:0;
  const ang=o.ang||0;
+ // лучи: зона не площадь, а один или несколько тонких отрезков от игрока.
+ // Так бьют Зерцало (один луч по взгляду) и Венец костей (корона из лучей).
+ const rays=(o.rays&&o.rays.length)?o.rays:null;
+ const hw=o.halfW||0;
  const path=function(){
   ctx.beginPath();
-  if(half){
+  if(rays){
+   // капсула: два отрезка по бокам и полукруги на концах. Ровно та фигура,
+   // по которой считается попадание, — проекция вдоль луча и отсечка по
+   // расстоянию до оси. Дуги идут ПРОТИВ часовой (последний аргумент true),
+   // иначе canvas ведёт их длинной стороной и прочерчивает хорду через фигуру.
+   const H=Math.PI/2;
+   for(const a of rays){
+    const cx=Math.cos(a),cy=Math.sin(a);
+    const nx=-cy*hw,ny=cx*hw;                 // нормаль к лучу, на полуширину
+    ctx.moveTo(nx,ny);
+    ctx.lineTo(cx*R+nx,cy*R+ny);
+    ctx.arc(cx*R,cy*R,hw,a+H,a-H,true);       // скругление на дальнем конце
+    ctx.lineTo(-nx,-ny);
+    ctx.arc(0,0,hw,a-H,a+H,true);             // скругление у ног игрока
+    ctx.closePath();
+   }
+  }else if(half){
    ctx.moveTo(0,0);
    ctx.arc(0,0,R,ang-half,ang+half);
    ctx.closePath();
@@ -131,15 +151,21 @@ function zoneStamp(x,y,R,id,a,opts){
 // его край и есть край зоны. Кольцо поверх такого листа читается как чертёж.
 const ZONE_RING={bare:1, withSheet:0};
 let zonePulses=[];
-// arc — полуугол конуса в радианах, тот же, по которому считается попадание.
-// Без него зона считается круговой, как и было у шести круглых орудий.
-function pulseZone(x,y,R,id,life,arc){
+// shape — форма зоны, та же, по которой считается попадание:
+//   не задана           — круг радиуса R (навий хвост, клюка, колокол);
+//   {arc:полуугол}      — конус по взгляду (коса);
+//   {rays:[углы],halfW} — тонкие лучи из игрока (зерцало, венец костей).
+// Форма берётся из боевого кода, а не подбирается на глаз: если нарисовано
+// не то, чем бьёт, игрок учится не верить картинке.
+function pulseZone(x,y,R,id,life,shape){
  if(!(R>0))return;
  if(zonePulses.length>24)zonePulses.shift();   // предохранитель на плотной волне
  // большая зона гаснет быстрее: чем шире кольцо, тем дольше оно мозолит глаз
  const L=life||(R>300?0.3:0.42);
+ const s=(typeof shape==='number')?{arc:shape}:(shape||null);   // старый вызов с числом
  // угол фиксируется в момент удара: лист не должен крутиться на месте
- zonePulses.push({x:x,y:y,R:R,id:id,t:L,max:L,arc:arc||0,
+ zonePulses.push({x:x,y:y,R:R,id:id,t:L,max:L,
+  arc:(s&&s.arc)||0, rays:(s&&s.rays)||null, halfW:(s&&s.halfW)||0,
   rot:(typeof P!=='undefined'&&P.fx!=null)?Math.atan2(P.fy||0,P.fx||1):0});
 }
 function drawZonePulses(dt){
@@ -159,7 +185,8 @@ function drawZonePulses(dt){
   const RR=z.R*(1+(1-k)*0.06);
   const hasSheet=!!wfxSheet(z.id);
   const ra=Math.min(1,k*1.25)*(hasSheet?ZONE_RING.withSheet:ZONE_RING.bare);
-  if(ra>0)zoneStamp(zx,zy,RR,z.id,ra,{arc:z.arc,ang:z.rot,fill:hasSheet?false:undefined});
+  if(ra>0)zoneStamp(zx,zy,RR,z.id,ra,
+   {arc:z.arc,ang:z.rot,rays:z.rays,halfW:z.halfW,fill:hasSheet?false:undefined});
   if(hasSheet)zoneSheetStamp(zx,zy,RR,z.id,k,z.rot,z.arc);
  }
 }
@@ -194,7 +221,7 @@ function drawZonePulses(dt){
 //  то, чем силуэт отделяется от фона, ради чего лист и заказывался.
 //  Поэтому у слота есть режим: tint+lighter для заглушек, как есть для заданий.
 const WFX_SHEETS={};
-// заводится после загрузки реестра: мятный серп ложится на взмах Косы
+// заводится после загрузки реестра
 addEventListener('load',()=>{
  if(typeof KOSA_ZONE_SHEET!=='undefined')WFX_SHEETS.kosa={im:KOSA_ZONE_SHEET,brief:true};
 });
