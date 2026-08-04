@@ -125,6 +125,11 @@ function zoneStamp(x,y,R,id,a,opts){
 //  Живут доли секунды, поэтому три-четыре зоны внахлёст не превращают
 //  экран в кашу, но игрок успевает прочитать, что именно ударило.
 // ------------------------------------------------------------
+// Сила кольца границы. У оружия без листа оно единственное, что показывает,
+// докуда бьёт, — там оно в полную силу. Где лист есть, границу рисует уже он
+// сам: лист кладётся диаметром 2R и обрезается по настоящему конусу, то есть
+// его край и есть край зоны. Кольцо поверх такого листа читается как чертёж.
+const ZONE_RING={bare:1, withSheet:0};
 let zonePulses=[];
 // arc — полуугол конуса в радианах, тот же, по которому считается попадание.
 // Без него зона считается круговой, как и было у шести круглых орудий.
@@ -153,8 +158,8 @@ function drawZonePulses(dt){
   // есть, кольцо приглушается, чтобы не спорить с рисунком.
   const RR=z.R*(1+(1-k)*0.06);
   const hasSheet=!!wfxSheet(z.id);
-  zoneStamp(zx,zy,RR,z.id,Math.min(1,k*1.25)*(hasSheet?0.5:1),
-   {arc:z.arc,ang:z.rot,fill:hasSheet?false:undefined});
+  const ra=Math.min(1,k*1.25)*(hasSheet?ZONE_RING.withSheet:ZONE_RING.bare);
+  if(ra>0)zoneStamp(zx,zy,RR,z.id,ra,{arc:z.arc,ang:z.rot,fill:hasSheet?false:undefined});
   if(hasSheet)zoneSheetStamp(zx,zy,RR,z.id,k,z.rot,z.arc);
  }
 }
