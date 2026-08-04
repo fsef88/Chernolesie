@@ -615,6 +615,10 @@
    ]
   },
   {
+   "file": "styles/65-levelup-list.css",
+   "note": "v7.32 окно уровня: список во всю ширину"
+  },
+  {
    "lit": "</style>\n<!-- v5.38: Google Fonts удалены — шрифт Мономах встроен (@font-face выше) -->\n</head>\n<body>\n"
   },
   {

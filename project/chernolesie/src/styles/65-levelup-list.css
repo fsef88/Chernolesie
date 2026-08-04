@@ -1,0 +1,141 @@
+/* ============================================================
+   v7.32 ОКНО ПОДНЯТИЯ УРОВНЯ — СПИСОК ВО ВСЮ ШИРИНУ
+
+   Было: три карточки по 120-160px в ряд. На телефоне 1440px в портрете это
+   три узких столбика в середине экрана, описание переносилось по слогам,
+   лента редкости обрезалась рамкой, а плашка «НОВИНКА» налезала на неё
+   сверху. Половина экрана при этом пустовала.
+
+   Стало: три строки во всю ширину, икона слева, текст справа. Палец
+   достаёт до всех трёх не перехватывая телефон, описание умещается в
+   одну-две строки, ничего не налезает.
+
+   Файл идёт последним из стилей и намеренно переопределяет .card из
+   20-screens.css, 30-responsive-mobile.css и 40-ornaments.css: там карта
+   описана как узкий столбик, и правки внутри тех файлов пришлось бы
+   размазывать по трём брейкпоинтам.
+   Рамка-скрижаль (--tarot-bg), угловые руны (span.fxRunes), бегущая
+   кромка и свечение по редкости остаются как были.
+   ============================================================ */
+
+#cards{
+  /* заголовок сверху, кнопки снизу, карты забирают всё, что между ними:
+     иначе на высоком телефоне сверху копилась пустая треть экрана */
+  justify-content:flex-start;
+  /* сверху отступ под HUD: оверлей лежит inset:0, и без него заголовок
+     подлезал под полоску здоровья */
+  padding:clamp(64px,11vh,92px) 12px calc(16px + env(safe-area-inset-bottom,0px));
+  gap:8px;
+}
+.cards-title{font-size:clamp(17px,5vw,24px);margin-bottom:2px}
+
+#cardrow{
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:center;
+  width:100%;
+  max-width:560px;
+  gap:10px;
+  flex:1 1 auto;      /* забрать всю высоту между заголовком и кнопками */
+  min-height:0;
+}
+
+#cards .card{
+  /* ширина не фиксируется — строка тянется по контейнеру,
+     высота делится поровну между тремя, но не больше потолка:
+     на планшете три карты по полэкрана выглядели бы нелепо */
+  width:auto;
+  flex:1 1 0;
+  min-height:92px;
+  /* потолок высоты: растянутая на 190px строка внутри пустая — икона и текст
+     всё равно по центру. Остаток высоты уходит в отступы между картами */
+  max-height:148px;
+  display:grid;
+  grid-template-columns:auto 1fr;
+  align-items:center;
+  gap:14px;
+  padding:12px 14px;
+  border-radius:12px;
+  text-align:left;
+}
+#cards .card .cbody{min-width:0;display:flex;flex-direction:column;gap:3px}
+#cards .card h3{
+  margin:0;
+  font-size:clamp(17px,5vw,24px);
+  line-height:1.15;
+  color:#ffcf6a;
+  /* длинные названия вроде «Вихрь Стрибога» переносятся целыми словами */
+  overflow-wrap:break-word;
+}
+#cards .card p{
+  margin:0;
+  font-size:clamp(13px,3.8vw,17px);
+  line-height:1.35;
+  color:#c3bca4;
+}
+#cards .card .upgradeIcon{
+  width:clamp(56px,17vw,88px);
+  height:clamp(56px,17vw,88px);
+  margin:0;
+  flex:none;
+}
+#cards .card .upgradeIcon img,#cards .card .upgradeIcon svg{width:100%;height:100%}
+/* круглая оправа: сам арт внутри — круглый медальон, а 43-iconostas-chrome.css
+   ставит border-radius:12px и режет его углами. Картинка наследует радиус
+   от контейнера (см. 44-painted-elements.css), поэтому хватает одной строки */
+#cards .card .upgradeIcon{border-radius:50%}
+
+/* стихия — в правом верхнем углу строки, а не отдельной строкой под текстом:
+   так она не отнимает высоту и читается как метка, а не как содержание */
+#cards .card .tag{
+  position:absolute;
+  top:8px;
+  right:10px;
+  margin:0;
+  font-size:10px;
+  padding:2px 7px;
+  letter-spacing:.04em;
+}
+
+/* нажатие: строка не «подпрыгивает», а вдавливается — на широком элементе
+   подскок читается как дёрганье */
+#cards .card:hover,#cards .card:active{transform:none}
+#cards .card:active{filter:brightness(1.18)}
+
+/* руны по углам на строке жмутся к краям — отодвигаем от текста */
+#cards .card span.fxRunes{inset:4px}
+
+/* flex-direction задаётся явно: в 30-responsive-mobile.css кнопки поставлены
+   в столбик, а на всю ширину они спокойно встают в ряд и не съедают высоту */
+#cardbtns{gap:10px;width:100%;max-width:560px;display:flex;flex-direction:row;flex-wrap:nowrap;margin-top:2px}
+#cardbtns .btnsm{flex:1;padding:13px 10px;font-size:clamp(13px,3.8vw,16px);border-radius:10px}
+
+/* очень низкие экраны в альбомной ориентации: строки ужимаются,
+   иначе третья карта уезжает под кнопки */
+@media (max-height:560px){
+  #cards{justify-content:center;padding:8px 10px}
+  #cards .card{padding:8px 12px;gap:10px}
+  #cards .card .upgradeIcon{width:44px;height:44px}
+  #cards .card h3{font-size:15px}
+  #cards .card p{font-size:11px}
+  #cardrow{gap:7px}
+}
+
+/* десктоп: ряд остаётся рядом — там ширины хватает и три колонки читаются
+   быстрее, чем список */
+@media (min-width:900px) and (min-height:620px){
+  #cards{justify-content:center}
+  #cardrow{flex-direction:row;max-width:900px;gap:16px}
+  #cards .card{
+    grid-template-columns:1fr;
+    justify-items:center;
+    text-align:center;
+    width:230px;
+    padding:16px 14px;
+    gap:8px;
+  }
+  #cards .card .cbody{align-items:center}
+  #cards .card .upgradeIcon{width:76px;height:76px}
+  #cards .card .tag{position:static;margin-top:4px}
+  #cardbtns{max-width:520px;margin-inline:auto}
+}

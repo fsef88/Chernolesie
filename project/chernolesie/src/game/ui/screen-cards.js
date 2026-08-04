@@ -241,7 +241,9 @@ function buildTarotCardEl(o, isNew, isFree){
   const d=document.createElement('div');
   const tag=o.tag||'dar';
   const ic=cardIconId(o);
-  const _newBadge=isNew?'<span class="badge-new">НОВИНКА</span>':'';
+  // v7.32: плашка «НОВИНКА» и лента редкости с карты убраны — на узкой карточке
+  // они налезали друг на друга и обрезались рамкой. Новый слот теперь читается
+  // по зелёной кромке (.card-new), редкость — по свечению рамки (.rar-*).
 
   const isEvo=/пробуждение|эвол|ливень|рагнар|громобой|перунов|небесн/i.test(o.t||'')||!!o.evo;
   const isSyn=/клятва|синер|корни мораны|барабан|шёпот стаи|глаз заставы/i.test(o.t||'')||!!o.syn;
@@ -249,34 +251,20 @@ function buildTarotCardEl(o, isNew, isFree){
   // 4 тира редкости: Обычный / Редкий / Эпический / Легендарный
   const _rn = seedRandom();
   const rarity = isEvo ? 'legendary' : (isSyn ? 'epic' : (_rn < 0.12 ? 'legendary' : (_rn < 0.32 ? 'epic' : (_rn < 0.65 ? 'rare' : 'common'))));
-  const rarityTxt = rarity === 'legendary' ? '👑 Легендарный дар' : (rarity === 'epic' ? '🔮 Эпический дар' : (rarity === 'rare' ? '⚡ Редкий дар' : '✦ Обычный дар'));
   
   d.className='card rar-'+rarity+(isEvo?' card-evo':'')+(isSyn?' card-syn':'')+(isNew?' card-new':'');
   if(typeof TAROT_FRAME_ART !== 'undefined' && TAROT_FRAME_ART.src){
     d.style.setProperty('--tarot-bg', `url("${TAROT_FRAME_ART.src}")`);
   }
 
-  // Индикация шага прокачки и точного бонуса («Ур. 3 ➔ Ур. 4 (+20% урон)»)
-  let lvlStepHtml = '';
-  const _wid = typeof weaponIdByName==='function' ? weaponIdByName(o.t) : null;
-  if(_wid){
-    const clvl = typeof wLvl==='function' ? wLvl(_wid) : 0;
-    if(clvl > 0){
-      const nextDmg = '+' + Math.round((clvl+1)*20) + '% урон';
-      lvlStepHtml = `<div class="lvl-step">Ур. ${clvl} ➔ Ур. ${clvl+1}</div><span class="stat-bonus">(${nextDmg})</span>`;
-    } else {
-      lvlStepHtml = `<div class="lvl-step">Новое оружие!</div>`;
-    }
-  } else if(cardLv && cardLv[o.t]){
-    const clvl = cardLv[o.t];
-    lvlStepHtml = `<div class="lvl-step">Ур. ${clvl} ➔ Ур. ${clvl+1}</div>`;
-  }
-
-  d.innerHTML = `<span class="rar-badge">${rarityTxt}</span>` + _newBadge +
+  // v7.32: строка «Ур. 2 ➔ Ур. 3 (+20% урон)» убрана — на строке во всю ширину
+  // важнее название и что оружие делает; шаг прокачки виден в HUD арсенала.
+  d.innerHTML =
     `<div class="upgradeIcon ${tag}${isEvo?' evo':''}">${iconPaint(ic)}</div>` +
-    `<h3>${o.t}</h3>` +
-    `${lvlStepHtml}` +
-    `<p>${o.d}</p>` +
+    `<div class="cbody">` +
+      `<h3>${o.t}</h3>` +
+      `<p>${o.d}</p>` +
+    `</div>` +
     `<span class="tag ${tag}">${tag==='phys'?'сталь':tag==='elec'?'гром':tag==='pois'?'мор':tag==='frost'?'стужа':tag==='void'?'тень':'дар'}</span>` +
     `<span class="fxRunes"></span><span class="fxEdge"></span><span class="fxDust"></span>`;
 
@@ -305,6 +293,9 @@ function showCards(){
  }
  const _ct=document.querySelector('.cards-title');
  if(_ct)_ct.innerHTML='Уровень! Выбери улучшение<span style="display:block;font-size:12px;opacity:.65;margin-top:2px">'+slotsLine()+'</span>';
+ // v7.32: подсказка обучения живёт поверх всего и налезала на заголовок окна
+ // уровня — гасим её на время выбора, вернётся сама при следующем поводе.
+ {const _tut=document.getElementById('tutorial');if(_tut)_tut.classList.remove('show');}
  const row=document.getElementById('cardrow');row.innerHTML='';
  const CARD_SVGS={
  phys:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 38 28 20m-4 0 6-6 10 10-6 6M8 40l9-2-7-7z"/><path d="M30 8l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/></svg>',

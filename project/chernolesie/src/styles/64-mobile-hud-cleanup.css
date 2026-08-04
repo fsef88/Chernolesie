@@ -84,60 +84,12 @@ body.touch-ui #minimap{
   body.touch-ui #boondisp .boon-badge{max-width:74px;font-size:8px}
 }
 
-
 /* ============================================================================
-   v7.28: ГОРИЗОНТАЛЬНОЕ РАСПОЛОЖЕНИЕ КАРТОЧЕК ПРОКАЧКИ НА ВСЕХ ЭКРАНАХ (без вертикального переноса на смартфонах)
+   v7.28 «горизонтальные карточки прокачки» удалён в v7.32.
+   Блок силой держал три карты в одном ряду (width:0 !important, на телефоне
+   max-width:130px) и ради этого выносил ленту редкости за верхнюю кромку
+   (top:-8px), где её срезал overflow:hidden самой карты. Именно он делал
+   окно уровня нечитаемым на телефоне.
+   Раскладка окна уровня теперь целиком в styles/65-levelup-list.css:
+   список во всю ширину на телефоне, ряд на десктопе — и без !important.
    ============================================================================ */
-#cardrow{
-  display: flex !important;
-  flex-direction: row !important;
-  flex-wrap: nowrap !important;
-  justify-content: center !important;
-  align-items: stretch !important;
-  gap: min(10px, 2vw) !important;
-  width: 100% !important;
-  max-width: 100% !important;
-}
-#cardrow .card{
-  flex: 1 1 0 !important;
-  width: 0 !important;
-  min-width: 0 !important;
-  max-width: 180px !important;
-  min-height: 180px !important;
-}
-@media (max-width: 600px){
-  #cards{ padding: 10px 8px !important; gap: 8px !important; }
-  #cardrow{ gap: 5px !important; }
-  #cardrow .card{
-    max-width: 130px !important;
-    min-height: 155px !important;
-    padding: 14px 6px 8px !important;
-    border-radius: 10px !important;
-  }
-  #cardrow .card h3{
-    font-size: 11px !important;
-    margin: 4px 0 3px !important;
-    line-height: 1.12 !important;
-  }
-  #cardrow .card p{
-    font-size: 9.5px !important;
-    line-height: 1.18 !important;
-  }
-  #cardrow .card .rar-badge{
-    font-size: 7.5px !important;
-    padding: 2px 6px !important;
-    top: -8px !important;
-  }
-  #cardrow .card .upgradeIcon{
-    width: 38px !important;
-    height: 38px !important;
-    margin-bottom: 4px !important;
-  }
-  #cardrow .card .lvl-step{
-    font-size: 9.5px !important;
-    margin: 3px 0 1px !important;
-  }
-  #cardrow .card .stat-bonus{
-    font-size: 9px !important;
-  }
-}
