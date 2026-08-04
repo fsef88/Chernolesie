@@ -1,0 +1,19 @@
+/* =========================================== */
+/* =============== LOG ======================= */
+/* =========================================== */
+#log{position:fixed;bottom:calc(max(0px,env(safe-area-inset-bottom,0)) + 80px);left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:3px;pointer-events:none;z-index:21;max-width:90%}
+.logitem{font-size:11px;padding:3px 10px;background:rgba(20,24,16,.95);border:1px solid #5a604a;border-radius:4px;color:#e8e2cf;animation:logfade 4s forwards;text-shadow:0 1px 2px #000;text-align:center;max-width:90vw}
+.logitem.gold{color:#ffcf6a;border-color:#c9a04a}
+.logitem.evo{color:#ffaa44;border-color:#ffaa44}
+/* v5.72 синергии: бейдж в HUD + подсветка карточки */
+.synbadge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.3px;color:#d8bcff;background:rgba(40,26,58,.9);border:1px solid #7a5ab0;border-radius:8px;padding:2px 7px;text-shadow:0 1px 2px #000;box-shadow:0 0 6px rgba(160,110,255,.28);white-space:nowrap}
+.card.card-syn{border-color:#8a63c8;box-shadow:0 0 14px rgba(150,100,255,.35),inset 0 0 22px rgba(120,70,200,.18)}
+.card.card-syn h3{color:#d8bcff}
+.card.card-new{border-color:#7ad06a;box-shadow:0 0 14px rgba(120,200,100,.4),inset 0 0 22px rgba(100,180,70,.18)}
+.card.card-new h3{color:#bff0a0}
+.card .badge-new{position:absolute;top:6px;right:6px;background:#7ad06a;color:#10240a;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;letter-spacing:.5px;box-shadow:0 0 8px rgba(120,200,100,.6)}
+
+.logitem.warn{color:#ff7a5a;border-color:#c95a3c}
+@keyframes logfade{0%{opacity:0;transform:translateY(8px)}10%,70%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-8px)}}
+@keyframes fadeHint{0%{opacity:0;transform:translateX(-50%) translateY(-10px)}100%{opacity:1;transform:translateX(-50%) translateY(0)}}
+

@@ -1,0 +1,319 @@
+/* =========================================== */
+/* =============== SCREENS =================== */
+/* =========================================== */
+/* Cards entrance animation */
+#cards{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(6,8,5,.95);gap:14px;flex-direction:column;z-index:30;padding:20px;overflow-y:auto;animation:cardOverlayIn 0.3s ease-out}
+@keyframes cardOverlayIn{0%{opacity:0;transform:scale(0.92)}100%{opacity:1;transform:scale(1)}}
+.cards-title{color:#ffcf6a;margin:0;font-size:20px;text-align:center;text-shadow:0 0 8px rgba(255,207,106,.5)}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:100%}
+.card{width:160px;min-height:140px;background:linear-gradient(#1c2417,#161e10);border:2px solid #c9a04a;border-radius:10px;padding:10px;cursor:pointer;transition:.12s;animation:cardEntry .4s ease-out both;touch-action:manipulation;position:relative;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+.card:nth-child(2){animation-delay:0.07s}.card:nth-child(3){animation-delay:0.14s}
+@keyframes cardEntry{0%{transform:scale(.8) translateY(20px);opacity:0}50%{transform:scale(1.05) translateY(-4px)}100%{transform:scale(1) translateY(0);opacity:1}}
+.card:hover,.card:active{transform:translateY(-3px) scale(1.03);border-color:#ffcf6a;box-shadow:0 8px 20px rgba(255,207,106,.3)}
+.card h3{margin:0 0 5px;color:#ffcf6a;font-size:14px}
+.card p{margin:0;font-size:11px;color:#b9b29a;line-height:1.3}
+.card .tag{display:inline-block;padding:1px 5px;border-radius:3px;font-size:9px;margin-top:4px;background:rgba(154,192,106,.2);color:#9ac06a;border:1px solid rgba(154,192,106,.4)}
+.card .tag.frost{background:rgba(180,224,255,.2);color:#bfe0ff;border-color:rgba(180,224,255,.4)}
+.card .tag.elec{background:rgba(143,208,255,.2);color:#8fd0ff;border-color:rgba(143,208,255,.4)}
+.card .tag.pois{background:rgba(154,192,106,.2);color:#9ac06a;border-color:rgba(154,192,106,.4)}
+.card .tag.void{background:rgba(180,120,255,.2);color:#b478ff;border-color:rgba(180,120,255,.4)}
+#cardbtns{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;justify-content:center}
+.btnsm{padding:7px 12px;font-size:11px;background:#2a2417;border:1px solid #c9a04a;border-radius:6px;color:#e8e2cf;cursor:pointer;touch-action:manipulation;transition:.12s}
+.btnsm:hover,.btnsm:active{background:#3a301f;border-color:#ffcf6a}
+.btnsm.disabled{opacity:.4;cursor:not-allowed}
+
+/* Классы и божества — общий стиль */
+/* Pause overlay animation */
+#pauseov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(6,8,5,.96);flex-direction:column;gap:12px;z-index:50;padding:20px;overflow-y:auto;animation:pauseFadeIn 0.2s ease-out}
+@keyframes pauseFadeIn{0%{opacity:0}100%{opacity:1}}
+#boonov,#classov,#achov,#statsov,#treeov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(6,8,5,.96);flex-direction:column;gap:12px;z-index:50;padding:20px;overflow-y:auto}
+/* v6.65: РАМКА ПАНЕЛЕЙ. 9-slice через border-image: центр прозрачный,
+   свой фон панели виден, орнамент по краям. Рамка — дерево+золото. */
+.pframe{
+ border:26px solid transparent;
+ border-image:url('@@A:ui/20-screens-1.jpg@@') 132 round;
+ border-image-width:26px;
+ border-image-slice:132;
+ border-image-repeat:round;
+ padding:16px;
+}
+@media (max-width:700px){
+ .pframe{border-width:16px;border-image-width:16px;padding:10px}
+}
+#boonov h2,#classov h2,#achov h2,#statsov h2,#treeov h2,#pauseov h2{color:#ffcf6a;margin:0;font-size:22px;text-align:center;text-shadow:0 0 8px rgba(255,207,106,.4)}
+.boonrow,.classrow,.treerow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:100%}
+.booncard,.classcard{background:linear-gradient(#1c2417,#161e10);border:2px solid #c9a04a;border-radius:10px;padding:12px;cursor:pointer;transition:.12s;touch-action:manipulation;box-shadow:0 4px 12px rgba(0,0,0,.4);position:relative;animation:cardEntry .35s ease-out both}
+.booncard:nth-child(2),.classcard:nth-child(2){animation-delay:0.06s}.booncard:nth-child(3),.classcard:nth-child(3){animation-delay:0.12s}.booncard:nth-child(4),.classcard:nth-child(4){animation-delay:0.18s}.booncard:nth-child(5),.classcard:nth-child(5){animation-delay:0.24s}
+.booncard{width:170px;min-height:140px}
+.classcard{width:160px;text-align:center}
+.booncard:hover,.booncard:active,.classcard:hover,.classcard:active{transform:translateY(-3px);border-color:#ffcf6a;box-shadow:0 8px 20px rgba(255,207,106,.3)}
+.booncard h3,.classcard h3{color:#ffcf6a;font-size:14px;margin:0 0 5px}
+.booncard p,.classcard p{color:#b9b29a;font-size:11px;margin:0;line-height:1.3}
+.classcard.sel{border-color:#ffcf6a;background:linear-gradient(#2a3017,#1e2410);box-shadow:0 0 16px #c9a04a,0 8px 20px rgba(255,207,106,.3)}
+.classcard .icon{font-size:34px;margin-bottom:4px}
+.classcard .arch{color:#9fa088;font-size:9px;font-style:italic;margin-top:4px}
+
+/* Game over */
+#over{position:fixed;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(6,8,5,.95);text-align:center;z-index:40;padding:20px;overflow-y:auto;animation:overFadeIn 0.4s ease-out}
+@keyframes overFadeIn{0%{opacity:0;transform:translateY(20px) scale(0.95)}100%{opacity:1;transform:translateY(0) scale(1)}}
+#over h1{color:#c95a3c;font-size:30px;margin:0 0 6px;text-shadow:0 0 18px rgba(201,90,60,.7),0 2px 4px #000;animation:overTitlePulse 1.5s ease-in-out infinite}
+#over h1.win{color:#ffcf6a;text-shadow:0 0 24px rgba(255,207,106,.6),0 0 50px rgba(255,207,106,.3),0 2px 4px #000;animation:winTitlePulse 2s ease-in-out infinite}
+@keyframes overTitlePulse{0%,100%{text-shadow:0 0 18px rgba(201,90,60,.7),0 2px 4px #000}50%{text-shadow:0 0 30px rgba(201,90,60,.9),0 2px 4px #000}}
+@keyframes winTitlePulse{0%,100%{text-shadow:0 0 24px rgba(255,207,106,.6),0 0 50px rgba(255,207,106,.3),0 2px 4px #000}50%{text-shadow:0 0 40px rgba(255,207,106,.9),0 0 80px rgba(255,207,106,.5),0 2px 4px #000}}
+#over p{color:#b9b29a;margin:3px 0;font-size:12px;max-width:480px;width:100%;word-break:break-word;text-align:center;box-sizing:border-box}
+button.big{margin-top:12px;padding:9px 20px;font-size:13px;background:linear-gradient(180deg,#ffd77d,#b9852f 50%,#6a431b);border:1px solid rgba(255,231,162,.35);border-radius:8px;color:#1b1006;cursor:pointer;font-weight:700;letter-spacing:.5px;font-family:Georgia,'Times New Roman',serif;touch-action:manipulation;transition:.12s;box-shadow:0 4px 10px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.2)}
+button.big:hover,button.big:active{background:linear-gradient(180deg,#ffe8a0,#c9a04a 60%,#8a5a1b);transform:translateY(-1px)}
+.btnrow{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;justify-content:center}
+/* v6.18: экран смерти был «стеной текста с двумя равными кнопками» — глаз не знал,
+   куда смотреть. Теперь один фокус: крупная кнопка «Ещё раз», остальное мельче. */
+.big.primary{font-size:20px;padding:16px 34px;background:linear-gradient(180deg,#ffd77d,#e0a63c);
+ color:#20180a;border:1px solid #ffe9b0;box-shadow:0 0 26px rgba(255,207,106,.45);font-weight:700;letter-spacing:.5px}
+.big.primary:focus{outline:2px solid #fff3cf;outline-offset:3px}
+#odeath{color:#e0a08a!important;font-size:14px!important;margin:6px 0 2px!important;max-width:520px!important}
+#orecord{color:#ffcf6a!important;font-size:13px!important}
+#onext{color:#9ad06a!important;font-size:13px!important}
+#oclassunlock{color:#c9a0ff!important;font-size:13px!important}
+#osecondary{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px;opacity:.8}
+/* v6.18: телеграф эволюций — панель под слотами. Игрок всегда видит, сколько осталось. */
+#evohud{position:fixed;top:150px;right:8px;z-index:21;pointer-events:none;font-size:10.5px;
+ line-height:1.45;color:#c9c0a0;text-shadow:0 1px 2px #000;text-align:right;max-width:230px}
+#evohud .er{white-space:nowrap}
+#evohud .er.ready{color:#ffd77d;font-weight:700}
+#evohud .er.near{color:#cfe0a0}
+#evohud b{color:#e8e2cf;font-weight:600}
+#evohud .miss{color:#8a8f7a}
+/* v6.18: момент эволюции — единственное место, где акцент уместен (см. документ). */
+#chestov{position:fixed;inset:0;z-index:65;display:none;align-items:center;justify-content:center;
+ background:radial-gradient(ellipse at center,rgba(20,15,5,.75) 0%,rgba(6,4,1,.96) 100%);
+ animation:chOvIn .25s ease-out; overflow:hidden}
+#chestov .chrays{
+ position:absolute;width:150vw;height:150vw;max-width:1100px;max-height:1100px;
+ background:repeating-conic-gradient(from 0deg,rgba(255,200,90,.07) 0deg 5deg,transparent 5deg 20deg);
+ border-radius:50%;pointer-events:none;z-index:0;
+ animation:chRaysSpin 30s linear infinite, chRaysPulse 3s ease-in-out infinite alternate;
+ filter:blur(2px) drop-shadow(0 0 35px rgba(255,180,50,.3))}
+#chestov .chbox{display:flex;flex-direction:column;align-items:center;gap:10px;max-width:min(94vw,640px);z-index:2;position:relative}
+#chestov .chbadge{
+ font-size:11px;font-weight:700;letter-spacing:5px;color:#ffd77d;
+ text-transform:uppercase;background:linear-gradient(90deg,rgba(255,207,106,.05),rgba(255,207,106,.28),rgba(255,207,106,.05));
+ padding:5px 20px;border-radius:24px;border:1px solid rgba(255,207,106,.5);
+ box-shadow:0 0 20px rgba(255,207,106,.45);
+ animation:chBadgePulse 1.5s ease-in-out infinite alternate}
+#chestov .chk{font-size:clamp(32px,7vw,54px);color:#ffd77d;font-weight:700;letter-spacing:6px;
+ text-shadow:0 0 35px rgba(255,207,106,.95),0 0 80px rgba(255,140,30,.6),0 4px 10px #000;
+ animation:chTitle .5s cubic-bezier(.18,1.6,.4,1)}
+#chestov .chs{font-size:13px;color:#e8d2a0;letter-spacing:2px;margin-top:-6px;font-weight:600;text-shadow:0 1px 3px #000}
+#chestov .ch-art-wrap{
+ width:200px;height:200px;margin:2px 0 6px;position:relative;display:flex;align-items:center;justify-content:center;
+ animation:chArtBounce .65s cubic-bezier(.18,1.6,.4,1);z-index:10}
+#chestov .ch-art-wrap img{
+ width:100%;height:100%;object-fit:contain;
+ -webkit-mask-image:radial-gradient(circle at 50% 50%, black 55%, transparent 92%);
+ mask-image:radial-gradient(circle at 50% 50%, black 55%, transparent 92%);
+ filter:drop-shadow(0 0 32px rgba(255,200,80,.9)) drop-shadow(0 10px 22px rgba(0,0,0,.95));
+ animation:chArtFloat 3.5s ease-in-out infinite alternate}
+#chestov .ch-art-wrap::before{
+ content:'';position:absolute;width:180px;height:180px;border-radius:50%;
+ border:1px dashed rgba(255,207,106,.35);
+ background:radial-gradient(circle,rgba(255,180,50,.25) 0%,transparent 70%);
+ animation:chHaloSpin 18s linear infinite;z-index:-1;
+ box-shadow:0 0 35px rgba(255,180,50,.35)}
+@keyframes chHaloSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes chArtBounce{0%{opacity:0;transform:scale(.3) translateY(40px)}70%{opacity:1;transform:scale(1.12) translateY(-6px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes chArtFloat{0%{transform:translateY(0) scale(1)}100%{transform:translateY(-5px) scale(1.03)}}
+#chestov .chrow{
+ display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;
+ gap:12px;width:100%;max-width:640px;margin:6px 0 4px;z-index:10}
+#chestov .chitem{
+ display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:14px;
+ min-width:210px;max-width:295px;flex:1 1 210px;
+ background:linear-gradient(145deg,rgba(52,40,16,.97) 0%,rgba(20,16,8,.96) 100%);
+ border:2px solid rgba(220,175,90,.65);
+ box-shadow:0 0 25px rgba(255,200,80,.28),inset 0 0 18px rgba(255,180,60,.12);
+ opacity:0;transform:translateY(22px) scale(.75);
+ position:relative;overflow:hidden;
+ animation:chItemBounce .48s cubic-bezier(.18,1.65,.4,1) forwards}
+#chestov .chitem::before{
+ content:'';position:absolute;top:0;left:20%;right:20%;height:2px;
+ background:linear-gradient(90deg,transparent,#ffcf6a,transparent);
+ box-shadow:0 0 10px #ffcf6a}
+#chestov .chitem::after{
+ content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+ background:linear-gradient(90deg,transparent 40%,rgba(255,240,180,.25) 50%,transparent 60%);
+ transform:rotate(32deg) translateX(-100%);
+ animation:chShimmer 2.2s ease-in-out infinite;pointer-events:none}
+#chestov .chitem.evo{
+ border-color:#ffd77d;
+ background:linear-gradient(135deg,rgba(86,62,18,.99) 0%,rgba(44,30,10,.98) 100%);
+ box-shadow:0 0 40px rgba(255,207,106,.75),0 0 70px rgba(255,140,30,.45),inset 0 0 24px rgba(255,220,100,.35);
+ animation:chItemBounce .55s cubic-bezier(.18,1.75,.4,1) forwards, chEvoGlow 1.6s ease-in-out infinite alternate}
+#chestov .chico{width:46px;height:46px;flex:0 0 46px;display:flex;align-items:center;justify-content:center;
+ border-radius:12px;background:radial-gradient(circle,rgba(255,207,106,.26) 0%,rgba(0,0,0,.4) 80%);
+ border:1px solid rgba(255,207,106,.4);
+ box-shadow:0 0 16px rgba(255,207,106,.22)}
+#chestov .chico svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:2.5;
+ stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 8px currentColor)}
+#chestov .chtx{display:flex;flex-direction:column;gap:3px;text-align:left;min-width:0}
+#chestov .chtt{font-size:15px;color:#fff2d0;font-weight:700;letter-spacing:.5px}
+#chestov .chdd{font-size:12px;color:#d0c6a8;line-height:1.3}
+#chestov .chitem.evo .chtt{color:#ffd77d;font-size:17px;text-shadow:0 0 12px rgba(255,207,106,.8)}
+#chestov .chbtn{
+ margin-top:10px;padding:13px 44px;font-size:16px;font-weight:700;letter-spacing:2px;
+ color:#1a140a;background:linear-gradient(180deg,#ffe49e 0%,#d8a244 100%);
+ border:2px solid #fff2c6;border-radius:10px;cursor:pointer;
+ box-shadow:0 0 32px rgba(255,207,106,.7),0 4px 14px rgba(0,0,0,.7);
+ transition:all .18s ease;opacity:0;
+ animation:chItemBounce .4s ease-out forwards}
+#chestov .chbtn:hover{
+ background:linear-gradient(180deg,#fff2b8 0%,#e8b256 100%);
+ transform:scale(1.05);box-shadow:0 0 42px rgba(255,227,146,.95)}
+#chestov .chbtn:active{transform:scale(.98)}
+@keyframes chOvIn{from{opacity:0}to{opacity:1}}
+@keyframes chRaysSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes chRaysPulse{0%{opacity:.6;transform:scale(.94)}100%{opacity:1;transform:scale(1.06)}}
+@keyframes chBadgePulse{0%{transform:scale(.96);opacity:.85}100%{transform:scale(1.03);opacity:1;box-shadow:0 0 22px rgba(255,207,106,.65)}}
+@keyframes chTitle{0%{opacity:0;transform:scale(2.2)}70%{opacity:1;transform:scale(.95)}100%{transform:scale(1)}}
+@keyframes chItemBounce{0%{opacity:0;transform:translateY(22px) scale(.65)}70%{opacity:1;transform:translateY(-4px) scale(1.04)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes chShimmer{0%{transform:rotate(32deg) translateX(-100%)}60%,100%{transform:rotate(32deg) translateX(100%)}}
+@keyframes chEvoGlow{0%{box-shadow:0 0 35px rgba(255,207,106,.6),0 0 60px rgba(255,140,30,.35)}100%{box-shadow:0 0 50px rgba(255,227,146,.95),0 0 90px rgba(255,160,50,.65)}}
+@keyframes chTitle{0%{opacity:0;transform:scale(2.2)}70%{opacity:1;transform:scale(.95)}100%{transform:scale(1)}}
+@keyframes chItemBounce{0%{opacity:0;transform:translateY(22px) scale(.65)}70%{opacity:1;transform:translateY(-4px) scale(1.04)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes chShimmer{0%{transform:rotate(32deg) translateX(-100%)}60%,100%{transform:rotate(32deg) translateX(100%)}}
+@keyframes chEvoGlow{0%{box-shadow:0 0 35px rgba(255,207,106,.6),0 0 60px rgba(255,140,30,.35)}100%{box-shadow:0 0 50px rgba(255,227,146,.95),0 0 90px rgba(255,160,50,.65)}}
+#evoov{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;
+ flex-direction:column;pointer-events:none;text-align:center;
+ background:radial-gradient(ellipse at center,rgba(0,0,0,0) 28%,rgba(4,3,0,.86) 100%)}
+#evoov.show{display:flex;animation:evoIn .45s ease-out}
+#evoov .ek{font-size:11px;letter-spacing:6px;color:#c9a04a;margin-bottom:6px}
+#evoov .evo-art-wrap{width:220px;height:220px;margin:8px 0 14px;position:relative;display:flex;align-items:center;justify-content:center;animation:chArtBounce .65s cubic-bezier(.18,1.6,.4,1)}
+#evoov .evo-art-wrap img{width:100%;height:100%;object-fit:contain;-webkit-mask-image:radial-gradient(circle at 50% 50%, black 58%, transparent 92%);mask-image:radial-gradient(circle at 50% 50%, black 58%, transparent 92%);filter:drop-shadow(0 0 35px rgba(255,207,106,.9)) drop-shadow(0 10px 25px rgba(0,0,0,.95));animation:chArtFloat 3.5s ease-in-out infinite alternate}
+#evoov .en{font-size:clamp(28px,8vw,58px);color:#ffd77d;font-weight:700;letter-spacing:2px;
+ text-shadow:0 0 30px rgba(255,207,106,.85),0 0 70px rgba(255,160,40,.45),0 3px 6px #000}
+#evoov .ed{font-size:13px;color:#e8e2cf;margin-top:8px;max-width:70vw}
+@keyframes evoIn{0%{opacity:0;transform:scale(1.14)}35%{opacity:1;transform:scale(1)}100%{opacity:1;transform:scale(1)}}
+#evoov.fade{animation:evoOut .35s ease-in forwards}
+@keyframes evoOut{to{opacity:0}}
+/* v6.18e: баннер всплеска — НЕ останавливает мир и не трогает камеру.
+   Летит поверх боя, поэтому pointer-events:none и без затемнения фона. */
+#surgeov{position:fixed;left:0;right:0;top:26%;z-index:41;display:none;text-align:center;pointer-events:none}
+#surgeov.show{display:block;animation:surgeIn .5s cubic-bezier(.2,1.4,.4,1)}
+#surgeov .sn{font-size:clamp(24px,7vw,50px);font-weight:700;letter-spacing:3px;
+ color:#ffd77d;text-shadow:0 0 26px rgba(255,207,106,.9),0 0 60px rgba(255,140,30,.5),0 3px 6px #000}
+#surgeov .ss{font-size:clamp(11px,2.6vw,15px);color:#e8e2cf;letter-spacing:2px;margin-top:4px;
+ text-shadow:0 2px 5px #000}
+#surgeov.fade{animation:evoOut .4s ease-in forwards}
+@keyframes surgeIn{0%{opacity:0;transform:scale(.6) translateY(14px)}
+ 60%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
+/* v6.18: журнал находок */
+#jourov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;
+ background:rgba(6,8,5,.96);z-index:55;padding:20px;overflow-y:auto;text-align:center}
+#jourov h2{color:#ffcf6a;margin:0 0 8px}
+.jgrid{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:min(880px,96vw);
+ max-height:min(60vh,520px);overflow-y:auto;margin-bottom:10px}
+.jcard{background:rgba(20,24,16,.9);border:1px solid #3a4030;border-radius:7px;padding:6px 9px;
+ min-width:150px;max-width:210px;text-align:left;font-size:11px;color:#8a8f7a}
+.jcard.found{border-color:#c9a04a;color:#e8e2cf}
+.jcard h4{margin:0 0 2px;font-size:12px;color:#5a604a}
+.jcard.found h4{color:#ffcf6a}
+.jsec{width:100%;color:#9fa088;font-size:12px;margin:6px 0 2px;text-align:center}
+
+/* Pause */
+.settings{background:rgba(20,24,16,.9);border:1px solid #5a604a;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:260px;max-width:90vw}
+.settings label{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#b9b29a;gap:10px}
+.settings input[type=range]{width:110px;accent-color:#c9a04a}
+.settings select{background:#2a2417;color:#e8e2cf;border:1px solid #5a604a;padding:3px 6px;border-radius:4px;font-size:11px}
+
+/* Аномалии */
+.anomaly{position:absolute;width:32px;height:32px;border-radius:50%;border:2px solid #ffcf6a;background:radial-gradient(#c9a04a,#5a4017);display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 0 10px #ffcf6a;pointer-events:none;z-index:18;animation:anomPulse 1.6s ease-in-out infinite}
+@keyframes anomPulse{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(1.1);opacity:1}}
+
+/* Boss intro */
+#bossintro{position:fixed;inset:0;background:#000;z-index:46;opacity:0;pointer-events:none;transition:opacity .5s;display:flex;align-items:center;justify-content:center;flex-direction:column}
+#bossintro.show{opacity:.9}
+#bossintro .name{color:#c95a3c;font-size:38px;letter-spacing:8px;font-weight:700;opacity:0;transition:opacity .5s .3s;text-shadow:0 0 20px #c95a3c;text-align:center}
+#bossintro .sub{color:#8a5a4a;font-size:13px;letter-spacing:2px;opacity:0;transition:opacity .5s .6s;margin-top:8px}
+#bossintro.show .name{opacity:1}
+#bossintro.show .sub{opacity:1}
+
+/* Touch joystick */
+/* дубликат #joystick удалён — см. выше */
+
+/* Достижения */
+.achtabs{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}
+.achtab{padding:5px 10px;background:#2a2417;border:1px solid #5a604a;border-radius:4px;color:#b9b29a;cursor:pointer;font-size:11px;touch-action:manipulation;transition:.12s}
+.achtab.active{background:linear-gradient(#c9a04a,#a07a2a);color:#1a140a;border-color:#ffcf6a}
+.achgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;max-width:900px;width:100%}
+.ach{background:rgba(20,24,16,.8);border:1px solid #5a604a;border-radius:6px;padding:8px;display:flex;gap:6px;align-items:flex-start;font-size:10px;line-height:1.3;transition:.12s}
+.ach.locked{opacity:.4;filter:grayscale(.5)}
+.ach.hidden{border-style:dashed}
+.ach .icon{font-size:20px;flex-shrink:0}
+.ach h4{margin:0 0 1px;color:#ffcf6a;font-size:11px}
+.ach p{margin:0;color:#9fa088}
+.ach .progress{height:2px;background:#2a2417;border-radius:2px;margin-top:3px;overflow:hidden}
+.ach .progress > div{height:100%;background:linear-gradient(#c9a04a,#a07a2a);transition:width .3s}
+
+/* Славянский рунический орнамент для фонов оверлеев */
+.rune-ornament{position:fixed;bottom:0;left:0;right:0;height:12px;pointer-events:none;z-index:51;opacity:.18;background:repeating-linear-gradient(90deg,transparent 0,transparent 12px,rgba(201,160,74,.4) 12px,rgba(201,160,74,.4) 13px,rgba(201,160,74,.1) 13px,rgba(201,160,74,.1) 14px,transparent 14px,transparent 28px,rgba(201,160,74,.3) 28px,rgba(201,160,74,.3) 29px,rgba(201,160,74,.1) 29px,rgba(201,160,74,.1) 30px,transparent 30px,transparent 40px)}
+/* Уведомление достижения */
+#achnotif{position:fixed;top:60px;left:50%;transform:translate(-50%,-100px);background:linear-gradient(#2a2417,#1a140a);border:2px solid #c9a04a;border-radius:8px;padding:10px 14px;align-items:center;gap:8px;z-index:60;transition:transform .5s cubic-bezier(.5,1.6,.4,1),opacity .3s;box-shadow:0 4px 20px rgba(0,0,0,.7);max-width:90vw;opacity:0}
+#achnotif.show{transform:translate(-50%,0);opacity:1;box-shadow:0 4px 24px rgba(201,160,74,.4),0 0 40px rgba(201,160,74,.15),0 4px 20px rgba(0,0,0,.7);border-color:#ffcf6a}
+#achnotif .icon{font-size:24px}
+#achnotif h4{margin:0;color:#ffcf6a;font-size:12px}
+#achnotif p{margin:0;color:#b9b29a;font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* Древо */
+.treenode{width:120px;min-height:80px;background:rgba(20,24,16,.8);border:1px solid #5a604a;border-radius:6px;padding:7px;cursor:pointer;font-size:10px;touch-action:manipulation;transition:.12s}
+.treenode.maxed{border-color:#ffcf6a;background:rgba(40,30,20,.8);box-shadow:0 0 4px rgba(255,207,106,.3)}
+.treenode.can{border-color:#c9a04a;background:rgba(40,30,20,.6)}
+.treenode.locked{opacity:.5}
+.treenode h4{margin:0 0 2px;color:#ffcf6a;font-size:11px}
+.treenode p{margin:0;color:#9fa088;line-height:1.2}
+.treenode .cost{color:#ffcf6a;margin-top:2px;font-size:10px;font-weight:700}
+.treenode .lvl{margin:0;color:#9ac06a;font-size:9px}
+
+/* Рекорды */
+.statstable{background:rgba(20,24,16,.9);border:1px solid #5a604a;border-radius:6px;padding:8px;max-width:500px;width:100%;font-size:11px;overflow:hidden}
+.statstable table{width:100%;border-collapse:collapse}
+.statstable th{color:#ffcf6a;text-align:left;padding:4px 6px;border-bottom:1px solid #5a604a;font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+.statstable td{padding:3px 6px;color:#b9b29a;border-bottom:1px solid rgba(90,96,74,.3)}
+.statstable tr:last-child td{border-bottom:0}
+
+/* Tutorial */
+#tutorial{position:fixed;top:calc(max(54px,env(safe-area-inset-top,0)) + 96px);left:50%;transform:translateX(-50%);background:rgba(20,24,16,.98);border:1px solid #c9a04a;border-radius:8px;padding:10px 16px;max-width:80vw;z-index:55;display:none;text-align:center;font-size:11px;color:#e8e2cf}
+#tutorial.show{display:block;animation:tutfade .5s}
+@keyframes tutfade{0%{opacity:0;transform:translate(-50%,10px)}100%{opacity:1;transform:translate(-50%,0)}}
+
+/* Curse badge */
+.curse-icon{position:fixed;top:54px;left:8px;background:rgba(120,30,30,.95);border:1px solid #c95a3c;border-radius:4px;padding:3px 6px;font-size:9px;color:#fff;z-index:21;max-width:60vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:4px}
+.curse-icon .desc{color:#ffcf6a;font-size:8px}
+
+/* Wakeup */
+/* #wakeup удалён (#9): элемент НИКОГДА не показывался (display:none навсегда) —
+   мёртвый код. Вместо него — авто-пауза при уходе вкладки в фон (visibilitychange). */
+#hint{position:fixed;bottom:calc(max(8px,env(safe-area-inset-bottom,0)));left:50%;transform:translateX(-50%);font-size:9px;color:#6f7a5f;text-align:center;pointer-events:none;max-width:90%;z-index:18}
+
+/* Hit flash overlay */
+#hitFlash{position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 50%,rgba(193,74,58,.4) 100%);pointer-events:none;opacity:0;z-index:18;transition:opacity .15s}
+#lowHpVignette{position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 60%,rgba(193,74,58,.35) 100%);pointer-events:none;opacity:0;z-index:18;transition:opacity .5s}
+
+/* CLASS PORTRAIT PASS — unified framed character art */
+.classportrait{display:block;width:100%;max-width:118px;height:132px;object-fit:contain;object-position:center bottom;margin:0 auto 4px;filter:brightness(1.1) contrast(1.08) drop-shadow(0 5px 8px rgba(0,0,0,.72));pointer-events:none}
+
+/* CLASS READABILITY PASS — class identity remains rooted in the Slavic material palette */
+.classcard{border-color:color-mix(in srgb,var(--class-color,#c9a04a) 55%,#3b2817);box-shadow:0 8px 22px rgba(0,0,0,.52),inset 0 0 18px color-mix(in srgb,var(--class-color,#c9a04a) 10%,transparent)}
+.classcard{overflow:hidden;padding:0 10px 12px;display:flex;flex-direction:column;align-items:center;position:relative}.classcard{min-height:154px;overflow:hidden;padding:28px 10px 12px;display:flex;flex-direction:column;align-items:center;position:relative}.classcard .icon{position:absolute;top:8px;left:8px;width:24px;height:24px;border:1px solid color-mix(in srgb,var(--class-color,#c9a04a) 75%,transparent);border-radius:50%;background:rgba(16,11,7,.88);display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;filter:drop-shadow(0 0 7px color-mix(in srgb,var(--class-color,#c9a04a) 55%,transparent))}.classcard h3{margin:4px 0 3px}.classcard p{max-width:190px}.classcard .arch{color:var(--class-color,#c9a04a);font-weight:600}
+.classcard:hover,.classcard:active,.classcard.sel{border-color:var(--class-color,#ffcf6a);box-shadow:0 0 22px color-mix(in srgb,var(--class-color,#ffcf6a) 25%,transparent),0 10px 24px rgba(0,0,0,.6)}
+.classcard:before{content:'';position:absolute;top:0;left:10%;right:10%;height:3px;background:linear-gradient(90deg,transparent,var(--class-color,#c9a04a),transparent);box-shadow:0 0 10px var(--class-color,#c9a04a);opacity:.75}.classcard.sel:before{height:5px;opacity:1}.classcard.sel{transform:translateY(-3px)}
+
+@media (min-width:900px){
+  #hud{font-size:13px}
+  .wicon{width:20px;height:20px;font-size:11px}
+  .card{width:200px;min-height:150px}
+  .booncard{width:200px;min-height:160px}
+  .classcard{width:180px}
+  .bossintro .name{font-size:48px}
+}
+@media (max-width:600px){
+  #minimap{width:80px;height:80px;bottom:calc(max(50px,env(safe-area-inset-bottom,0)) + 4px);right:4px}
+  #bossintro .name{font-size:22px;letter-spacing:3px}
+}

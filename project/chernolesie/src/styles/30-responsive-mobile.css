@@ -1,0 +1,88 @@
+/* ============ MOBILE PORTRAIT ============ */
+@media (max-width:500px) and (orientation:portrait){
+  #joystick{width:100px;height:100px;left:12px;bottom:max(16px,env(safe-area-inset-bottom,0))}
+  #jstick{width:42px;height:42px}
+  .tbtn{width:52px;height:52px;font-size:18px}
+  .tbtn.special{width:62px;height:62px;font-size:22px}
+  #touchBtns{right:12px;bottom:max(16px,env(safe-area-inset-bottom,0));gap:10px}
+  #minimap{width:60px;height:60px;bottom:calc(max(16px,env(safe-area-inset-bottom,0)) + 4px);right:4px}
+  #hud{font-size:10px;padding:3px 4px 2px;min-height:22px}
+  #hud .stat{padding:1px 4px;gap:2px}
+  .wicon{width:14px;height:14px;font-size:8px}
+  #hpwrap{height:12px;width:min(200px,60vw);bottom:max(8px,env(safe-area-inset-bottom,0))}
+  #hptext{font-size:8px;bottom:calc(max(8px,env(safe-area-inset-bottom,0)) + 14px)}
+  #regenPulse{font-size:7px;bottom:calc(max(8px,env(safe-area-inset-bottom,0)) + 14px)}
+  #log{bottom:calc(max(40px,env(safe-area-inset-bottom,0)) + 130px)} /* v5.42 (Г2) */
+  .logitem{font-size:9px;padding:2px 6px}
+  #cardbtns{flex-direction:column;align-items:center}
+  .btnsm{font-size:12px;padding:8px 14px;min-width:120px}
+  .card{width:140px;min-height:120px}
+  .card h3{font-size:12px}
+  .card p{font-size:10px}
+  .booncard{width:140px;min-height:120px}
+  .classcard{width:min(174px,42vw);min-height:214px;padding-bottom:8px}.classcard .classportrait{height:108px;width:100%;max-width:100px;margin:0 auto 3px}.classcard .icon{font-size:19px}.classcard h3{font-size:13px;line-height:1.1}.classcard p{font-size:10px;line-height:1.2}
+  .boonrow,.classrow{gap:6px;max-width:100%}
+  #xpbar{top:24px;height:3px;left:4px;right:4px}
+  #boondisp{top:28px}
+  #bossbar{top:42px;width:min(80%,480px)}
+  #relics{top:42px;left:4px}
+  .relic-slot{width:20px;height:20px;font-size:10px}
+  button.big{font-size:12px;padding:8px 14px;min-width:100px}
+  #over h1{font-size:22px}
+  #over p{font-size:10px}
+  #tutorial{font-size:10px;padding:6px 10px;top:calc(max(50px,env(safe-area-inset-top,0)) + 20px);bottom:auto}
+  .section-ornament{width:80%}
+  .cards-title{font-size:16px}
+  #boonov h2,#classov h2,#achov h2,#statsov h2,#pauseov h2{font-size:16px}
+  .settings{min-width:auto;width:85vw}
+  .settings label{font-size:10px}
+  #bossintro .name{font-size:20px;letter-spacing:2px}
+  #bossintro .sub{font-size:11px}
+}
+/* ============ MOBILE LANDSCAPE ============ */
+@media (max-height:450px) and (orientation:landscape){
+  #joystick{width:90px;height:90px;left:8px;bottom:max(8px,env(safe-area-inset-bottom,0))}
+  #jstick{width:38px;height:38px}
+  .tbtn{width:48px;height:48px;font-size:16px}
+  .tbtn.special{width:58px;height:58px;font-size:20px}
+  #touchBtns{right:8px;bottom:max(10px,env(safe-area-inset-bottom,0));gap:8px;flex-direction:row}
+  #minimap{width:50px;height:50px;bottom:max(8px,env(safe-area-inset-bottom,0));right:4px}
+  #hud{font-size:9px;padding:2px 4px 1px;min-height:18px}
+  #hud .stat{padding:1px 3px;gap:2px}
+  .wicon{width:12px;height:12px;font-size:7px}
+  #hpwrap{height:10px;width:min(160px,50vw);bottom:max(4px,env(safe-area-inset-bottom,0))}
+  #hptext{font-size:7px;bottom:calc(max(4px,env(safe-area-inset-bottom,0)) + 12px)}
+  #regenPulse{display:none}
+  #log{bottom:calc(max(30px,env(safe-area-inset-bottom,0)) + 120px);font-size:9px} /* v5.42 (Г3) */
+  .logitem{font-size:8px;padding:1px 4px}
+  #xpbar{top:20px;height:2px;left:2px;right:2px}
+  #boondisp{top:23px}
+  #bossbar{top:36px;width:min(70%,400px)}
+  #bossname{font-size:9px}
+  .bbg{height:7px}
+  #relics{top:36px;left:4px}
+  .relic-slot{width:16px;height:16px;font-size:8px}
+  button.big{font-size:11px;padding:6px 10px;min-width:80px;margin-top:6px}
+  .card{width:120px;min-height:100px;padding:6px}
+  .card h3{font-size:11px}
+  .card p{font-size:9px}
+  .booncard{width:120px;min-height:100px}
+  .classcard{width:120px}
+  .boonrow,.classrow{gap:4px}
+  #over h1{font-size:20px}
+  #over p{font-size:9px}
+  .cards-title{font-size:14px}
+  #boonov h2,#classov h2,#achov h2,#statsov h2,#pauseov h2{font-size:14px}
+  #bossintro .name{font-size:18px;letter-spacing:1px}
+  #bossintro .sub{font-size:10px}
+  .btnrow{gap:4px}
+  .settings{min-width:auto;width:75vw;padding:8px}
+  .settings label{font-size:9px}
+}
+
+
+/* ============================================================
+   VISUAL POLISH V2 — ART DIRECTION: Slavic Identity + Hero Focus
+   Полный визуальный апгрейд: герой, UI, анимации, атмосфера
+   ============================================================ */
+

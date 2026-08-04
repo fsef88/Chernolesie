@@ -1,0 +1,142 @@
+/* v5.47: ⏸ теперь СЛЕВА от Q (ряд вместо колонки) — убран наезд на бар печати (репорт со скрина).
+   Спехуд поднят до 112 над рядом кнопок; миникарта уведена выше колонки. */
+@media(max-width:700px){
+ #spechud{left:auto;right:12px;transform:none;align-items:flex-end;bottom:calc(max(12px,env(safe-area-inset-bottom,0)) + 100px);max-width:min(52vw,240px)}
+ #touchBtns{flex-direction:row;align-items:flex-end}
+ #minimap{bottom:calc(max(28px,env(safe-area-inset-bottom,0)) + 188px)}
+}
+
+
+/* v5.34: ТИТУЛЬНЫЙ ЭКРАН (аудит C1) */
+#titlescreen{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 38%,rgba(58,39,20,.35),rgba(6,8,5,.97) 60%),linear-gradient(135deg,rgba(14,20,10,.97),rgba(5,7,4,.99));
+  text-align:center;padding:22px;overflow-y:auto;animation:fadeIn .5s ease both;}
+#titlescreen h1{font-size:clamp(34px,8vw,62px);letter-spacing:.12em;margin:4px 0 2px;
+  color:#ffcf6a;text-shadow:0 0 18px rgba(201,160,74,.55),0 2px 0 rgba(0,0,0,.6);font-family:Georgia,'Times New Roman',serif;}
+#tsGlyph{font-size:clamp(40px,11vw,76px);filter:drop-shadow(0 0 18px rgba(120,200,120,.45));animation:tsFloat 3.2s ease-in-out infinite;}
+#tsSub{color:#9fa088;font-size:clamp(11px,3.4vw,15px);margin-bottom:18px;letter-spacing:.4px}
+#tsRow{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:1000px;margin-bottom:18px}
+#tsRow .classcard{pointer-events:auto;width:min(186px,calc((100vw - 80px)/5))}
+/* На узких экранах (телефон) — 2 в ряд, чтобы карточки оставались читаемыми */
+@media (max-width:640px){#tsRow .classcard{width:min(44vw,180px)}}
+#btnStartPoohd{font-size:clamp(15px,4.4vw,20px);padding:12px 34px;animation:cardEntry .4s ease-out both}
+@keyframes tsFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@supports(padding:max(0px)){#titlescreen{padding-top:calc(22px + env(safe-area-inset-top,0));padding-bottom:calc(22px + env(safe-area-inset-bottom,0));}}
+
+/* v6.25 РАСКЛАДКА ТАЧ-ИНТЕРФЕЙСА — заменена на v6.27 (см. ниже).
+   Прежний вариант поднимал полосу здоровья над зоной кнопок, но она
+   всё равно оставалась в центре экрана и закрывала игровое поле. */
+/* v6.25: выбор длительности забега на титульнике.
+   Стоит ПЕРЕД карточками классов: сначала «сколько играю», потом «кем».
+   Размер соразмерен карточкам класса — иначе выбор не читается как выбор. */
+#tsMode{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;
+  margin:6px 0 20px;width:100%;max-width:620px}
+#tsMode .modebtn{
+  pointer-events:auto;cursor:pointer;user-select:none;position:relative;
+  flex:1 1 240px;max-width:290px;min-height:84px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  padding:14px 20px;border-radius:14px;
+  font-family:'Monomakh',Georgia,serif;font-size:20px;letter-spacing:.6px;
+  color:#a89c7e;background:linear-gradient(#1d1508,#100b04);
+  border:2px solid rgba(138,106,52,.55);
+  box-shadow:inset 0 1px 0 rgba(255,240,176,.05),0 3px 10px rgba(0,0,0,.45);
+  transition:color .15s,border-color .15s,background .15s,transform .12s;
+}
+#tsMode .modebtn .mico{font-size:26px;line-height:1;filter:drop-shadow(0 0 8px currentColor)}
+#tsMode .modebtn small{display:block;font-size:13px;opacity:.75;letter-spacing:0;font-family:Georgia,serif}
+#tsMode .modebtn:hover{color:#d8b46a;border-color:rgba(216,180,106,.7);transform:translateY(-2px)}
+#tsMode .modebtn:active{transform:scale(.98)}
+#tsMode .modebtn.sel{
+  color:#ffcf6a;border-color:rgba(255,207,106,.9);
+  background:linear-gradient(#3a2a16,#1c1206);
+  box-shadow:0 0 18px rgba(201,160,74,.35),inset 0 1px 0 rgba(255,240,176,.14);
+}
+/* Галочка у выбранного — понятно без цвета */
+#tsMode .modebtn.sel::after{
+  content:'✓';position:absolute;top:6px;right:10px;
+  font-size:15px;color:#ffcf6a;opacity:.9;
+}
+@media (max-width:560px){
+  #tsMode{gap:10px;margin:4px 0 16px}
+  #tsMode .modebtn{flex:1 1 44%;min-height:76px;padding:11px 10px;font-size:17px;border-radius:12px}
+  #tsMode .modebtn .mico{font-size:22px}
+  #tsMode .modebtn small{font-size:11px}
+}
+
+/* v6.25: ЛОВУШКА ФЛЕКСБОКСА НА ТИТУЛЬНИКЕ.
+   #titlescreen — это flex-колонка с justify-content:center и overflow-y:auto.
+   Когда содержимое выше экрана (7 карточек классов на телефоне идут
+   столбиком), центрирование сдвигает контент вверх ЗА пределы контейнера,
+   и прокрутить туда нельзя — верх просто недоступен. Замер: переключатель
+   режима оказывался на y=-379 и был не виден вообще.
+   Лечится заменой центрирования на автоматические поля: они не создают
+   недоступной области при переполнении. */
+#titlescreen{justify-content:flex-start}
+#titlescreen>*{flex-shrink:0}
+#titlescreen::before,#titlescreen::after{content:'';margin:auto;flex:0 0 0}
+
+/* v6.26: закрытые классы на титульнике.
+   Приглушены, но видны: игрок должен знать, ЧТО он откроет. */
+.classcard.locked{
+  filter:grayscale(.85) brightness(.55);
+  border-color:rgba(90,80,60,.5) !important;
+  box-shadow:0 6px 16px rgba(0,0,0,.5) !important;
+  cursor:not-allowed;position:relative;
+}
+.classcard.locked .classportrait{filter:grayscale(1) brightness(.5);border-color:rgba(120,110,90,.5) !important;box-shadow:none !important}
+.classcard.locked h3{color:#8d8570}
+.classcard.locked:before{background:linear-gradient(90deg,transparent,rgba(140,130,105,.5),transparent)}
+.classcard .lockreq{
+  color:#d8b46a !important;font-size:11px;line-height:1.35;
+  margin-top:6px;padding:5px 8px;border-radius:8px;
+  background:rgba(0,0,0,.45);border:1px solid rgba(216,180,106,.35);
+}
+.classcard .lockseal{
+  position:absolute;top:8px;right:10px;font-size:15px;opacity:.75;
+  filter:drop-shadow(0 1px 2px #000);
+}
+@keyframes lockShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+.classcard.locked.shake{animation:lockShake .32s ease}
+
+/* Плашка «открыт новый класс» — показывается на экране итогов забега */
+#classUnlockToast{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(max(12px,env(safe-area-inset-bottom,0)) + 90px);
+  z-index:120;pointer-events:none;
+  padding:12px 22px;border-radius:14px;text-align:center;
+  font-family:'Monomakh',Georgia,serif;
+  background:linear-gradient(#3a2a16,#1a1206);
+  border:2px solid rgba(255,207,106,.85);
+  box-shadow:0 0 26px rgba(201,160,74,.5),0 8px 22px rgba(0,0,0,.6);
+  color:#ffcf6a;opacity:0;transition:opacity .4s;
+}
+#classUnlockToast.show{opacity:1}
+#classUnlockToast .u1{font-size:13px;letter-spacing:2px;color:#d8b46a}
+#classUnlockToast .u2{font-size:20px;margin-top:2px}
+
+/* v6.26: выбор ступени Порчи на титульнике */
+#tsCorr{display:flex;align-items:center;justify-content:center;gap:7px;
+  flex-wrap:wrap;margin:0 0 16px;max-width:620px}
+#tsCorr .clbl{font-family:'Monomakh',Georgia,serif;color:#a89c7e;font-size:14px;margin-right:4px}
+#tsCorr .corrbtn{
+  pointer-events:auto;cursor:pointer;user-select:none;
+  width:34px;height:34px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Monomakh',Georgia,serif;font-size:16px;
+  color:#8d8570;background:linear-gradient(#1d1508,#100b04);
+  border:1px solid rgba(138,106,52,.5);transition:all .15s;
+}
+#tsCorr .corrbtn:hover{color:#d8b46a;border-color:rgba(216,180,106,.7)}
+#tsCorr .corrbtn.sel{color:#ff8a7a;border-color:rgba(255,120,90,.85);
+  background:linear-gradient(#3a1a16,#1c0c06);
+  box-shadow:0 0 14px rgba(255,110,80,.35)}
+#tsCorr .corrbtn.off{opacity:.3;cursor:not-allowed;filter:grayscale(1)}
+#tsCorr .chint{font-size:12px;color:#9a9077;margin-left:6px;font-family:Georgia,serif}
+@media (max-width:560px){
+  #tsCorr{gap:5px;margin-bottom:12px}
+  #tsCorr .corrbtn{width:30px;height:30px;font-size:14px}
+  #tsCorr .clbl,#tsCorr .chint{font-size:11px}
+  #tsCorr .chint{flex:1 1 100%;text-align:center;margin:2px 0 0}
+}
+

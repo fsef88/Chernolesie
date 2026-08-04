@@ -1,0 +1,39 @@
+/* =========================================== */
+/* =============== TOUCH UI ================== */
+/* =========================================== */
+#joystick{position:fixed;bottom:max(24px,env(safe-area-inset-bottom,0));left:20px;width:130px;height:130px;background:rgba(40,30,20,.85);border:2px solid rgba(255,207,106,.5);border-radius:50%;z-index:25;display:none;touch-action:none;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+#joystick.show{display:block}
+#jstick{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:52px;height:52px;background:radial-gradient(rgba(255,207,106,.7),rgba(255,207,106,.3));border:2px solid #ffcf6a;border-radius:50%;pointer-events:none;box-shadow:0 0 8px rgba(255,207,106,.4)}
+#touchBtns{position:fixed;bottom:max(28px,env(safe-area-inset-bottom,0));right:16px;display:none;gap:14px;z-index:25;flex-direction:column;align-items:flex-end}
+#touchBtns.show{display:flex}
+.tbtn{width:60px;height:60px;background:rgba(40,30,20,.9);border:2px solid rgba(255,207,106,.5);border-radius:50%;color:#ffcf6a;font-size:22px;display:flex;align-items:center;justify-content:center;user-select:none;touch-action:manipulation;box-shadow:0 4px 12px rgba(0,0,0,.4);margin:2px 0}
+.tbtn:active{background:rgba(255,207,106,.3);transform:scale(.92)}
+/* v5.92: невидимая зона нажатия на 6px шире рисованного круга. В узком
+   брейкпоинте кнопки уменьшаются до 48x48 (спец — 58x58), и попасть большим
+   пальцем в динамичном бою по самому кругу тяжело: события ловил ровно
+   нарисованный круг, запаса не было. Расширяем область, не меняя вид.
+   6px выбраны по зазору контейнера (#touchBtns gap:14px) — соседние зоны
+   не смыкаются и не крадут нажатия друг у друга. */
+.tbtn{position:relative}
+.tbtn::after{content:'';position:absolute;inset:-6px;border-radius:50%;background:transparent;}
+
+.tbtn.special{width:72px;height:72px;background:none;border:none;box-shadow:none;position:relative;padding:0;overflow:visible}
+.tbtn.special::before{content:'';position:absolute;inset:-8px;border-radius:50%;background:radial-gradient(circle,rgba(255,150,45,.18),rgba(255,90,20,.07) 55%,transparent 70%);opacity:0;transition:opacity .25s;z-index:0;pointer-events:none}
+/* v6.20: медальон ульты — вертикальный лист из 20 кадров, набор по проценту заряда */
+.tbtn.special .ultwrap{position:absolute;inset:0;z-index:1;pointer-events:none;transform-origin:50% 50%;border-radius:50%;background:radial-gradient(circle,rgba(18,13,8,.72) 66%,rgba(18,13,8,0) 74%);box-shadow:0 3px 10px rgba(0,0,0,.45)}
+.tbtn.special .ultf{position:absolute;inset:0;background-image:url("@@A:ui/14-touch-ui-1.webp@@");background-repeat:no-repeat;background-size:100% 2000%;background-position:0 0;filter:saturate(.9) brightness(.95)}
+/* v6.55: готовность Печати — мягкое свечение, без резкого мигания. */
+.tbtn.special.ready::before{opacity:.42;animation:ultReadyHaloSoft 1.85s ease-in-out infinite}
+.tbtn.special.ready .ultwrap{animation:ultReadyGlowSoft 1.85s ease-in-out infinite}
+@keyframes ultReadyGlowSoft{
+ 0%,100%{transform:scale(1);filter:saturate(1.02) brightness(1.03) drop-shadow(0 0 4px rgba(255,180,70,.38))}
+ 50%{transform:scale(1.025);filter:saturate(1.12) brightness(1.14) drop-shadow(0 0 10px rgba(255,210,90,.62))}
+}
+@keyframes ultReadyHaloSoft{0%,100%{opacity:.22}50%{opacity:.52}}
+.tbtn.special .scharge{display:none!important}
+.tbtn.special .sico{position:relative;z-index:2;font-size:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.tbtn.special:active{transform:scale(0.92)}
+/* v6.20: свечение готовности переехало в ultPulse */
+.tbtn.ready{animation:pulseReady 0.8s ease-in-out infinite}
+@keyframes pulseReady{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+

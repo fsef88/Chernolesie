@@ -1,0 +1,163 @@
+let last=performance.now(),acc=0,loopStarted=false,lastDraw=0,miniTimer=0;
+// ИНТЕРПОЛЯЦИЯ АНИМАЦИЙ — для плавного движения врагов между кадрами физики
+let animAccumulator=0;
+let lastFrameTime=performance.now();
+const PHYSICS_DT=1/60;
+let interpFactor=0;
+let _drawDt=1/60;   // v6.16: реальное время последнего кадра отрисовки
+// v6.17: сетка для разведения врагов. Ячейка 48px — чуть больше максимального
+// радиуса взаимодействия (r+r+6 у крупных типов), поэтому хватает 3x3 ячеек.
+const _SEP_CELL=48;
+const _sepGrid=new Map();
+// v7.8: ячейка заводилась на каждые посещённые 48px мира и НИКОГДА не удалялась —
+// ни между шагами, ни между забегами. Очистка перед заполнением обходит все ключи,
+// поэтому её стоимость росла линейно с пройденным путём и копилась через всю сессию.
+// Замер: 20 000 px пути = 10 252 ячейки, все пустые, 0.24 мс на обход, то есть
+// ~44 мс в секунду впустую на десктопе (60 кадров × 3 шага физики).
+// Теперь ячейка, оставшаяся пустой, выбрасывается из Map, а её массив уходит в пул:
+// размер сетки держится по числу занятых ячеек, а пересоздания массивов — которого
+// избегала правка v6.74 — по-прежнему нет.
+const _sepFree=[];
+function _sepClear(){
+ for(const ent of _sepGrid){
+  if(ent[1].length===0){_sepGrid.delete(ent[0]);if(_sepFree.length<512)_sepFree.push(ent[1]);}
+  else ent[1].length=0;
+ }
+}
+// Собирает соседей из 9 ячеек вокруг точки в переиспользуемый буфер (без аллокаций в кадре).
+const _sepBuf=[];
+function _sepNear(x,y){
+ _sepBuf.length=0;
+ const cx=Math.floor(x/_SEP_CELL),cy=Math.floor(y/_SEP_CELL);
+ for(let gx=cx-1;gx<=cx+1;gx++)for(let gy=cy-1;gy<=cy+1;gy++){
+  const cell=_sepGrid.get(gx*73856093^gy*19349663);
+  if(cell)for(let i=0;i<cell.length;i++)_sepBuf.push(cell[i]);
+ }
+ return _sepBuf;
+}
+function frame(now){
+ if(!window.__yaGameRendered){window.__yaGameRendered=1;try{window.__yaReady&&window.__yaReady();}catch(e){}}   // Яндекс: Game Ready после первого кадра
+ try{
+  const _rdt=(now-last)/1000;last=now;
+  // v6.61: слоу-мо — таймер тикает по РЕАЛЬНОМУ времени, а dt мира умножается на SLOWMO_SCALE
+  if(slowmo>0)slowmo-=_rdt;
+  const d=_rdt*GAME_SPEED*(slowmo>0?SLOWMO_SCALE:1);
+  if(__PROF_ON){PROF.frames++;const g=now-(PROF._gap||now);PROF._gap=now;if(g>25&&g<2000){PROF.jank++;if(g>PROF.gapMax)PROF.gapMax=g;}}
+  acc+=Math.min(d,0.1);
+  if(__PROF_ON)pT('upd',1);
+  let steps=0;
+  while(acc>=1/60&&steps<5){
+   // v6.17: ветки hitstop/slowMoT убраны — мир всегда идёт с постоянной скоростью.
+   // Переменные оставлены (их сбрасывает resetRun и читает старый код), но в 0.
+   // v6.18: ЕДИНСТВЕННОЕ исключение — момент эволюции (0.4с). Это не хитстоп
+   // боя: срабатывает раз в несколько минут и только на пробуждении оружия.
+   if(evoPause>0){evoPause-=1/60;acc-=1/60;steps++;continue;}
+   update(1/60);acc-=1/60;
+   steps++;
+  }
+  if(acc>1/60)acc=acc%(1/60);
+  if(__PROF_ON)pT('upd',0);
+  // FPS CAP: пропускаем draw() если не прошло достаточно времени
+  // fpsCap теперь реально работает.
+  // - fpsCap=0 (∞): рисуем каждый кадр (макс FPS)
+  // - fpsCap=60: пропускаем draw если прошло < 16.6мс с прошлой отрисовки
+  // - fpsCap=30: пропускаем draw если прошло < 33.3мс (экономия батареи)
+  // update() всё равно зовётся на 60Hz (физика не тормозит),
+  // только визуал капается до целевого FPS.
+  if(fpsCap>0){
+   // Плавный FPS Cap с компенсацией дрейфа кадров.
+   // Раньше lastDraw=now был сразу — при дрифте таймера кадры «съезжали»,
+   // и в среднем FPS был ниже целевого. Теперь lastDraw корректируется
+   // на (now-lastDraw)%targetDt — это выравнивает кадры по сетке targetDt.
+   const targetDt=1000/fpsCap*0.9; // допуск: иначе cap=60 на 60Hz дробит кадры пополам
+   if(now-lastDraw<targetDt){
+    requestAnimationFrame(frame);
+    return;
+   }
+   lastDraw=now-(now-lastDraw)%targetDt;
+  }else{
+   lastDraw=now;
+  }
+  // ИНТЕРПОЛЯЦИЯ: вычислить фактор интерполяции
+  // v5.79: interpFactor считался вторым, НЕЗАВИСИМЫМ аккумулятором (animAccumulator),
+  // который жил своей жизнью: при включённом FPS-капе кадр выходил через return ДО
+  // этого блока, и накопители расходились. Интерполяция подставляла долю, не имеющую
+  // отношения к реальному остатку шага физики, — вместо сглаживания получался дребезг.
+  // Правильная доля — это ровно то, что осталось в acc после цикла update().
+  interpFactor=Math.max(0,Math.min(1,acc/PHYSICS_DT));
+  if(__PROF_ON)pT('rtotal',1);
+  draw();
+  if(__PROF_ON)pT('rtotal',0);
+  if(zoomPunch>1.002)zoomPunch=1+(zoomPunch-1)*Math.exp(-_rdt*7);else zoomPunch=1;   // v6.61: плавное затухание пульса камеры
+  // МИНИКАРТА: не нужно 60 FPS, 5 FPS (раз в 0.2с) достаточно.
+  // Экономит: ~55 циклов drawMinimap() в секунду.
+  // На полноэкранной миникарте 100×100 это копейки, но на слабых телефонах заметно.
+  if(now-miniTimer>200){
+   if(__PROF_ON)pT('mini',1);
+   drawMinimap();
+   if(__PROF_ON)pT('mini',0);
+   miniTimer=now;
+  }
+ }catch(e){
+  // v5.98: здесь стояло paused=false. Это ровно то, от чего togglePause защищён
+  // длинным комментарием: снятие паузы поверх открытого выбора карты/божества.
+  // Любое исключение в update() или draw() запускало мир, пока игрок выбирает карту;
+  // при устойчивой ошибке (она повторяется каждый кадр) поставить паузу становилось
+  // невозможно вообще. Цикл и без того продолжается: rAF ниже вызывается всегда, вне try.
+  // Логируем с троттлингом, чтобы не залить консоль на 60 кадрах в секунду.
+  const _now=performance.now();
+  if(!frame._errT||_now-frame._errT>1000){frame._errT=_now;console.error('FRAME:',e);}
+ }
+ // Рекурсивный rAF — синхронизация с V-Sync монитора, нет tearing на 60/120Hz.
+ // Если tab в фоне, Chrome тротлит rAF до 1Hz (setInterval тоже тротлится).
+ requestAnimationFrame(frame);
+}
+// Запускаем loop на первом user input (tap/click/keypress)
+// Chrome тротлит setInterval/rAF в фоновых вкладках/iframe — но rAF даёт V-Sync
+function startLoop(){
+ if(loopStarted)return;
+ loopStarted=true;
+ // console.log removed v6.16
+ // Рекурсивный rAF — V-Sync с монитором, нет tearing.
+ // Если tab уходит в фон, rAF тротлится Chrome, но игра не падает.
+ lastDraw=performance.now();
+ requestAnimationFrame(frame);
+}
+// Сразу пытаемся запустить (сработает если tab в фокусе)
+setTimeout(()=>{if(!loopStarted){startLoop();}},50);
+// Запускаем на любом user input
+addEventListener('touchstart',()=>startLoop(),{passive:true});
+addEventListener('pointerdown',()=>startLoop(),{passive:true});
+addEventListener('keydown',()=>startLoop(),{passive:true});
+addEventListener('click',()=>startLoop(),{passive:true});
+// Также подписываемся на visibility — когда tab становится видимым
+document.addEventListener('visibilitychange',()=>{
+ if(document.hidden){
+  // (#6) вместо мёртвого #wakeup — авто-пауза при уходе в фон.
+  // Без неё на мобильном аккумулятор времени накапливал секунды, и после
+  // возврата игра «прыгала» вперёд (враги телепортировались к игроку).
+  if(!paused&&!over&&!runEnded)togglePause();
+ }else{
+  startLoop();
+ }
+});
+// v1.0 Яндекс: пауза при потере фокуса + отключение контекстного меню (требования 1.3, 1.6.1.8)
+window.addEventListener('blur',()=>{if(started&&!paused&&!over&&!runEnded)togglePause();});
+addEventListener('contextmenu',e=>e.preventDefault());
+// Дополнительный watchdog: если loop не запущен, запустить через 1с
+setTimeout(()=>{if(!loopStarted)startLoop();},1000);
+
+
+// ============================================================
+//  v6.18  РЕЦЕПТЫ ЭВОЛЮЦИЙ, ТЕЛЕГРАФ, МОМЕНТ, ЖУРНАЛ, ВЕТКА ОТКРЫТИЙ
+//  Основание — документ «Чернолесье: психология удержания».
+//  Коротко, что было не так:
+//   * эволюция происходила сама (сундук брал старшее оружие 5 ур.) — игрок
+//     не выбирал, не планировал и часто не замечал кульминацию забега;
+//   * мета-дерево состояло только из чисел, а «+48% против +60%» не ощущается;
+//   * экран смерти сообщал ФАКТ поражения, но не его причину;
+//   * 27 новых орудий не участвовали ни в одной синергии.
+//  Ниже — по одному ответу на каждый пункт.
+// ============================================================
+
+// ---------- имена орудий для интерфейса ----------

@@ -1,0 +1,91 @@
+function spawnBoss(){
+ // Та же логика — от центра камеры + clamp в мир.
+ const cx=cam.x+W/2,cy=cam.y+H/2;
+ const a=srnd(0,TAU),rad=Math.max(W,H)*0.85+200,b=ETYPES.dragon;   // v6.72: Горыныч
+ // v6.74: удалён мёртвый блок minR (minR всегда < rad → условие недостижимо)
+ let sx=cx+Math.cos(a)*rad,sy=cy+Math.sin(a)*rad;
+ sx=clamp(sx,0,WORLD);sy=clamp(sy,0,WORLD);
+ const bhp=safeNum(2600*diffMul,2600); // #10: защита от NaN diffMul
+ bossE=acquireEnemy({...b,x:sx,y:sy,hp:bhp,maxhp:bhp,r:46,spd:44,dmg:22,type:'dragon',boss:true,drawH:210,at:0,flash:0,slow:1,kx:0,ky:0,hitT:0,wasInRange:false,boltT:0,frozen:0,poisoned:0,slamT:3.2,phase:1,ringT:5.5,xp:0,ai:'tank',dmgMod:1.5,fireT:0,chargeT:2.5,chargeTelegraph:0,chargeDir:null,chargeDuration:0});   // v6.72: Горынычat:0,flash:0,slow:1,kx:0,ky:0,hitT:0,wasInRange:false,boltT:0,frozen:0,poisoned:0,slamT:3.2,phase:1,ringT:5.5,xp:0,ai:'tank',dmgMod:1.5,fireT:0,chargeT:2.5,chargeTelegraph:0,chargeDir:null,chargeDuration:0});
+ document.getElementById('bossbar').style.display='block';
+ document.getElementById('bossbar').classList.remove('enrage');
+ document.getElementById('bossname').textContent='ЗМЕЙ ГОРЫНЫЧ';   // v6.72
+ const bp0=document.getElementById('bossphase'); if(bp0)bp0.textContent='фаза I · корни';
+ const bhpEl0=document.getElementById('bosshp'); if(bhpEl0)bhpEl0.classList.remove('phase2','phase3');
+ const intro=document.getElementById('bossintro');
+ intro.querySelector('.name').textContent='ЗМЕЙ ГОРЫНЫЧ';
+ intro.querySelector('.sub').textContent='Хранитель Заставы пробудился';
+ intro.classList.add('show');sfxBoss();setTimeout(()=>intro.classList.remove('show'),2500);
+ log('⚠ ЗМЕЙ ГОРЫНЫЧ идёт на заставу!','warn');
+}
+// v5.30: стартовый титр забега. Аналог bossintro, но зелёно-золотой и
+// НЕ ставит паузу/не блокирует управление — бой идёт «под титром».
+// Не меняет баланс, математику боя, спавн и время (time уже сброшен в resetRun).
+function showRunIntro(isDaily){
+ const ri=document.getElementById('runintro');if(!ri)return;
+ let txt='ЧЁРНОЛЕСЬЕ',sub='Застава встречает рассвет…';
+ // (v5.34) daily НЕ объявлен глобально — свободная переменная
+ // бросала ReferenceError в strict mode при каждом старте забега.
+ // Определяем daily-режим по runSeed>0 (Daily Run использует seed = день).
+ if(isDaily||runSeed>0){txt='ЧЁРНОЛЕСЬЕ · ДЕНЬ';sub='Испытание дня открыто';}
+ ri.querySelector('.name').textContent=txt;
+ ri.querySelector('.sub').textContent=sub;
+ ri.classList.add('show');
+ if(typeof sfxEvo==='function')sfxEvo(); // мягкий «гонг» входа
+ setTimeout(()=>{ri.classList.remove('show');},2800);
+}
+// МИНИ-БОСС «ДРЕВЕНЬ»: тот же протокол спавна, что у босса (кольцо вокруг
+// центра камеры + clamp в мир), общая интро-заставка и верхняя HP-полоса
+// (если она свободна — т.е. главный босс пока не явился).
+function spawnMiniBoss(){
+ const cx=cam.x+W/2,cy=cam.y+H/2;
+ const a=srnd(0,TAU),rad=Math.max(W,H)*0.85+200,b=ETYPES.baba_yaga;
+ let sx=cx+Math.cos(a)*rad,sy=cy+Math.sin(a)*rad;
+ sx=clamp(sx,0,WORLD);sy=clamp(sy,0,WORLD);
+ // v5.89: Древень приходит и на 5:00, и на 20:00 (ротация BALANCE.miniAt),
+ // а HP были одни и те же — поздний Древень падал мгновенно. Масштабируем.
+ const ehp=safeNum(b.hp*diffMul*(1+0.05*Math.floor(time/120)),520); // #10: защита от NaN diffMul
+ miniBossE=acquireEnemy({...b,x:sx,y:sy,hp:ehp,maxhp:ehp,type:'baba_yaga',mini:true,at:0,flash:0,slow:1,kx:0,ky:0,hitT:0,wasInRange:false,boltT:0,frozen:0,poisoned:0,slamT:2.2,atkT:0,dying:0,fireT:0,phase:1,ai:'tank',dmgMod:1.6,atkFrames:TREANT_ATK,dieFrames:TREANT_DIE,atkDur:0.85,dieMax:1.25});
+ if(!bossE){document.getElementById('bossbar').style.display='block';document.getElementById('bossname').textContent='ДРЕВЕНЬ'; const bpM=document.getElementById('bossphase'); if(bpM)bpM.textContent='мини · корни чащи';}
+ const intro=document.getElementById('bossintro');
+ intro.querySelector('.name').textContent='ДРЕВЕНЬ';
+ intro.querySelector('.sub').textContent='Младший Хранитель Чёрнолесья';
+ intro.classList.add('show');sfxBoss();setTimeout(()=>intro.classList.remove('show'),2500);
+ log('⚠ ДРЕВЕНЬ пробудился!', 'warn');
+}
+// МИНИ-БОСС №2 «СТРЫГА»: быстрый охотник. Рывок: захватывает точку игрока
+// (e.lx/e.ly) и летит к ней — боковой уворот спасает. В рывке урон ×dmgMod.
+function spawnMini2Boss(){
+ const cx=cam.x+W/2,cy=cam.y+H/2;
+ const a=srnd(0,TAU),rad=Math.max(W,H)*0.85+200,b=ETYPES.naviya;
+ let sx=cx+Math.cos(a)*rad,sy=cy+Math.sin(a)*rad;
+ sx=clamp(sx,0,WORLD);sy=clamp(sy,0,WORLD);
+ // v5.89: то же для Стрыги — приходит на 10:00 и на 25:00 с одинаковыми HP.
+ const ehp=safeNum(b.hp*diffMul*(1+0.05*Math.floor(time/120)),420); // #10: защита от NaN diffMul
+ mini2BossE=acquireEnemy({...b,x:sx,y:sy,hp:ehp,maxhp:ehp,type:'naviya',mini:true,at:0,flash:0,slow:1,kx:0,ky:0,hitT:0,wasInRange:false,boltT:0,frozen:0,poisoned:0,slamT:1.6,atkT:0,dying:0,fireT:0,phase:1,howlT:4,ai:'stalker',dmgMod:1.5,lx:sx,ly:sy,pounceSpd:560,atkFrames:MGLIST_ATK,dieFrames:MGLIST_DIE,atkDur:0.55,dieMax:0.95});
+ if(!bossE){document.getElementById('bossbar').style.display='block';document.getElementById('bossname').textContent='СТРЫГА'; const bpS=document.getElementById('bossphase'); if(bpS)bpS.textContent='мини · ночная охота';}
+ const intro=document.getElementById('bossintro');
+ intro.querySelector('.name').textContent='СТРЫГА';
+ intro.querySelector('.sub').textContent='Ночная охотница вышла на след';
+ intro.classList.add('show');sfxBoss();setTimeout(()=>intro.classList.remove('show'),2500);
+   log('⚠ СТРЫГА вышла на след!', 'warn');
+}
+function spawnMini3Boss(){
+ // v5.11 B2: Леший-Вожак — третий мини-босс (ротация)
+ const cx=cam.x+W/2,cy=cam.y+H/2;
+ const a=srnd(0,TAU),rad=Math.max(W,H)*0.85+200,b=ETYPES.leshiy;
+ let sx=cx+Math.cos(a)*rad,sy=cy+Math.sin(a)*rad;
+ sx=clamp(sx,0,WORLD);sy=clamp(sy,0,WORLD);
+ const ehp=safeNum(380*diffMul*(1+0.05*Math.floor(time/120)),380);
+ mini3BossE=acquireEnemy({...b,x:sx,y:sy,hp:ehp,maxhp:ehp,r:22,spd:98,dmg:11,type:'leshiy',mini:true,miniKind:'warlord',drawH:96,at:0,flash:0,slow:1,kx:0,ky:0,hitT:0,wasInRange:false,boltT:0,frozen:0,poisoned:0,slamT:2.0,atkT:0,dying:0,fireT:0,phase:1,ai:'chase',dmgMod:1.45,howlT:5});
+ if(!bossE){document.getElementById('bossbar').style.display='block';document.getElementById('bossname').textContent='ЛЕШИЙ-ВОЖАК'; const bp=document.getElementById('bossphase'); if(bp)bp.textContent='мини · вожак чащи';}
+ const intro=document.getElementById('bossintro');
+ intro.querySelector('.name').textContent='ЛЕШИЙ-ВОЖАК';
+ intro.querySelector('.sub').textContent='Чаща выслала вожака';
+ // v5.88: два других мини-босса пишут в журнал боя, третий — нет.
+ log('⚠ ЛЕШИЙ-ВОЖАК вышел из чащи!','warn');
+ intro.classList.add('show');sfxBoss();setTimeout(()=>intro.classList.remove('show'),2500);
+ }
+// v5.83: возвращает true, если реликвия реально легла в слот. Раньше функция
+// молча выходила при полных слотах, а вызывающий код уже отрапортовал игроку
+// «Дар: <реликвия>» — награда объявлялась и не выдавалась.

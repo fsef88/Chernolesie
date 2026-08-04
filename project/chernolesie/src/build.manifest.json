@@ -1,0 +1,1406 @@
+{
+ "source": "chernolesie_v7 (2).html",
+ "sha256": "2ed0b7f0282e70189da682b40deaecb8c374100ed958e4481aa251e61f7ab01d",
+ "generated": "2026-08-03",
+ "assets": {
+  "ui/control.jpg": "image/jpeg",
+  "ui/xqvxtkifevdu4z.jpg": "image/jpeg",
+  "ui/monomakh.ttf": "font/ttf",
+  "ui/14-touch-ui-1.webp": "image/webp",
+  "ui/20-screens-1.jpg": "image/jpeg",
+  "ui/backdrops.webp": "image/webp",
+  "ui/chartfloat.webp": "image/webp",
+  "ui/46-painted-backdrops-1.webp": "image/webp",
+  "ui/hxwcvm8c8fcfme9w1llpv3c9.webp": "image/webp",
+  "ui/d8laa.webp": "image/webp",
+  "ui/taa.webp": "image/webp",
+  "ui/xvtae1f3qj8fcga.webp": "image/webp",
+  "art/30-title.html/tsglyph.webp": "image/webp",
+  "sprites/Enemies/Chashob_norm/f_01.webp": "image/webp",
+  "sprites/Enemies/Chashob_norm/f_02.webp": "image/webp",
+  "sprites/Enemies/Chashob_norm/f_03.png": "image/png",
+  "sprites/Enemies/Chashob_norm/f_04.webp": "image/webp",
+  "sprites/Enemies/Chashob_norm/f_05.webp": "image/webp",
+  "sprites/Enemies/Chashob_norm/f_06.webp": "image/webp",
+  "sprites/Enemies/Chashob_norm/f_07.png": "image/png",
+  "sprites/Enemies/Chashob_norm/f_08.webp": "image/webp",
+  "sprites/Enemies/Chashob_norm/f_09.webp": "image/webp",
+  "sprites/Enemies/Chashob_norm/f_10.webp": "image/webp",
+  "sprites/Enemies/Chashob_norm/f_11.webp": "image/webp",
+  "sprites/Enemies/Chashob_norm/f_12.webp": "image/webp",
+  "sprites/Enemies/Chashob_norm/f_13.webp": "image/webp",
+  "sprites/Enemies/Chashob_norm/f_14.webp": "image/webp",
+  "sprites/Enemies/Chashob_norm/f_15.webp": "image/webp",
+  "sprites/Enemies/Chashob_norm/f_16.webp": "image/webp",
+  "sprites/Enemies/Vodyanoy_norm/f_01.webp": "image/webp",
+  "sprites/Enemies/Vodyanoy_norm/f_02.webp": "image/webp",
+  "sprites/Enemies/BabaYaga_norm/f_01.webp": "image/webp",
+  "sprites/Enemies/BabaYaga_norm/f_02.webp": "image/webp",
+  "sprites/Enemies/BabaYaga_norm/f_03.webp": "image/webp",
+  "sprites/Enemies/BabaYaga_norm/f_04.webp": "image/webp",
+  "sprites/Enemies/Naviya_norm/f_01.webp": "image/webp",
+  "sprites/Enemies/Naviya_norm/f_02.webp": "image/webp",
+  "sprites/Enemies/Naviya_norm/f_03.webp": "image/webp",
+  "sprites/Enemies/Naviya_norm/f_04.webp": "image/webp",
+  "sprites/Heroes/Warrior_norm/f_01.webp": "image/webp",
+  "sprites/Heroes/Warrior_norm/f_02.webp": "image/webp",
+  "sprites/Heroes/Warrior_norm/f_03.webp": "image/webp",
+  "sprites/Heroes/Warrior_norm/f_04.webp": "image/webp",
+  "sprites/Heroes/Warrior_norm/f_05.webp": "image/webp",
+  "sprites/Heroes/Warrior_norm/f_06.png": "image/png",
+  "sprites/Heroes/Warrior_norm/f_07.webp": "image/webp",
+  "sprites/Heroes/Warrior_norm/f_08.webp": "image/webp",
+  "sprites/Heroes/Warrior_norm/f_09.webp": "image/webp",
+  "sprites/Heroes/Warrior_norm/f_10.webp": "image/webp",
+  "sprites/Heroes/Warrior_norm/f_11.webp": "image/webp",
+  "sprites/Heroes/Warrior_norm/f_12.webp": "image/webp",
+  "sprites/Heroes/Warrior_norm/f_13.webp": "image/webp",
+  "sprites/Heroes/Warrior_norm/f_14.webp": "image/webp",
+  "sprites/Heroes/Warrior_norm/f_15.webp": "image/webp",
+  "sprites/Heroes/Warrior_norm/f_16.webp": "image/webp",
+  "sprites/Heroes/Druid_norm/f_01.webp": "image/webp",
+  "sprites/Heroes/Druid_norm/f_02.webp": "image/webp",
+  "sprites/Heroes/Druid_norm/f_03.png": "image/png",
+  "sprites/Heroes/Druid_norm/f_04.png": "image/png",
+  "sprites/Heroes/Druid_norm/f_05.webp": "image/webp",
+  "sprites/Heroes/Druid_norm/f_06.webp": "image/webp",
+  "sprites/Heroes/Druid_norm/f_07.webp": "image/webp",
+  "sprites/Heroes/Druid_norm/f_08.webp": "image/webp",
+  "sprites/Heroes/Druid_norm/f_09.webp": "image/webp",
+  "sprites/Heroes/Druid_norm/f_10.webp": "image/webp",
+  "sprites/Heroes/Druid_norm/f_11.webp": "image/webp",
+  "sprites/Heroes/Druid_norm/f_12.webp": "image/webp",
+  "sprites/Heroes/Druid_norm/f_13.webp": "image/webp",
+  "sprites/Heroes/Druid_norm/f_14.webp": "image/webp",
+  "sprites/Heroes/Druid_norm/f_15.webp": "image/webp",
+  "sprites/Heroes/Druid_norm/f_16.webp": "image/webp",
+  "sprites/Heroes/Shaman_norm/f_12.webp": "image/webp",
+  "sprites/Heroes/Shaman_norm/f_13.webp": "image/webp",
+  "sprites/Heroes/Shaman_norm/f_14.webp": "image/webp",
+  "sprites/Heroes/Shaman_norm/f_15.webp": "image/webp",
+  "sprites/Heroes/Shaman_norm/f_16.webp": "image/webp",
+  "sprites/Heroes/Groznik_norm/f_01.webp": "image/webp",
+  "sprites/Heroes/Groznik_norm/f_02.png": "image/png",
+  "sprites/Heroes/Groznik_norm/f_03.png": "image/png",
+  "sprites/Heroes/Groznik_norm/f_04.webp": "image/webp",
+  "sprites/Heroes/Groznik_norm/f_05.webp": "image/webp",
+  "sprites/Heroes/Groznik_norm/f_06.webp": "image/webp",
+  "sprites/Heroes/Groznik_norm/f_07.webp": "image/webp",
+  "sprites/Heroes/Groznik_norm/f_08.webp": "image/webp",
+  "sprites/Heroes/Groznik_norm/f_09.webp": "image/webp",
+  "sprites/Heroes/Groznik_norm/f_10.webp": "image/webp",
+  "sprites/Heroes/Groznik_norm/f_11.webp": "image/webp",
+  "sprites/Heroes/Groznik_norm/f_12.webp": "image/webp",
+  "sprites/Heroes/Groznik_norm/f_13.webp": "image/webp",
+  "sprites/Heroes/Groznik_norm/f_14.webp": "image/webp",
+  "sprites/Heroes/Groznik_norm/f_15.webp": "image/webp",
+  "sprites/Heroes/Groznik_norm/f_16.webp": "image/webp",
+  "sprites/Heroes/Shaman_norm/f_01.webp": "image/webp",
+  "sprites/Heroes/Shaman_norm/f_02.webp": "image/webp",
+  "sprites/Heroes/Shaman_norm/f_03.webp": "image/webp",
+  "sprites/Heroes/Shaman_norm/f_04.webp": "image/webp",
+  "sprites/Heroes/Shaman_norm/f_05.webp": "image/webp",
+  "sprites/Heroes/Shaman_norm/f_06.webp": "image/webp",
+  "sprites/Heroes/Shaman_norm/f_07.webp": "image/webp",
+  "sprites/Heroes/Shaman_norm/f_08.webp": "image/webp",
+  "sprites/Heroes/Shaman_norm/f_09.webp": "image/webp",
+  "sprites/Heroes/Shaman_norm/f_10.webp": "image/webp",
+  "sprites/Heroes/Shaman_norm/f_11.webp": "image/webp",
+  "sprites/Heroes/Ognevik_norm/f_01.webp": "image/webp",
+  "sprites/Heroes/Ognevik_norm/f_02.webp": "image/webp",
+  "sprites/Heroes/Ognevik_norm/f_03.png": "image/png",
+  "sprites/Heroes/Ognevik_norm/f_04.webp": "image/webp",
+  "sprites/Heroes/Ognevik_norm/f_05.webp": "image/webp",
+  "sprites/Heroes/Ognevik_norm/f_06.webp": "image/webp",
+  "sprites/Heroes/Ognevik_norm/f_07.webp": "image/webp",
+  "sprites/Heroes/Ognevik_norm/f_08.webp": "image/webp",
+  "sprites/Heroes/Ognevik_norm/f_09.webp": "image/webp",
+  "sprites/Heroes/Ognevik_norm/f_10.webp": "image/webp",
+  "sprites/Heroes/Ognevik_norm/f_11.webp": "image/webp",
+  "sprites/Heroes/Ognevik_norm/f_12.webp": "image/webp",
+  "sprites/Heroes/Ognevik_norm/f_13.webp": "image/webp",
+  "sprites/Heroes/Ognevik_norm/f_14.webp": "image/webp",
+  "sprites/Heroes/Ognevik_norm/f_15.webp": "image/webp",
+  "sprites/Heroes/Ognevik_norm/f_16.webp": "image/webp",
+  "sprites/Heroes/Rogue_norm/f_01.webp": "image/webp",
+  "sprites/Heroes/Rogue_norm/f_02.webp": "image/webp",
+  "sprites/Heroes/Rogue_norm/f_03.webp": "image/webp",
+  "sprites/Heroes/Rogue_norm/f_04.webp": "image/webp",
+  "sprites/Heroes/Rogue_norm/f_05.webp": "image/webp",
+  "sprites/Heroes/Rogue_norm/f_06.webp": "image/webp",
+  "sprites/Heroes/Rogue_norm/f_07.webp": "image/webp",
+  "sprites/Heroes/Rogue_norm/f_08.webp": "image/webp",
+  "sprites/Heroes/Rogue_norm/f_09.webp": "image/webp",
+  "sprites/Heroes/Rogue_norm/f_10.webp": "image/webp",
+  "sprites/Heroes/Rogue_norm/f_11.webp": "image/webp",
+  "sprites/Heroes/Rogue_norm/f_12.webp": "image/webp",
+  "sprites/Heroes/Rogue_norm/f_13.webp": "image/webp",
+  "sprites/Heroes/Rogue_norm/f_14.webp": "image/webp",
+  "sprites/Heroes/Rogue_norm/f_15.webp": "image/webp",
+  "sprites/Heroes/Rogue_norm/f_16.webp": "image/webp",
+  "sprites/Heroes/Archer_norm/f_12.webp": "image/webp",
+  "sprites/Heroes/Archer_norm/f_13.webp": "image/webp",
+  "sprites/Heroes/Archer_norm/f_14.webp": "image/webp",
+  "sprites/Heroes/Archer_norm/f_15.webp": "image/webp",
+  "sprites/Heroes/Archer_norm/f_16.webp": "image/webp",
+  "sprites/Heroes/Archer_norm/f_01.webp": "image/webp",
+  "sprites/Heroes/Archer_norm/f_02.webp": "image/webp",
+  "sprites/Heroes/Archer_norm/f_03.webp": "image/webp",
+  "sprites/Heroes/Archer_norm/f_04.webp": "image/webp",
+  "sprites/Heroes/Archer_norm/f_05.webp": "image/webp",
+  "sprites/Heroes/Archer_norm/f_06.webp": "image/webp",
+  "sprites/Heroes/Archer_norm/f_07.webp": "image/webp",
+  "sprites/Heroes/Archer_norm/f_08.webp": "image/webp",
+  "sprites/Heroes/Archer_norm/f_09.webp": "image/webp",
+  "sprites/Heroes/Archer_norm/f_10.webp": "image/webp",
+  "sprites/Heroes/Archer_norm/f_11.webp": "image/webp",
+  "sprites/Enemies/Leshiy_norm/f_01.webp": "image/webp",
+  "sprites/Enemies/Leshiy_norm/f_02.webp": "image/webp",
+  "sprites/Enemies/Leshiy_norm/f_03.webp": "image/webp",
+  "sprites/Enemies/Leshiy_norm/f_04.webp": "image/webp",
+  "sprites/Enemies/Leshiy_norm/f_05.webp": "image/webp",
+  "sprites/Enemies/Leshiy_norm/f_06.webp": "image/webp",
+  "sprites/Enemies/Leshiy_norm/f_07.webp": "image/webp",
+  "sprites/Enemies/Leshiy_norm/f_08.webp": "image/webp",
+  "sprites/Enemies/Leshiy_norm/f_09.webp": "image/webp",
+  "sprites/Enemies/Leshiy_norm/f_10.webp": "image/webp",
+  "sprites/Enemies/Leshiy_norm/f_11.webp": "image/webp",
+  "sprites/Enemies/Leshiy_norm/f_12.webp": "image/webp",
+  "sprites/Enemies/Leshiy_norm/f_13.webp": "image/webp",
+  "sprites/Enemies/Leshiy_norm/f_14.webp": "image/webp",
+  "sprites/Enemies/Volkolak_norm/f_01.webp": "image/webp",
+  "sprites/Enemies/Volkolak_norm/f_02.webp": "image/webp",
+  "sprites/Enemies/Volkolak_norm/f_03.webp": "image/webp",
+  "sprites/Enemies/Volkolak_norm/f_04.webp": "image/webp",
+  "sprites/Enemies/Volkolak_norm/f_05.webp": "image/webp",
+  "sprites/Enemies/Volkolak_norm/f_06.webp": "image/webp",
+  "sprites/Enemies/Volkolak_norm/f_07.webp": "image/webp",
+  "sprites/Enemies/Volkolak_norm/f_08.webp": "image/webp",
+  "sprites/Enemies/Volkolak_norm/f_09.webp": "image/webp",
+  "sprites/Enemies/Volkolak_norm/f_10.webp": "image/webp",
+  "sprites/Enemies/Volkolak_norm/f_11.webp": "image/webp",
+  "sprites/Enemies/Volkolak_norm/f_12.webp": "image/webp",
+  "sprites/Enemies/Volkolak_norm/f_13.webp": "image/webp",
+  "sprites/Enemies/Volkolak_norm/f_14.webp": "image/webp",
+  "sprites/Enemies/Rusalka_norm/f_01.webp": "image/webp",
+  "sprites/Enemies/Rusalka_norm/f_02.webp": "image/webp",
+  "sprites/Enemies/Rusalka_norm/f_03.webp": "image/webp",
+  "sprites/Enemies/Rusalka_norm/f_04.webp": "image/webp",
+  "sprites/Enemies/Rusalka_norm/f_05.webp": "image/webp",
+  "sprites/Enemies/Rusalka_norm/f_06.webp": "image/webp",
+  "sprites/Enemies/Rusalka_norm/f_07.webp": "image/webp",
+  "sprites/Enemies/Rusalka_norm/f_08.webp": "image/webp",
+  "sprites/Enemies/Rusalka_norm/f_09.webp": "image/webp",
+  "sprites/Enemies/Rusalka_norm/f_10.webp": "image/webp",
+  "sprites/Enemies/Rusalka_norm/f_11.webp": "image/webp",
+  "sprites/Enemies/Rusalka_norm/f_12.webp": "image/webp",
+  "sprites/Enemies/Rusalka_norm/f_13.webp": "image/webp",
+  "sprites/Enemies/Rusalka_norm/f_14.webp": "image/webp",
+  "sprites/Enemies/VedmaT_norm/f_01.webp": "image/webp",
+  "sprites/Enemies/VedmaT_norm/f_02.webp": "image/webp",
+  "sprites/Enemies/VedmaT_norm/f_03.webp": "image/webp",
+  "sprites/Enemies/VedmaT_norm/f_04.webp": "image/webp",
+  "sprites/Enemies/VedmaT_norm/f_05.webp": "image/webp",
+  "sprites/Enemies/VedmaT_norm/f_06.webp": "image/webp",
+  "sprites/Enemies/VedmaT_norm/f_07.webp": "image/webp",
+  "sprites/Enemies/VedmaT_norm/f_08.webp": "image/webp",
+  "sprites/Enemies/VedmaT_norm/f_09.webp": "image/webp",
+  "sprites/Enemies/VedmaT_norm/f_10.webp": "image/webp",
+  "sprites/Enemies/VedmaT_norm/f_11.webp": "image/webp",
+  "sprites/Enemies/VedmaT_norm/f_12.webp": "image/webp",
+  "sprites/Enemies/VedmaT_norm/f_13.webp": "image/webp",
+  "sprites/Enemies/VedmaT_norm/f_14.webp": "image/webp",
+  "sprites/Enemies/Vodianik_norm/f_01.webp": "image/webp",
+  "sprites/Enemies/Vodianik_norm/f_02.webp": "image/webp",
+  "sprites/Enemies/Vodianik_norm/f_03.webp": "image/webp",
+  "sprites/Enemies/Vodianik_norm/f_04.webp": "image/webp",
+  "sprites/Enemies/Vodianik_norm/f_05.webp": "image/webp",
+  "sprites/Enemies/Vodianik_norm/f_06.webp": "image/webp",
+  "sprites/Enemies/Vodianik_norm/f_07.webp": "image/webp",
+  "sprites/Enemies/Vodianik_norm/f_08.webp": "image/webp",
+  "sprites/Enemies/Vodianik_norm/f_09.webp": "image/webp",
+  "sprites/Enemies/Vodianik_norm/f_10.webp": "image/webp",
+  "sprites/Enemies/Vodianik_norm/f_11.webp": "image/webp",
+  "sprites/Enemies/Vodianik_norm/f_12.webp": "image/webp",
+  "sprites/Enemies/Vodianik_norm/f_13.webp": "image/webp",
+  "sprites/Enemies/Vodianik_norm/f_14.webp": "image/webp",
+  "sprites/Enemies/Poludnitsa_norm/f_01.webp": "image/webp",
+  "sprites/Enemies/Poludnitsa_norm/f_02.webp": "image/webp",
+  "sprites/Enemies/Poludnitsa_norm/f_03.webp": "image/webp",
+  "sprites/Enemies/Poludnitsa_norm/f_04.webp": "image/webp",
+  "sprites/Enemies/Poludnitsa_norm/f_05.webp": "image/webp",
+  "sprites/Enemies/Poludnitsa_norm/f_06.webp": "image/webp",
+  "sprites/Enemies/Poludnitsa_norm/f_07.webp": "image/webp",
+  "sprites/Enemies/Poludnitsa_norm/f_08.webp": "image/webp",
+  "sprites/Enemies/Poludnitsa_norm/f_09.webp": "image/webp",
+  "sprites/Enemies/Poludnitsa_norm/f_10.webp": "image/webp",
+  "sprites/Enemies/Poludnitsa_norm/f_11.webp": "image/webp",
+  "sprites/Enemies/Poludnitsa_norm/f_12.webp": "image/webp",
+  "sprites/Enemies/Poludnitsa_norm/f_13.webp": "image/webp",
+  "sprites/Enemies/Poludnitsa_norm/f_14.webp": "image/webp",
+  "sprites/Enemies/Bognik_norm/f_01.webp": "image/webp",
+  "sprites/Enemies/Bognik_norm/f_02.webp": "image/webp",
+  "sprites/Enemies/Bognik_norm/f_03.webp": "image/webp",
+  "sprites/Enemies/Bognik_norm/f_04.webp": "image/webp",
+  "sprites/Enemies/Bognik_norm/f_05.webp": "image/webp",
+  "sprites/Enemies/Bognik_norm/f_06.webp": "image/webp",
+  "sprites/Enemies/Bognik_norm/f_07.webp": "image/webp",
+  "sprites/Enemies/Bognik_norm/f_08.webp": "image/webp",
+  "sprites/Enemies/Bognik_norm/f_09.webp": "image/webp",
+  "sprites/Enemies/Bognik_norm/f_10.webp": "image/webp",
+  "sprites/Enemies/Bognik_norm/f_11.webp": "image/webp",
+  "sprites/Enemies/Bognik_norm/f_12.webp": "image/webp",
+  "sprites/Enemies/Bognik_norm/f_13.webp": "image/webp",
+  "sprites/Enemies/Bognik_norm/f_14.webp": "image/webp",
+  "sprites/Enemies/Upyr_norm/f_01.webp": "image/webp",
+  "sprites/Enemies/Upyr_norm/f_02.webp": "image/webp",
+  "sprites/Enemies/Upyr_norm/f_03.webp": "image/webp",
+  "sprites/Enemies/Upyr_norm/f_04.webp": "image/webp",
+  "sprites/Enemies/Upyr_norm/f_05.webp": "image/webp",
+  "sprites/Enemies/Upyr_norm/f_06.webp": "image/webp",
+  "sprites/Enemies/Upyr_norm/f_07.webp": "image/webp",
+  "sprites/Enemies/Upyr_norm/f_08.webp": "image/webp",
+  "sprites/Enemies/Upyr_norm/f_09.webp": "image/webp",
+  "sprites/Enemies/Upyr_norm/f_10.webp": "image/webp",
+  "sprites/Enemies/Upyr_norm/f_11.webp": "image/webp",
+  "sprites/Enemies/Upyr_norm/f_12.webp": "image/webp",
+  "sprites/Enemies/Upyr_norm/f_13.webp": "image/webp",
+  "sprites/Enemies/Upyr_norm/f_14.webp": "image/webp",
+  "sprites/Enemies/Kikimora_norm/f_01.webp": "image/webp",
+  "sprites/Enemies/Kikimora_norm/f_02.webp": "image/webp",
+  "sprites/Enemies/Kikimora_norm/f_03.webp": "image/webp",
+  "sprites/Enemies/Kikimora_norm/f_04.webp": "image/webp",
+  "sprites/Enemies/Kikimora_norm/f_05.webp": "image/webp",
+  "sprites/Enemies/Kikimora_norm/f_06.webp": "image/webp",
+  "sprites/Enemies/Kikimora_norm/f_07.webp": "image/webp",
+  "sprites/Enemies/Kikimora_norm/f_08.webp": "image/webp",
+  "sprites/Enemies/Kikimora_norm/f_09.webp": "image/webp",
+  "sprites/Enemies/Kikimora_norm/f_10.webp": "image/webp",
+  "sprites/Enemies/Kikimora_norm/f_11.webp": "image/webp",
+  "sprites/Enemies/Kikimora_norm/f_12.webp": "image/webp",
+  "sprites/Enemies/Kikimora_norm/f_13.webp": "image/webp",
+  "sprites/Enemies/Kikimora_norm/f_14.webp": "image/webp",
+  "sprites/warrior-norm.webp": "image/webp",
+  "sprites/warrior-norm-2.webp": "image/webp",
+  "sprites/warrior-norm-3.webp": "image/webp",
+  "sprites/warrior-norm-4.webp": "image/webp",
+  "sprites/warrior-norm-5.webp": "image/webp",
+  "sprites/warrior-norm-6.webp": "image/webp",
+  "sprites/warrior-norm-7.webp": "image/webp",
+  "sprites/warrior-norm-8.webp": "image/webp",
+  "sprites/warrior-norm-9.webp": "image/webp",
+  "sprites/warrior-norm-10.webp": "image/webp",
+  "sprites/warrior-norm-11.webp": "image/webp",
+  "sprites/warrior-norm-12.webp": "image/webp",
+  "sprites/warrior-norm-13.webp": "image/webp",
+  "sprites/warrior-norm-14.webp": "image/webp",
+  "sprites/warrior-norm-15.webp": "image/webp",
+  "sprites/warrior-norm-16.webp": "image/webp",
+  "art/world/deco-src.webp": "image/webp",
+  "art/world/aaa.webp": "image/webp",
+  "art/world/gaaa.webp": "image/webp",
+  "art/world/cntv3xqpnm7h3fgwt4wgz6tfkaa.webp": "image/webp",
+  "art/world/aaaa.webp": "image/webp",
+  "art/world/rlqkz41fgaaa.webp": "image/webp",
+  "art/world/djhomhwx3mb2oa.webp": "image/webp",
+  "art/world/fm1x4a.webp": "image/webp",
+  "art/world/jzv4zvnga.webp": "image/webp",
+  "art/world/zsdo8ieb7aw.webp": "image/webp",
+  "art/world/gae.webp": "image/webp",
+  "art/world/m3nx98jw8eaa.webp": "image/webp",
+  "art/world/b7ls9f5shaa.webp": "image/webp",
+  "art/world/lsf.webp": "image/webp",
+  "art/world/fd1asao35lyoor3xicabru.webp": "image/webp",
+  "art/world/vspugxkfww.webp": "image/webp",
+  "art/world/bmcaa.webp": "image/webp",
+  "art/world/rsybyca.webp": "image/webp",
+  "art/world/bzjw32i.webp": "image/webp",
+  "art/world/howqi7e2famdlbdyah7wet18uaa.png": "image/png",
+  "art/world/luwfn1od9yqaaaabjru5erkjggg.png": "image/png",
+  "art/world/vwcgxh2tz3duewaaaabjru5erkjggg.png": "image/png",
+  "art/world/iyflaaaaaelftksuqmcc.png": "image/png",
+  "art/world/wvv5viw9wnraaaaaelftksuqmcc.png": "image/png",
+  "art/world/srmawxogaaaaasuvork5cyii.png": "image/png",
+  "art/world/vqq57ivrkaaaaasuvork5cyii.webp": "image/webp",
+  "art/world/uln039lbw.png": "image/png",
+  "art/world/d8jghlsbhoduaaaaasuvork5cyii.png": "image/png",
+  "art/world/gcj9pafpl9hzgaaaabjru5erkjggg.png": "image/png",
+  "art/world/bzt6us0nacb2aaaaaelftksuqmcc.png": "image/png",
+  "art/world/or8ekkyu2begaaaaasuvork5cyii.jpg": "image/jpeg",
+  "art/util/math.jpg": "image/jpeg",
+  "art/sprites/dragon-frames.webp": "image/webp",
+  "art/sprites/grlbjsaaaaaaa.webp": "image/webp",
+  "art/art-registry/chest-art.webp": "image/webp",
+  "art/art-registry/aura-art-idol.webp": "image/webp",
+  "art/art-registry/tarot-frame-art.webp": "image/webp",
+  "art/art-registry/props-art-sheet.webp": "image/webp",
+  "art/art-registry/icons-art-sheet.webp": "image/webp",
+  "art/art-registry/projectiles-art-sheet.webp": "image/webp",
+  "art/art-registry/evo-altar-art.webp": "image/webp",
+  "art/art-registry/victory-shield-art.webp": "image/webp",
+  "art/art-registry/slash-anim-sheet.webp": "image/webp",
+  "art/art-registry/slash-anim-sheet-v8.png": "image/png",
+  "art/art-registry/druid-wave-sheet.webp": "image/webp",
+  "art/art-registry/rogue-slash-sheet.webp": "image/webp",
+  "art/art-registry/altar-world-prop-art.webp": "image/webp",
+  "art/art-registry/gold-vein-world-prop-art.webp": "image/webp",
+  "art/art-registry/coin-drop-art.webp": "image/webp",
+  "art/art-registry/idol-world-prop-art.webp": "image/webp",
+  "art/art-registry/wolf-spirit-art.webp": "image/webp",
+  "art/art-registry/raven-orb-art.webp": "image/webp",
+  "art/art-registry/vihr-vortex-sheet.webp": "image/webp",
+  "art/art-registry/obereg-shield-art.webp": "image/webp",
+  "art/art-registry/kolokol-aura-art.webp": "image/webp",
+  "art/art-registry/rosa-aura-art.webp": "image/webp",
+  "art/art-registry/zerno-aura-art.webp": "image/webp",
+  "art/art-registry/crown-aura-art.webp": "image/webp",
+  "art/art-registry/hazard-trap-art.webp": "image/webp",
+  "art/art-registry/kosa-trail-sheet.webp": "image/webp",
+  "art/art-registry/ult-seal-mandala-art.webp": "image/webp",
+  "art/art-registry/boss-hranitel-art.webp": "image/webp",
+  "art/art-registry/boss-volk-art.webp": "image/webp",
+  "art/art-registry/boss-leshiy-art.webp": "image/webp",
+  "art/art-registry/boss-hranitel-sheet.webp": "image/webp",
+  "art/art-registry/boss-volk-sheet.webp": "image/webp",
+  "art/art-registry/boss-leshiy-sheet.webp": "image/webp",
+  "art/art-registry/wolf-spirit-sheet.webp": "image/webp",
+  "art/art-registry/explosion-anim-sheet.webp": "image/webp",
+  "art/art-registry/lightning-anim-sheet.webp": "image/webp",
+  "art/art-registry/poison-anim-sheet.webp": "image/webp",
+  "art/art-registry/frost-spike-anim-sheet.webp": "image/webp",
+  "art/art-registry/fireball-anim-sheet.webp": "image/webp",
+  "art/icons/class-art.webp": "image/webp",
+  "art/icons/class-art-2.webp": "image/webp",
+  "art/icons/class-art-3.webp": "image/webp",
+  "art/icons/class-art.jpg": "image/jpeg",
+  "art/icons/class-art-4.webp": "image/webp",
+  "art/icons/class-art-5.webp": "image/webp",
+  "art/icons/class-art-6.webp": "image/webp",
+  "art/icons/painted-icons.jpg": "image/jpeg",
+  "art/icons/nnjxqfpawnpjqa2lnsxpy0alsxpy0saap.jpg": "image/jpeg",
+  "art/icons/uxl.jpg": "image/jpeg",
+  "art/icons/by5gcaewgh8kgkmjusrxp.jpg": "image/jpeg",
+  "art/icons/kit.jpg": "image/jpeg",
+  "art/icons/cg5p21g93dlnsi.jpg": "image/jpeg",
+  "art/icons/c5o85zj5znpwcuf.jpg": "image/jpeg",
+  "art/icons/tzmvyc3eem25.jpg": "image/jpeg",
+  "art/icons/xroc.jpg": "image/jpeg",
+  "art/icons/h1emsiccx9s.jpg": "image/jpeg",
+  "art/icons/wdmcftjzi9imum.jpg": "image/jpeg",
+  "art/icons/s8ugjyngwwkltkjqfnqdziu9xp.jpg": "image/jpeg",
+  "art/icons/painted-boons.jpg": "image/jpeg",
+  "art/icons/yrwhd39fz.jpg": "image/jpeg",
+  "art/icons/painted-curses.jpg": "image/jpeg",
+  "art/hero-fx/hero-battle.webp": "image/webp",
+  "art/hero-fx/hero-battle-2.webp": "image/webp",
+  "art/hero-fx/hero-battle-3.webp": "image/webp",
+  "art/hero-fx/hero-battle-4.webp": "image/webp",
+  "art/hero-fx/hero-battle-5.webp": "image/webp",
+  "art/hero-fx/hero-battle-6.webp": "image/webp",
+  "art/hero-fx/hero-battle-7.webp": "image/webp",
+  "art/icons/ico-01.jpg": "image/jpeg",
+  "art/icons/ico-02.webp": "image/webp",
+  "art/icons/ico-03.jpg": "image/jpeg",
+  "art/icons/ico-04.jpg": "image/jpeg",
+  "art/icons/ico-05.jpg": "image/jpeg",
+  "art/icons/ico-06.jpg": "image/jpeg",
+  "art/icons/ico-07.jpg": "image/jpeg",
+  "art/icons/ico-08.jpg": "image/jpeg",
+  "art/icons/ico-09.jpg": "image/jpeg",
+  "art/icons/ico-10.jpg": "image/jpeg",
+  "art/icons/ico-11.jpg": "image/jpeg",
+  "art/icons/ico-12.jpg": "image/jpeg",
+  "art/icons/ico-13.jpg": "image/jpeg",
+  "art/icons/ico-14.jpg": "image/jpeg",
+  "art/icons/ico-15.jpg": "image/jpeg",
+  "art/icons/ico-16.webp": "image/webp",
+  "art/icons/ico-17.jpg": "image/jpeg",
+  "art/icons/ico-18.jpg": "image/jpeg",
+  "art/icons/ico-19.jpg": "image/jpeg",
+  "art/icons/ico-20.jpg": "image/jpeg",
+  "art/icons/ico-21.jpg": "image/jpeg",
+  "art/icons/ico-22.jpg": "image/jpeg",
+  "art/icons/ico-23.jpg": "image/jpeg",
+  "art/icons/ico-24.jpg": "image/jpeg",
+  "art/icons/ico-25.jpg": "image/jpeg",
+  "art/icons/ico-26.jpg": "image/jpeg",
+  "art/icons/ico-27.jpg": "image/jpeg",
+  "art/icons/ico-28.jpg": "image/jpeg",
+  "art/icons/ico-29.jpg": "image/jpeg",
+  "art/icons/ico-30.jpg": "image/jpeg",
+  "art/world/ico-31.webp": "image/webp",
+  "ui/ico-32.webp": "image/webp"
+ },
+ "parts": [
+  {
+   "file": "head.html",
+   "note": "head: мета, иконки, подключение SDK Яндекса",
+   "srcLines": [
+    1,
+    11
+   ]
+  },
+  {
+   "lit": "<style>\n"
+  },
+  {
+   "file": "styles/00-fonts.css",
+   "note": "Устав Мономах (встроенный шрифт) + назначение гарнитуры",
+   "srcLines": [
+    13,
+    22
+   ]
+  },
+  {
+   "file": "styles/10-hud.css",
+   "note": "Верхний HUD: время/HP/класс/оружие, XP-полоса, босс-бар, реликвии",
+   "srcLines": [
+    23,
+    66
+   ]
+  },
+  {
+   "file": "styles/11-hp-bar.css",
+   "note": "Нижняя полоса здоровья",
+   "srcLines": [
+    67,
+    75
+   ]
+  },
+  {
+   "file": "styles/12-log.css",
+   "note": "Лента событий + бейджи синергий",
+   "srcLines": [
+    76,
+    94
+   ]
+  },
+  {
+   "file": "styles/13-minimap.css",
+   "note": "Миникарта",
+   "srcLines": [
+    95,
+    100
+   ]
+  },
+  {
+   "file": "styles/14-touch-ui.css",
+   "note": "Джойстик, кнопки, медальон Печати",
+   "srcLines": [
+    101,
+    139
+   ]
+  },
+  {
+   "file": "styles/20-screens.css",
+   "note": "Оверлеи: карты, пауза, смерть, достижения, древо, журнал",
+   "srcLines": [
+    140,
+    458
+   ]
+  },
+  {
+   "file": "styles/30-responsive-mobile.css",
+   "note": "Портрет и ландшафт на телефоне",
+   "srcLines": [
+    459,
+    546
+   ]
+  },
+  {
+   "file": "styles/40-ornaments.css",
+   "note": "Славянский орнамент, классовые свечения, пергамент, руны",
+   "srcLines": [
+    547,
+    657
+   ]
+  },
+  {
+   "file": "styles/41-art-direction-v1.css",
+   "note": "Редкость, прирост уровня, стартовый титр забега",
+   "srcLines": [
+    658,
+    754
+   ]
+  },
+  {
+   "file": "styles/42-meta-shop-boss.css",
+   "note": "Мета-магазин, древо, ритм боссов, UX спецатаки",
+   "srcLines": [
+    755,
+    812
+   ]
+  },
+  {
+   "file": "styles/43-iconostas-chrome.css",
+   "note": "Иконостас: единая SVG-иконография и хром интерфейса",
+   "srcLines": [
+    813,
+    910
+   ]
+  },
+  {
+   "file": "styles/44-painted-elements.css",
+   "note": "Премиум-слой: медальоны, виньетка, живописные иконки",
+   "srcLines": [
+    911,
+    939
+   ]
+  },
+  {
+   "file": "styles/45-card-runes.css",
+   "note": "Микро-эффекты: угловые руны, бегущая руна, искры, фольга",
+   "srcLines": [
+    940,
+    984
+   ]
+  },
+  {
+   "file": "styles/46-painted-backdrops.css",
+   "note": "«Гербовая застава»: скин героя и живописные подложки",
+   "srcLines": [
+    985,
+    1052
+   ]
+  },
+  {
+   "file": "styles/50-title-screen.css",
+   "note": "Титульный экран: классы, длительность, ступени Порчи",
+   "srcLines": [
+    1053,
+    1194
+   ]
+  },
+  {
+   "file": "styles/60-touch-rework.css",
+   "note": "v6.27 переработка тач-интерфейса по канону жанра",
+   "srcLines": [
+    1195,
+    1372
+   ]
+  },
+  {
+   "file": "styles/61-title-cta.css",
+   "note": "v6.29 фикс кнопки «В бой»",
+   "srcLines": [
+    1373,
+    1419
+   ]
+  },
+  {
+   "file": "styles/62-bottom-action-bar.css",
+   "note": "v6.30 нижняя панель главного действия",
+   "srcLines": [
+    1420,
+    1497
+   ]
+  },
+  {
+   "file": "styles/63-ios-start-fix.css",
+   "note": "v6.52 фикс стартовой кнопки на iOS",
+   "srcLines": [
+    1498,
+    1530
+   ]
+  },
+  {
+   "file": "styles/64-mobile-hud-cleanup.css",
+   "note": "v6.56 чистка мобильного HUD + раннее давление",
+   "srcLines": [
+    1531,
+    1673
+   ]
+  },
+  {
+   "lit": "</style>\n<!-- v5.38: Google Fonts удалены — шрифт Мономах встроен (@font-face выше) -->\n</head>\n<body>\n"
+  },
+  {
+   "file": "markup/10-hud.html",
+   "note": "HUD, XP, божество, босс-бар, реликвии",
+   "srcLines": [
+    1678,
+    1705
+   ]
+  },
+  {
+   "file": "markup/20-field.html",
+   "note": "Канвас, HP, лог, миникарта, тач-контролы, панели прогресса",
+   "srcLines": [
+    1706,
+    1725
+   ]
+  },
+  {
+   "file": "markup/30-title.html",
+   "note": "Титульный экран, тост открытия класса, оверлеи удара",
+   "srcLines": [
+    1726,
+    1739
+   ]
+  },
+  {
+   "file": "markup/40-overlays.html",
+   "note": "Выбор карт/божества/класса, пауза, интро, воскрешение",
+   "srcLines": [
+    1740,
+    1798
+   ]
+  },
+  {
+   "file": "markup/50-endgame.html",
+   "note": "Экран итогов, журнал, всплеск, сундук, эволюция, статы, древо",
+   "srcLines": [
+    1799,
+    1880
+   ]
+  },
+  {
+   "file": "markup/60-misc.html",
+   "note": "Крупный титр, туториал, орнамент",
+   "srcLines": [
+    1881,
+    1884
+   ]
+  },
+  {
+   "lit": "<script>\n"
+  },
+  {
+   "file": "game/data/sprite-atlas.js",
+   "note": "window.EMB — все кадры анимаций",
+   "srcLines": [
+    1886,
+    1900
+   ]
+  },
+  {
+   "file": "game/data/hero-warrior-v674.orphan.js",
+   "note": "v6.74: Новый Воин — 16 кадров (исправлено: теперь внутри <script>)",
+   "srcLines": [
+    1902,
+    1924
+   ]
+  },
+  {
+   "lit": "</script>\n<script>\n"
+  },
+  {
+   "file": "game/boot/00-build-log.js",
+   "note": "История сборок и заметки по масштабу мира",
+   "srcLines": [
+    1926,
+    1959
+   ]
+  },
+  {
+   "file": "game/core/world.js",
+   "note": "TILE/WORLD, набор декораций, тайл земли",
+   "srcLines": [
+    1960,
+    2028
+   ]
+  },
+  {
+   "file": "game/core/canvas.js",
+   "note": "Канвас, DPR, зум, resize",
+   "srcLines": [
+    2029,
+    2110
+   ]
+  },
+  {
+   "file": "game/core/util.js",
+   "note": "RNG (игровой/визуальный), seed для Daily, clamp/prune, LocalStorage",
+   "srcLines": [
+    2111,
+    2186
+   ]
+  },
+  {
+   "file": "game/render/atmosphere-cache.js",
+   "note": "Прегенерённые спрайты мотыльков/светлячков/листьев",
+   "srcLines": [
+    2187,
+    2206
+   ]
+  },
+  {
+   "file": "game/core/input.js",
+   "note": "Клавиатура (в т.ч. ЙЦУКЕН), джойстик, определение мобилы",
+   "srcLines": [
+    2207,
+    2257
+   ]
+  },
+  {
+   "file": "game/audio/engine.js",
+   "note": "Аудиошина, слои, компрессор, SFX боя",
+   "srcLines": [
+    2258,
+    2457
+   ]
+  },
+  {
+   "file": "game/audio/ambient-music.js",
+   "note": "Фоновый лес, всплески, процедурная музыка, совет при смерти",
+   "srcLines": [
+    2458,
+    2606
+   ]
+  },
+  {
+   "file": "game/state/run-state.js",
+   "note": "Игрок, камера, массивы сущностей, тряска, комбо, оружие",
+   "srcLines": [
+    2607,
+    2683
+   ]
+  },
+  {
+   "file": "game/data/balance.js",
+   "note": "BALANCE: все ручки сложности, таблица спавна, плотность",
+   "srcLines": [
+    2684,
+    2800
+   ]
+  },
+  {
+   "file": "game/systems/director.js",
+   "note": "Динамический директор: давление, капы, HP-мультипликатор",
+   "srcLines": [
+    2801,
+    2891
+   ]
+  },
+  {
+   "file": "game/data/run-modes.js",
+   "note": "Полный (30 мин) и короткий (12 мин) забег, расписание мини-боссов",
+   "srcLines": [
+    2892,
+    2954
+   ]
+  },
+  {
+   "file": "game/systems/corruption.js",
+   "note": "Ступени Порчи, рекорды по ступеням, классовые пассивки",
+   "srcLines": [
+    2955,
+    3008
+   ]
+  },
+  {
+   "file": "game/systems/class-unlocks.js",
+   "note": "Условия открытия классов, подсказки, прогресс",
+   "srcLines": [
+    3009,
+    3061
+   ]
+  },
+  {
+   "file": "game/data/classes.js",
+   "note": "CLASSES: 7 архетипов + базовые скорости",
+   "srcLines": [
+    3062,
+    3123
+   ]
+  },
+  {
+   "file": "game/data/boons.js",
+   "note": "BOONS: 5 божеств",
+   "srcLines": [
+    3124,
+    3145
+   ]
+  },
+  {
+   "file": "game/data/curses.js",
+   "note": "CURSES: 4 проклятия",
+   "srcLines": [
+    3146,
+    3155
+   ]
+  },
+  {
+   "file": "game/data/enemies.js",
+   "note": "ETYPES: типы врагов и их поведение",
+   "srcLines": [
+    3156,
+    3179
+   ]
+  },
+  {
+   "file": "game/render/sprites.js",
+   "note": "Кадры анимаций, отрисовка спрайтов, тени",
+   "srcLines": [
+    3180,
+    3429
+   ]
+  },
+  {
+   "file": "game/world/decorations.js",
+   "note": "Расстановка декораций мира",
+   "srcLines": [
+    3430,
+    3516
+   ]
+  },
+  {
+   "file": "game/core/pool.js",
+   "note": "Пулы объектов: враги, частицы, тексты урона",
+   "srcLines": [
+    3517,
+    3613
+   ]
+  },
+  {
+   "file": "game/core/particles.js",
+   "note": "Типы частиц, спрайты, самоцветы опыта, вспышки",
+   "srcLines": [
+    3614,
+    3782
+   ]
+  },
+  {
+   "file": "game/core/spatial-hash.js",
+   "note": "Сетка соседства для быстрых выборок врагов",
+   "srcLines": [
+    3783,
+    3856
+   ]
+  },
+  {
+   "file": "game/systems/fog-of-war.js",
+   "note": "Туман войны 3×3 тайла",
+   "srcLines": [
+    3857,
+    3888
+   ]
+  },
+  {
+   "file": "game/data/relics.js",
+   "note": "RELICS",
+   "srcLines": [
+    3889,
+    3900
+   ]
+  },
+  {
+   "file": "game/systems/achievements.js",
+   "note": "Достижения: список, проверка, уведомления, экран",
+   "srcLines": [
+    3901,
+    4059
+   ]
+  },
+  {
+   "file": "game/ui/screen-stats.js",
+   "note": "Экран рекордов",
+   "srcLines": [
+    4060,
+    4110
+   ]
+  },
+  {
+   "file": "game/systems/skill-tree.js",
+   "note": "Древо силы: узлы, экран, применение",
+   "srcLines": [
+    4111,
+    4193
+   ]
+  },
+  {
+   "file": "game/ui/juice.js",
+   "note": "Крупные титры, вехи минут, сердцебиение, вехи комбо",
+   "srcLines": [
+    4194,
+    4293
+   ]
+  },
+  {
+   "file": "game/systems/omens.js",
+   "note": "Знамения: волны раз в ~90 с",
+   "srcLines": [
+    4294,
+    4320
+   ]
+  },
+  {
+   "file": "game/systems/spawner.js",
+   "note": "Спавн врагов и формации (стена/кольцо/поток)",
+   "srcLines": [
+    4321,
+    4477
+   ]
+  },
+  {
+   "file": "game/systems/elites.js",
+   "note": "Аффиксы и элитные враги",
+   "srcLines": [
+    4478,
+    4515
+   ]
+  },
+  {
+   "file": "game/systems/special-events.js",
+   "note": "Курьер, маяк, шаман",
+   "srcLines": [
+    4516,
+    4573
+   ]
+  },
+  {
+   "file": "game/systems/bosses.js",
+   "note": "Босс и три мини-босса, интро забега",
+   "srcLines": [
+    4574,
+    4664
+   ]
+  },
+  {
+   "file": "game/systems/levelup.js",
+   "note": "Выдача реликвий, добор карт, окно прокачки",
+   "srcLines": [
+    4665,
+    4800
+   ]
+  },
+  {
+   "file": "game/systems/anomalies.js",
+   "note": "Аномалии на карте и их сбор",
+   "srcLines": [
+    4801,
+    4854
+   ]
+  },
+  {
+   "file": "game/systems/seal.js",
+   "note": "Печать: спецатака каждого класса",
+   "srcLines": [
+    4855,
+    5061
+   ]
+  },
+  {
+   "file": "game/data/cards.js",
+   "note": "CARD_POOL, слоты, эволюции, SYNERGIES",
+   "srcLines": [
+    5062,
+    5310
+   ]
+  },
+  {
+   "file": "game/systems/slots.js",
+   "note": "Учёт слотов оружия/пассивок, взятие карты, эволюция",
+   "srcLines": [
+    5311,
+    5487
+   ]
+  },
+  {
+   "file": "game/data/art-registry.js",
+   "note": "Реестр живописных ассетов (сундук, алтарь, ауры, боссы, эффекты)",
+   "srcLines": [
+    5488,
+    5571
+   ]
+  },
+  {
+   "file": "game/systems/chest.js",
+   "note": "Сундук: призы, вскрытие, показ",
+   "srcLines": [
+    5572,
+    5738
+   ]
+  },
+  {
+   "file": "game/ui/screen-cards.js",
+   "note": "Экран выбора карт: пул, таро-карточка, показ/закрытие",
+   "srcLines": [
+    5739,
+    6076
+   ]
+  },
+  {
+   "file": "game/systems/perks-shop.js",
+   "note": "Мета-перки и магазин",
+   "srcLines": [
+    6077,
+    6154
+   ]
+  },
+  {
+   "file": "game/systems/run-stats.js",
+   "note": "Статистика забега, кто убил, пожизненные счётчики",
+   "srcLines": [
+    6155,
+    6219
+   ]
+  },
+  {
+   "file": "game/platform/ads.js",
+   "note": "Реклама, воскрешение, удвоение золота, шаринг",
+   "srcLines": [
+    6220,
+    6391
+   ]
+  },
+  {
+   "file": "game/ui/screen-gameover.js",
+   "note": "Экран итогов забега",
+   "srcLines": [
+    6392,
+    6601
+   ]
+  },
+  {
+   "file": "game/ui/screen-select.js",
+   "note": "Выбор класса и божества",
+   "srcLines": [
+    6602,
+    6685
+   ]
+  },
+  {
+   "file": "game/ui/screen-title.js",
+   "note": "Титульный экран",
+   "srcLines": [
+    6686,
+    6816
+   ]
+  },
+  {
+   "file": "game/systems/run-reset.js",
+   "note": "Полный сброс забега",
+   "srcLines": [
+    6817,
+    6985
+   ]
+  },
+  {
+   "file": "game/ui/overlays.js",
+   "note": "Учёт модалок, закрытие, пауза",
+   "srcLines": [
+    6986,
+    7027
+   ]
+  },
+  {
+   "file": "game/core/settings.js",
+   "note": "Качество частиц, вибро, FPS-кап, профайлер, тема",
+   "srcLines": [
+    7028,
+    7105
+   ]
+  },
+  {
+   "file": "game/ui/registry.js",
+   "note": "Карта элементов UI и кэш getElementById",
+   "srcLines": [
+    7106,
+    7179
+   ]
+  },
+  {
+   "file": "game/core/update.js",
+   "note": "Главный update() и агрегатор мульти-килла",
+   "srcLines": [
+    7180,
+    7232
+   ]
+  },
+  {
+   "file": "game/entities/player.js",
+   "note": "Движение игрока",
+   "srcLines": [
+    7233,
+    7366
+   ]
+  },
+  {
+   "file": "game/systems/spawn-tick.js",
+   "note": "Тик спавна и спецсобытий",
+   "srcLines": [
+    7367,
+    7469
+   ]
+  },
+  {
+   "file": "game/weapons/tick.js",
+   "note": "Диспетчер оружий по откатам",
+   "srcLines": [
+    7470,
+    7534
+   ]
+  },
+  {
+   "file": "game/weapons/set-a.js",
+   "note": "Серп, Коса, Угли, Камень, Оберег, Зов + волки",
+   "srcLines": [
+    7535,
+    7754
+   ]
+  },
+  {
+   "file": "game/weapons/set-b.js",
+   "note": "Колокол, Вервь, Идол, Навь, Роса, Вихрь, Клюка, Зерно",
+   "srcLines": [
+    7755,
+    8057
+   ]
+  },
+  {
+   "file": "game/weapons/set-c.js",
+   "note": "Кости, Упырь, Зерцало, Сопель, Тризна, Голод + тик состояний",
+   "srcLines": [
+    8058,
+    8348
+   ]
+  },
+  {
+   "file": "game/weapons/fx-state.js",
+   "note": "Орбы серпов, стена оберега, буря вихря, след косы",
+   "srcLines": [
+    8349,
+    8432
+   ]
+  },
+  {
+   "file": "game/systems/projectiles.js",
+   "note": "Снаряды и ядовитые зоны",
+   "srcLines": [
+    8433,
+    8538
+   ]
+  },
+  {
+   "file": "game/entities/enemy-ai.js",
+   "note": "Таймеры, движение, ауры и обновление одного врага",
+   "srcLines": [
+    8539,
+    8991
+   ]
+  },
+  {
+   "file": "game/entities/enemies-tick.js",
+   "note": "Обход всех врагов за кадр",
+   "srcLines": [
+    8992,
+    9023
+   ]
+  },
+  {
+   "file": "game/systems/pickups.js",
+   "note": "Частицы, подбор лута, уровни, деспавн, HUD",
+   "srcLines": [
+    9024,
+    9217
+   ]
+  },
+  {
+   "file": "game/weapons/base-melee-bow.js",
+   "note": "Меч и лук: базовые оружия",
+   "srcLines": [
+    9218,
+    9398
+   ]
+  },
+  {
+   "file": "game/weapons/base-bolt.js",
+   "note": "Молния: поиск цели и разряд",
+   "srcLines": [
+    9399,
+    9455
+   ]
+  },
+  {
+   "file": "game/systems/drops.js",
+   "note": "Лечение с убийства и выпадение лута",
+   "srcLines": [
+    9456,
+    9692
+   ]
+  },
+  {
+   "file": "game/systems/damage.js",
+   "note": "Нанесение урона и реакция врага",
+   "srcLines": [
+    9693,
+    9800
+   ]
+  },
+  {
+   "file": "game/ui/icons.js",
+   "note": "Иконография: классы, божества, проклятия, SVG-набор",
+   "srcLines": [
+    9801,
+    9990
+   ]
+  },
+  {
+   "file": "game/ui/icon-mapping.js",
+   "note": "Сопоставление карт/оружий с иконками, визуалы классов",
+   "srcLines": [
+    9991,
+    10145
+   ]
+  },
+  {
+   "file": "game/render/hero-fx.js",
+   "note": "Медальон героя, всплеск смерти, эффекты классовых атак",
+   "srcLines": [
+    10146,
+    10399
+   ]
+  },
+  {
+   "file": "game/render/hero-anim.js",
+   "note": "Клипы и стейт-машина анимации героя",
+   "srcLines": [
+    10400,
+    10527
+   ]
+  },
+  {
+   "file": "game/render/hero-sprite.js",
+   "note": "Риг, спрайты, обводка и отрисовка героя",
+   "srcLines": [
+    10528,
+    10723
+   ]
+  },
+  {
+   "file": "game/render/world-layers.js",
+   "note": "Атмосфера, земля, самоцветы, бакеты декораций",
+   "srcLines": [
+    10724,
+    10933
+   ]
+  },
+  {
+   "file": "game/render/props-anomalies.js",
+   "note": "Аномалии и пропсы мира",
+   "srcLines": [
+    10934,
+    11366
+   ]
+  },
+  {
+   "file": "game/render/enemies-layer.js",
+   "note": "Слой врагов",
+   "srcLines": [
+    11367,
+    11626
+   ]
+  },
+  {
+   "file": "game/render/glow-auras.js",
+   "note": "Свечение, постоянные ауры, следы оружия",
+   "srcLines": [
+    11627,
+    11795
+   ]
+  },
+  {
+   "file": "game/render/fx-layer.js",
+   "note": "Слой эффектов и след косы",
+   "srcLines": [
+    11796,
+    12263
+   ]
+  },
+  {
+   "file": "game/render/player-layer.js",
+   "note": "Фокус на герое, игрок, монеты, цифры урона, кромка мира",
+   "srcLines": [
+    12264,
+    12441
+   ]
+  },
+  {
+   "file": "game/render/compose.js",
+   "note": "Синхронизация HUD, камера, сборка кадра, миникарта",
+   "srcLines": [
+    12442,
+    12634
+   ]
+  },
+  {
+   "file": "game/core/loop.js",
+   "note": "Фиксированный шаг физики, интерполяция, rAF",
+   "srcLines": [
+    12635,
+    12782
+   ]
+  },
+  {
+   "file": "game/systems/evolutions.js",
+   "note": "Рецепты эволюций, HUD прогресса, фанфары",
+   "srcLines": [
+    12783,
+    12957
+   ]
+  },
+  {
+   "file": "game/systems/journal.js",
+   "note": "Журнал находок",
+   "srcLines": [
+    12958,
+    13006
+   ]
+  },
+  {
+   "file": "game/systems/goals.js",
+   "note": "Открытия, следующая цель, готовность пар",
+   "srcLines": [
+    13007,
+    13139
+   ]
+  },
+  {
+   "file": "game/data/weapon-scaling.js",
+   "note": "WAFF/WBAL: как статы игрока масштабируют каждое оружие",
+   "srcLines": [
+    13140,
+    13221
+   ]
+  },
+  {
+   "file": "game/systems/surges.js",
+   "note": "Всплески: баннеры, ярость, камбэк",
+   "srcLines": [
+    13222,
+    13333
+   ]
+  },
+  {
+   "file": "game/systems/recipe-guard.js",
+   "note": "Блокировщик рецептов и смягчение старых синергий",
+   "srcLines": [
+    13334,
+    13407
+   ]
+  },
+  {
+   "file": "game/boot/init.js",
+   "note": "Инициализация и вход в титульный экран",
+   "srcLines": [
+    13408,
+    13438
+   ]
+  },
+  {
+   "lit": "</script>\n\n<!-- ============================================================\n     ИНТЕГРАЦИЯ С ЯНДЕКС ИГРАМИ (v1.0)\n     SDK подключён в <head>. Здесь — инициализация, облачные\n     сохранения (Player) и лидерборды. Вне платформы всё\n     безопасно отключается, игра работает как раньше.\n     ============================================================ -->\n<script>\n"
+  },
+  {
+   "file": "game/platform/yandex-games.js",
+   "note": "Инициализация SDK, облачные сохранения, лидерборды",
+   "srcLines": [
+    13448,
+    13552
+   ]
+  },
+  {
+   "lit": "</script>\n</body>\n</html>\n"
+  }
+ ]
+}

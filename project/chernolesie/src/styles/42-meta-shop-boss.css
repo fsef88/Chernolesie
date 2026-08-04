@@ -1,0 +1,58 @@
+/* ===== v5.3 META SHOP / TREE ===== */
+#shop{display:flex;gap:8px;margin:6px 0;flex-wrap:wrap;justify-content:center;max-width:min(920px,96vw);max-height:min(42vh,320px);overflow-y:auto;padding:4px}
+#shop .card.meta{width:138px;min-height:96px;position:relative;border-color:#6a5a30}
+#shop .card.meta .mtag{position:absolute;top:4px;right:5px;font-size:9px;color:#9fa088;letter-spacing:.3px}
+#shop .card.meta h3{font-size:12px;margin:10px 0 4px;color:#ffcf6a}
+#shop .card.meta p{font-size:10px;color:#c8c2a8;line-height:1.25;margin:0}
+#shop .card.meta .mcost{margin-top:6px;color:#ffcf6a;font-weight:700;font-size:11px}
+#shop .card.meta.maxed{opacity:.55;border-color:#5a604a}
+#shophead{width:100%;text-align:center;font-size:11px;color:#9fa088;margin:0 0 2px}
+#streakline{width:100%;text-align:center;font-size:11px;color:#e2a08a;margin:2px 0 0}
+#treeov .treerow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:min(960px,96vw);max-height:min(58vh,480px);overflow-y:auto}
+#treeov .treebranch{background:rgba(20,24,16,.88);border:1px solid #5a604a;border-radius:8px;padding:8px;min-width:148px;max-width:170px}
+#treeov .treebranch h3{color:#ffcf6a;margin:0 0 6px;font-size:13px;text-align:center;border-bottom:1px solid #3a4030;padding-bottom:4px}
+
+/* ===== v5.4 BOSS RHYTHM ===== */
+#bossphase{font-size:10px;color:#e2a08a;text-align:center;letter-spacing:1px;margin-top:2px;text-shadow:0 1px 2px #000;min-height:12px}
+#bosshp.phase2{background:linear-gradient(#e07040,#a03018);box-shadow:inset 0 0 4px rgba(255,120,60,.55)}
+#bosshp.phase3{background:linear-gradient(#ff4a3a,#8a1010);box-shadow:inset 0 0 6px rgba(255,60,40,.75),0 0 8px rgba(255,40,20,.35)}
+#bossbar.enrage #bossname{color:#ff6a4a;animation:bossPulse .6s ease-in-out infinite}
+@keyframes bossPulse{0%,100%{text-shadow:0 0 6px #ff4a3a}50%{text-shadow:0 0 16px #ff8a50}}
+
+/* ===== v5.9 SPECIAL UX ===== */
+#spechud{position:fixed;bottom:calc(max(34px,env(safe-area-inset-bottom,0)) + 120px);left:50%;transform:translateX(-50%);z-index:21;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:120px}
+#spechud .slbl{font-size:10px;color:#c9a04a;letter-spacing:.6px;text-shadow:0 1px 2px #000;font-weight:700}
+#spechud .srow{display:flex;align-items:center;gap:8px}
+#specicon{width:28px;height:28px;border-radius:50%;border:1px solid #c9a04a;background:rgba(20,24,16,.9);display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 0 6px rgba(0,0,0,.5)}
+#specbar{width:min(160px,42vw);height:8px;background:rgba(20,24,16,.85);border:1px solid #5a4017;border-radius:4px;overflow:hidden;position:relative}
+#specfill{height:100%;width:0%;background:linear-gradient(90deg,#6a4a20,#ffcf6a);box-shadow:0 0 6px rgba(255,207,106,.45);transition:width .12s linear}
+#spechud.ready .slbl{color:#fff0b0;animation:boonGlow 1.2s ease-in-out infinite}
+#spechud.ready #specfill{background:linear-gradient(90deg,#c9a04a,#fff0b0)}
+#spechud.ready #specicon{box-shadow:0 0 12px var(--spec-c,#ffcf6a);border-color:var(--spec-c,#ffcf6a)}
+#speckey{font-size:9px;color:#8a8f7a;text-shadow:0 1px 2px #000}
+#spechud.ready #speckey{color:#ffcf6a}
+.tbtn.special{position:relative;overflow:visible}
+.tbtn.special .scharge{position:absolute;inset:-4px;border-radius:50%;background:conic-gradient(var(--spec-c,#b478ff) var(--spec-p,0%), transparent 0);opacity:.85;z-index:0;pointer-events:none;-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px));mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px))}
+.tbtn.special .sico{position:relative;z-index:1;line-height:1}
+/* v6.55: сама кнопка не прыгает; готовность показывает только мягкое свечение медальона */
+.tbtn.special.ready{animation:none}
+/* v6.24: крупный титр событий. Лог в углу читают редко — крупные вехи забега
+   (минута, падение босса, сеча) должны приходить в центр поля зрения. */
+/* z-index 31 — выше оверлея карт (30): падение мини-босса сразу открывает выбор
+   карты, и на z-index 26 титр гасился в тот же кадр, в котором появлялся */
+#bigtext{position:fixed;left:50%;top:20%;z-index:31;pointer-events:none;opacity:0;text-align:center;white-space:nowrap}
+#bigtext .bt1{font-size:clamp(26px,7.5vw,56px);font-weight:800;letter-spacing:2px;color:#ffe6a0;text-shadow:0 2px 0 #000,0 0 24px rgba(255,180,60,.85)}
+#bigtext .bt2{margin-top:2px;font-size:clamp(10px,3vw,15px);color:#c9a04a;letter-spacing:3px;text-transform:uppercase;text-shadow:0 1px 3px #000}
+#bigtext.show{animation:bigTextIn 2.3s cubic-bezier(.2,.9,.25,1) forwards}
+@keyframes bigTextIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.55)}10%{opacity:1;transform:translate(-50%,-50%) scale(1.12)}20%{transform:translate(-50%,-50%) scale(1)}76%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-56%) scale(1.05)}}
+/* пульс сердцебиения на низком HP — страх должен быть виден, а не только в цифре */
+#lowHpVignette.crit{animation:hbPulse .62s ease-out infinite}
+@keyframes hbPulse{0%{opacity:.55}12%{opacity:1}30%{opacity:.6}45%{opacity:.85}100%{opacity:.55}}
+#tutorial{max-width:min(420px,88vw);line-height:1.35}
+#tutorial .tk{display:inline-block;background:rgba(201,160,74,.2);border:1px solid #c9a04a;border-radius:4px;padding:0 5px;margin:0 2px;color:#ffcf6a;font-weight:700}
+@media(max-width:700px){
+  #spechud{bottom:calc(max(12px,env(safe-area-inset-bottom,0)) + 120px);left:12px;transform:none;align-items:flex-start}
+  #speckey{display:none}
+  #log{bottom:calc(max(12px,env(safe-area-inset-bottom,0)) + 206px)} /* v5.42 (Г4) */
+}
+

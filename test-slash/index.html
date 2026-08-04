@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест Slash-эффекта</title>
+    <style>
+        body {
+            margin: 0;
+            background: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            border: 2px solid #333;
+            background: #1a1a1a;
+        }
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    
+    <div class="controls">
+        <button onclick="playSlash()">Пуск (Slash)</button>
+        <button onclick="resetCanvas()">Сброс</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const img = new Image();
+        img.src = 'slash-anim-sheet-v8.png';
+
+        let frame = 0;
+        let isPlaying = false;
+        let lastTime = 0;
+        const frameDuration = 50; // 50ms на кадр (20 FPS)
+
+        function draw() {
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            if (!img.complete) {
+                ctx.fillStyle = '#fff';
+                ctx.font = '20px Arial';
+                ctx.fillText('Загрузка спрайтов...', 300, 300);
+                return;
+            }
+
+            const frameWidth = 256;
+            const frameHeight = 256;
+            const cols = 4;
+            const rows = 3;
+
+            const col = frame % cols;
+            const row = Math.floor(frame / cols);
+
+            const sx = col * frameWidth;
+            const sy = row * frameHeight;
+
+            // Центрируем на экране
+            const x = canvas.width / 2 - frameWidth / 2;
+            const y = canvas.height / 2 - frameHeight / 2;
+
+            ctx.drawImage(
+                img,
+                sx, sy, frameWidth, frameHeight,
+                x, y, frameWidth, frameHeight
+            );
+
+            // Отладочная информация
+            ctx.fillStyle = '#0f0';
+            ctx.font = '14px Arial';
+            ctx.fillText(`Кадр: ${frame + 1}/12`, 20, 30);
+        }
+
+        function animate(timestamp = 0) {
+            if (!isPlaying) return;
+
+            if (timestamp - lastTime > frameDuration) {
+                frame = (frame + 1) % 12;
+                lastTime = timestamp;
+            }
+
+            draw();
+            requestAnimationFrame(animate);
+        }
+
+        function playSlash() {
+            if (isPlaying) return;
+            
+            frame = 0;
+            isPlaying = true;
+            lastTime = 0;
+            animate();
+            
+            // Останавливаем через 600ms (12 кадров × 50ms)
+            setTimeout(() => {
+                isPlaying = false;
+                draw();
+            }, 650);
+        }
+
+        function resetCanvas() {
+            isPlaying = false;
+            frame = 0;
+            draw();
+        }
+
+        // Автозапуск при загрузке
+        img.onload = () => {
+            draw();
+            console.log('Спрайтовый лист загружен');
+        };
+
+        img.onerror = () => {
+            ctx.fillStyle = '#f00';
+            ctx.font = '20px Arial';
+            ctx.fillText('Ошибка загрузки спрайтов!', 280, 300);
+        };
+
+        // Клик по холсту = запуск
+        canvas.addEventListener('click', playSlash);
+
+        // Первая отрисовка
+        draw();
+    </script>
+</body>
+</html>

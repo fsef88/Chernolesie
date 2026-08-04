@@ -1,0 +1,10 @@
+/* v5.38: кириллический устав Мономах (OFL, slavonic/Monomakh) — встроен, внешних шрифтов нет */
+@font-face{font-family:'Monomakh';src:url("@@A:ui/monomakh.ttf@@") format('truetype');font-weight:400;font-style:normal;font-display:swap;}
+/* v5.39: кириллический устав на первые роли — титульник, интро, экраны, карты */
+#titlescreen h1,#titlescreen #tsSub,.classcard h3,.classcard .arch,#btnStartPoohd,#runintro .name,#runintro .sub,#over h1,.card h3,.card h4{font-family:'Monomakh',Georgia,serif}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#0a0d08;overflow:hidden;font-family:Georgia,'Iowan Old Style','Palatino Linotype',Palatino,'Times New Roman',serif;color:#e8e2cf;touch-action:none;overscroll-behavior:none;user-select:none;-webkit-user-select:none}
+#wrap{position:fixed;inset:0;overflow:hidden}
+canvas{background:#1a2410;display:block;position:absolute;top:0;left:0;width:100%;height:100%;image-rendering:pixelated}
+

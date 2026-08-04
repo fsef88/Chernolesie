@@ -1,0 +1,59 @@
+<!-- ============== ЭКРАНЫ ВЫБОРА ============== -->
+<div id="cards" class="pframe">
+  <div class="chrays" id="cardsrays" style="position:absolute;width:150vw;height:150vw;max-width:1100px;max-height:1100px;background:repeating-conic-gradient(from 0deg,rgba(255,200,90,.05) 0deg 6deg,transparent 6deg 20deg);border-radius:50%;pointer-events:none;z-index:-1;animation:chRaysSpin 35s linear infinite, chRaysPulse 3.5s ease-in-out infinite alternate;filter:blur(2px)"></div>
+  <h2 class="cards-title">Уровень! Выбери улучшение</h2>
+  <div class="section-ornament"></div>
+  <div class="row" id="cardrow"></div>
+  <div id="cardbtns">
+    <button class="btnsm" id="btnreroll">Перебросить (5 ◆)</button>
+    <button class="btnsm" id="btnskip">Пропустить</button>
+  </div>
+</div>
+<div id="boonov" class="pframe">
+  <h2>Выбери божество-покровителя</h2>
+  <div class="section-ornament"></div>
+  <p class="sub" style="color:#9fa088;margin:0 0 6px;font-size:11px;text-align:center">Каждый бог дарует тебе силу на этот забег. Благословение вечно.</p>
+  <div class="boonrow" id="boonrow"></div>
+</div>
+<div id="classov" class="pframe">
+  <h2>ЗАЩИТНИКИ ЧЁРНОЛЕСЬЯ</h2>
+  <div class="section-ornament"></div>
+  <p class="sub" style="color:#b9a77d;margin:0 0 6px;font-size:11px;text-align:center;letter-spacing:.4px">Пять оберегов заставы. Один путь — пережить Чёрный лес.</p>
+  <div class="classrow" id="classrow"></div>
+  <button class="big" id="btnClassStart" style="margin-top:10px">⚔ Начать поход</button>
+</div>
+<div id="pauseov" class="pframe">
+  <h2>ПАУЗА</h2>
+  <div class="settings">
+    <label>Громкость <input type="range" id="vol" min="0" max="100" value="35"></label>
+    <label>Музыка <input type="range" id="mus" min="0" max="100" value="25"></label>
+    <label>Качество <select id="qpart"><option value="2">Макс</option><option value="1" selected>Средне</option><option value="0">Мин</option></select></label>
+    <label>FPS <select id="fpscap"><option value="0" selected>∞</option><option value="60">60</option><option value="30">30</option></select></label>
+    <label>Тема <select id="theme"><option value="forest" selected>Лес</option><option value="winter">Зима</option><option value="night">Ночь</option></select></label>
+    <label>Туман <select id="warp"><option value="1" selected>Вкл</option><option value="0">Выкл</option></select></label>
+    <label>Обзор <select id="zoomsel"><option value="far" selected>Далеко</option></select></label>
+    <label>Вибро <select id="vibsel"><option value="1" selected>Вкл</option><option value="0">Выкл</option></select></label>
+  </div>
+  <div class="btnrow">
+    <button class="big" id="btnresume">Продолжить поход</button>
+    <button class="big" id="btnAch">Достижения</button>
+    <button class="big" id="btnStats">Рекорды</button>
+    <button class="big" id="btnTree">Древо Силы</button>
+    <!-- v6.19: журнал раньше открывался только с экрана смерти (#over, btnJournal). Из паузы посмотреть находки было нельзя. Дублируем вход сюда: пауза уже стоит, openJournal кладёт поверх оверлей #jourov, закрытие возвращает в паузу. -->
+    <button class="big" id="btnJournal2">📖 Журнал находок</button>
+  </div>
+</div>
+<div id="bossintro"><div class="name">ЗМЕЙ ГОРЫНЫЧ</div><div class="sub">Хранитель Заставы пробудился</div></div>
+<div id="runintro"><div class="name">ЧЁРНОЛЕСЬЕ</div><div class="sub">Застава встречает рассвет…</div></div>
+<div id="reviveov" style="display:none;position:fixed;inset:0;z-index:60;background:rgba(6,8,12,.86);
+     align-items:center;justify-content:center;flex-direction:column;gap:18px;text-align:center;padding:24px">
+  <h1 style="margin:0;color:#ffcf6a;font-size:clamp(22px,6vw,38px)">Застава пала…</h1>
+  <p id="revivetxt" style="margin:0;color:#cfd8e3;max-width:420px">Подняться и продолжить забег?</p>
+  <button id="btnrevive" onclick="reviveByAd()" style="padding:14px 22px;font:inherit;font-size:18px;
+     background:#ffcf6a;color:#1a1408;border:0;border-radius:10px;cursor:pointer">▶ Смотреть рекламу и подняться</button>
+  <button id="btndecline" onclick="declineRevive()" style="padding:10px 18px;font:inherit;background:transparent;color:#8a94a3;
+     border:1px solid #2a3340;border-radius:10px;cursor:pointer">Завершить забег</button>
+</div>
+<!-- v6.18: порядок блоков переставлен по документу «психология удержания»:
+     причина смерти -> близкий рекорд -> ближайшая цель -> ОДНА крупная кнопка,
+     и только потом кузница. Раньше «Ещё раз» стояла под всей простынёй магазина. -->
