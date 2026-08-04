@@ -151,6 +151,41 @@ def frame_stats(f):
             'r50': q(0.5), 'r90': q(0.9), 'span': hi - lo}
 
 
+def apex_box(frames, threshold=6.0):
+    """Рамка от острия конуса.
+
+    У конусного оружия точка, из которой бьёт игрок, — это остриё клина, а
+    вовсе не центр рисунка. Игра кладёт ячейку центром на героя, поэтому
+    остриё обязано оказаться в центре ячейки. Генератор рисует клин от края
+    до края: остриё у левого края, дуга у правого. Берём остриё за центр и
+    отмеряем радиус до самой дальней точки рисунка — тогда дуга садится
+    ровно на границу поражения, а остриё — под ноги герою."""
+    apex = None
+    far = 0.0
+    for f in frames:
+        ys, xs = np.nonzero(f[:, :, 3] > threshold)
+        if not len(xs):
+            continue
+        i = int(np.argmin(xs))               # самая левая точка кадра — остриё
+        cand = (float(xs[i]), float(ys[i]))
+        if apex is None or cand[0] < apex[0]:
+            apex = cand
+    if apex is None:
+        raise SystemExit('Все кадры пустые')
+    for f in frames:
+        ys, xs = np.nonzero(f[:, :, 3] > threshold)
+        if not len(xs):
+            continue
+        d = np.hypot(xs - apex[0], ys - apex[1])
+        # не max, а 99-й перцентиль: одна улетевшая искра иначе задаёт радиус
+        # всему листу, и дуга садится заметно внутри границы поражения
+        far = max(far, float(np.percentile(d, 99)))
+    half = max(far, 1.0)
+    x0, y0 = int(round(apex[0] - half)), int(round(apex[1] - half))
+    side = int(round(half * 2))
+    return (x0, y0, x0 + side, y0 + side)
+
+
 def fit_box(frames, weight_pow=2.0):
     """Рамка по массе: центр — там же, где рисунок, размер — по ядру.
 
@@ -208,8 +243,9 @@ def main():
     ap.add_argument('--pick')
     ap.add_argument('--out-grid', default='4x2')
     ap.add_argument('--cell', type=int, default=160)
-    ap.add_argument('--fit', choices=['mass', 'box'], default='mass',
+    ap.add_argument('--fit', choices=['mass', 'box', 'apex'], default='mass',
                     help='mass — кадрировать по массе рисунка (по умолчанию), '
+                         'apex — от острия клина, для конусного оружия, '
                          'box — по рамке содержимого, как было до v7.35')
     args = ap.parse_args()
 
@@ -227,6 +263,9 @@ def main():
     if args.fit == 'box':
         box = square(union_box(frames), frames[0].shape[1], frames[0].shape[0])
         stats = [frame_stats(f) for f in frames]
+    elif args.fit == 'apex':
+        box = apex_box(frames)
+        stats = [frame_stats(crop_pad(f, box)) for f in frames]
     else:
         box, stats = fit_box(frames)
 
