@@ -71,9 +71,16 @@ function startFormation(){
  const kind=kinds[Math.min(kinds.length-1,Math.floor(srnd(0,kinds.length)))];
  let type=pickEnemyType(time);
  if(kind==='pack')type=time<55?'leshiy':(srnd(0,1)<0.55?'rusalka':'volkolak');
+ runFormation(kind,type,formationSize(),null);
+}
+// v7.30: геометрия вынесена из startFormation(). Случайная волна и волна из
+// расписания строятся одним кодом, отличается только КТО решает kind/type/n.
+// announce: null — стандартная реплика формации, строка — своя, '' — молча.
+function runFormation(kind,type,n,announce){
+ if(!ETYPES[type])return;
  const a=srnd(0,TAU);
- const n=formationSize();
  const cx=cam.x+W/2,cy=cam.y+H/2;
+ const say=(def,col)=>{const s=(announce===null||announce===undefined)?def:announce;if(s)log(s,col||'gold');};
  if(kind==='ring'){
   // кольцо по эллипсу экрана: смыкается со всех сторон разом
   const rx=W/2+200,ry=H/2+200;
@@ -82,7 +89,7 @@ function startFormation(){
    const t=a+i/n*TAU;
    if(spawnAt(type,cx+Math.cos(t)*rx,cy+Math.sin(t)*ry))ok++;
   }
-  if(ok>4){log('⟳ Кольцо смыкается','gold');vibe(60);flashScreen('#ffcf6a',0.3);}
+  if(ok>4){say('⟳ Кольцо смыкается');vibe(60);flashScreen('#ffcf6a',0.3);}
  }else if(kind==='wall'){
   // стена: одна линия поперёк направления a, второй ряд со смещением
   const R=Math.max(W,H)*0.6+150;
@@ -94,7 +101,7 @@ function startFormation(){
    const row=(i%2)*80;
    if(spawnAt(type,cx+ox*(R+row)+qx*u,cy+oy*(R+row)+qy*u))ok++;
   }
-  if(ok>4){log('▮ Стена идёт','gold');vibe(60);flashScreen('#ff6a6a',0.3);}
+  if(ok>4){say('▮ Стена идёт');vibe(60);flashScreen('#ff6a6a',0.3);}
  }else if(kind==='pincer'){
   // зажим с двух сторон: игроку надо выбрать щель, а не просто идти по кругу
   const R=Math.max(W,H)*0.58+150;
@@ -110,7 +117,7 @@ function startFormation(){
     if(spawnAt(type,cx+sx*(R+row)+qx*u,cy+sy*(R+row)+qy*u))ok++;
    }
   }
-  if(ok>6)log('⇄ Чаща сжимает','gold');
+  if(ok>6)say('⇄ Чаща сжимает');
  }else if(kind==='pack'){
   // быстрая стая: не много HP, но много тел. Хорошо создаёт ощущение мясорубки.
   const R=Math.max(W,H)*0.52+120;
@@ -123,19 +130,41 @@ function startFormation(){
    const depth=srnd(0,210);
    if(spawnAt(type,cx+ox*(R+depth)+qx*u,cy+oy*(R+depth)+qy*u))ok++;
   }
-  if(ok>5)log('⋯ Стая прорывается','gold');
+  if(ok>5)say('⋯ Стая прорывается');
  }else{
   // поток: узкий сектор, подаётся порциями несколько секунд подряд
   form={kind:'stream',t:6.5,tick:0,a:a,type:type,per:Math.max(2,Math.round(n/8))};
-  log('≫ Поток с одной стороны','gold');
+  say('≫ Поток с одной стороны');
+ }
+}
+// v7.30: РАСПИСАНИЕ ВОЛН. Идёт поверх случайных формаций и имеет приоритет:
+// после сценарной волны случайная не приходит ещё 18 секунд, иначе две толпы
+// накладываются и главы забега перестают читаться по отдельности.
+let waveIdx=0;
+function updateWaveScript(){
+ const pt=progT(time);
+ while(waveIdx<WAVE_SCRIPT.length&&pt>=WAVE_SCRIPT[waveIdx].t){
+  const w=WAVE_SCRIPT[waveIdx++];
+  if(bossSpawned)continue;
+  // размер поправляется на площадь экрана тем же множителем, что и обычные
+  // формации: на планшете волна не должна размазываться в редкую цепочку
+  runFormation(w.kind,w.type,Math.max(6,Math.round(w.n*Math.min(2.5,viewDensityMul()))),w.log||'');
+  formCd=Math.max(formCd,18);
  }
 }
 function updateFormations(dt){
- if(bossSpawned||time<18)return;   // v6.56: не ждём полминуты до первой волны
+ if(bossSpawned)return;
+ updateWaveScript();               // v7.30: сценарные волны идут и до 18-й секунды
+ if(time<18)return;                // v6.56: не ждём полминуты до первой формации
  formCd-=dt;
  if(formCd<=0){
-  formCd=Math.max(16,(34-Math.floor(time/60)*2)*directorFormMul());   // v6.58: директор чаще даёт формации, если легко
-  if(liveEnemies()<enemyCap(time)*1.05)startFormation();
+  // v7.30: раньше случайная формация приходила каждые 16-34 с и была единственным
+  // ритмом. Теперь ритм задаёт WAVE_SCRIPT, а случайные волны сдвинуты в фон:
+  // иначе сценарная глава тонет в трёх безымянных, пришедших вокруг неё.
+  formCd=Math.max(26,(50-Math.floor(time/60)*2)*directorFormMul());   // v6.58: директор чаще даёт формации, если легко
+  // и порог свободного места строже: волна в уже забитое поле не спавнится,
+  // а кулдаун тратит — получалось «объявление есть, толпы нет».
+  if(liveEnemies()<enemyCap(time)*0.85)startFormation();
  }
  if(form){
   form.t-=dt;
