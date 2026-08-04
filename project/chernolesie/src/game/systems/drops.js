@@ -11,8 +11,21 @@ function onKillHeal(amount){
   if(P.hp>before)spawnDmgText(P.x,P.y-P.r-20,`+${Math.round(P.hp-before)}`,'frost');
  }
 }
+// v7.31: ЗОЛОТО ЗА ЦЕННОСТЬ, А НЕ ЗА ФАКТ СМЕРТИ.
+// Было gold++ на каждое убийство. Замер полного забега: 98 301 убийство —
+// столько же золота, и вся Кузница с Древом окупались за три забега. При этом
+// леший (5 HP) приносил ровно столько же, сколько Чащобный Хозяин (300 HP).
+// Теперь платят только те, кого стоило убивать: шкала повторяет номиналы
+// кристаллов из GEM_TIERS, чтобы ценность врага читалась одинаково и в опыте,
+// и в золоте. Рядовая мелочь не платит совсем — её валюта это опыт.
+function goldFor(e){
+ if(!e)return 0;
+ if(e.boss||e.mini||e.elite)return 0;   // у них свои выплаты ниже по файлу
+ const v=e.xp||1;
+ return v>=25?8:v>=10?3:v>=5?1:0;
+}
 function killDrops(e){
- if(e.dead)return;e.dead=true;e.hp=0;kills++;gold++;sfxDeath();spawnDeathBurst(e);
+ if(e.dead)return;e.dead=true;e.hp=0;kills++;gold+=goldFor(e);sfxDeath();spawnDeathBurst(e);
  // v6.22: копим смерти текущего шага для общего ответа (см. flushMultiKill)
  mkN++;mkX+=e.x;mkY+=e.y;
  onEnemyKilledW(e.x,e.y);   // v6.17c: серия венца + метка для тризны
