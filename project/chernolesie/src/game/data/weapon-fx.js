@@ -112,6 +112,23 @@ function zoneStamp(x,y,R,id,a,opts){
  };
  ctx.save();
  ctx.translate(x,y);
+ // Луч рисуется СВЕТОМ, а не обводкой. У площадных зон контур уместен: он
+ // очерчивает край большой фигуры и не мешает смотреть внутрь. У спицы
+ // толщиной 44 px контур — это две линии почти вплотную, и корона из восьми
+ // таких читается как чертёж поверх боя. Поэтому здесь заливка с растяжкой
+ // от ног игрока наружу: ярко у древка, гаснет к концу луча.
+ if(rays){
+  ctx.globalCompositeOperation='lighter';
+  const g=ctx.createRadialGradient(0,0,hw*0.5,0,0,R);
+  g.addColorStop(0,f.core);
+  g.addColorStop(0.35,f.col);
+  g.addColorStop(1,f.col+'00');
+  ctx.globalAlpha=a*0.85;
+  ctx.fillStyle=g;
+  path();ctx.fill();
+  ctx.restore();
+  return;
+ }
  // 1) тёмная кромка — обычным смешиванием, чтобы у зоны был край
  ctx.globalAlpha=Math.min(1,a*0.55);
  ctx.strokeStyle=f.rim;
