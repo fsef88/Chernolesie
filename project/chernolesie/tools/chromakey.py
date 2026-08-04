@@ -24,11 +24,15 @@
 #      python3 tools/chromakey.py вход.png выход.webp
 #      python3 tools/chromakey.py вход.png выход.webp --grid 4x3 \
 #              --pick 0,1,3,4,6,7,9,10 --out-grid 4x2 --cell 160
+#      python3 tools/chromakey.py луч.png выход.webp --grid 4x2 \
+#              --fit bar --cell 320x64
 #
 #  --grid      сетка кадров во входном листе (столбцы x строки)
 #  --pick      какие кадры оставить, по порядку слева направо сверху вниз
 #  --out-grid  сетка выходного листа
-#  --cell      сторона квадратной ячейки выходного листа
+#  --cell      ячейка выходного листа: число (квадрат) или ШxВ
+#  --fit       как кадрировать: mass (по массе), apex (от острия конуса),
+#              bar (прямоугольником, для лучевых зон), box (старое поведение)
 #
 #  Без --grid лист просто чистится «как есть», без перекладки кадров.
 # ============================================================
@@ -269,10 +273,14 @@ def main():
     ap.add_argument('--grid')
     ap.add_argument('--pick')
     ap.add_argument('--out-grid', default='4x2')
-    ap.add_argument('--cell', type=int, default=160)
-    ap.add_argument('--fit', choices=['mass', 'box', 'apex'], default='mass',
+    ap.add_argument('--cell', default='160',
+                    help='сторона ячейки выходного листа; можно ШxВ для '
+                         'неквадратной (лучевые зоны — вытянутая полоса)')
+    ap.add_argument('--fit', choices=['mass', 'box', 'apex', 'bar'], default='mass',
                     help='mass — кадрировать по массе рисунка (по умолчанию), '
                          'apex — от острия клина, для конусного оружия, '
+                         'bar — по рамке содержимого БЕЗ приведения к квадрату, '
+                         'для лучевых зон, '
                          'box — по рамке содержимого, как было до v7.35')
     args = ap.parse_args()
 
@@ -290,6 +298,11 @@ def main():
     if args.fit == 'box':
         box = square(union_box(frames), frames[0].shape[1], frames[0].shape[0])
         stats = [frame_stats(f) for f in frames]
+    elif args.fit == 'bar':
+        # луч кадрируется прямоугольником: приводить его к квадрату значит
+        # добить пустотой сверху и снизу, а потом эту пустоту растянуть
+        box = union_box(frames)
+        stats = [frame_stats(crop_pad(f, box)) for f in frames]
     elif args.fit == 'apex':
         box = apex_box(frames)
         stats = [frame_stats(crop_pad(f, box)) for f in frames]
@@ -311,18 +324,19 @@ def main():
         print(f'{i + 1:>4} | {s["mass"]:5.3f} | {s["r50"]:4.2f} {s["r90"]:4.2f} '
               f'| {s["cx"]:+5.2f} {s["cy"]:+5.2f} | {s["span"]:5.0f}°')
 
-    cell = args.cell
+    cw, ch = (parse_grid(args.cell) if 'x' in str(args.cell).lower()
+              else (int(args.cell), int(args.cell)))
     cols, rows = parse_grid(args.out_grid)
     if len(frames) != cols * rows:
         sys.exit(f'Кадров {len(frames)}, а сетка {cols}x{rows} ждёт {cols * rows}')
 
-    sheet = Image.new('RGBA', (cols * cell, rows * cell), (0, 0, 0, 0))
+    sheet = Image.new('RGBA', (cols * cw, rows * ch), (0, 0, 0, 0))
     for i, f in enumerate(frames):
-        tile = to_image(crop_pad(f, box)).resize((cell, cell), Image.LANCZOS)
-        sheet.paste(tile, ((i % cols) * cell, (i // cols) * cell))
+        tile = to_image(crop_pad(f, box)).resize((cw, ch), Image.LANCZOS)
+        sheet.paste(tile, ((i % cols) * cw, (i // cols) * ch))
 
     sheet.save(args.dst, lossless=True) if args.dst.endswith('.webp') else sheet.save(args.dst)
-    print(f'{args.dst}: {cols}x{rows} по {cell}px, кадр-рамка {box}')
+    print(f'{args.dst}: {cols}x{rows} по {cw}x{ch}px, кадр-рамка {box}')
 
 
 if __name__ == '__main__':
