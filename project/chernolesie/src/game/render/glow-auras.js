@@ -90,12 +90,15 @@ function drawWeaponTrails(px, py){
     ctx.translate(px,py);
     ctx.rotate(s.ang);
     ctx.globalAlpha=alpha;
-    // v7.10: 8-кадровая анимация славянского взмаха из атласа SLASH_ANIM_SHEET (сетка 4x2, кадр 80x80)
+    // v7.10: 8-кадровая анимация славянского взмаха из атласа SLASH_ANIM_SHEET (сетка 4x2)
     const progress = 1 - Math.max(0, s.t/s.maxT);
     if(typeof SLASH_ANIM_SHEET !== 'undefined' && SLASH_ANIM_SHEET.complete && SLASH_ANIM_SHEET.naturalWidth){
       const fIdx = Math.min(7, Math.floor(progress * 8));
       const col = fIdx % 4, row = Math.floor(fIdx / 4);
-      const sx = col * 80, sy = row * 80, sw = 80, sh = 80;
+      // размер кадра берётся из самого листа: жёстко зашитые 80px не совпадали ни с одним атласом
+      const sw = Math.floor(SLASH_ANIM_SHEET.naturalWidth / 4);
+      const sh = Math.floor(SLASH_ANIM_SHEET.naturalHeight / 2);
+      const sx = col * sw, sy = row * sh;
       const drawSize = reach * 1.8;
       ctx.drawImage(SLASH_ANIM_SHEET, sx, sy, sw, sh, -drawSize*0.35, -drawSize*0.5, drawSize, drawSize);
     } else {
