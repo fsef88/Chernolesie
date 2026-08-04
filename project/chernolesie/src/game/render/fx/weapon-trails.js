@@ -12,6 +12,13 @@ export function drawWeaponTrails(ctx, slashes, cam, FXS, currentClass, weapons, 
 
     // Коса Моры
     if (s._kosa) {
+      // v7.35: у косы появился свой лист зоны по заданию (WFX_SHEETS.kosa).
+      // Старый след рисовался поверх него на 185% радиуса, сложением и без
+      // обрезки по конусу — он и расплывался за границу зоны, превращая удар
+      // в мазок. Один удар рисуется один раз: где есть лист, старый след лишний.
+      const _kw = (typeof WFX_SHEETS !== 'undefined') && WFX_SHEETS.kosa;
+      if (_kw && _kw.brief) continue;
+
       const kk = Math.min(1, s.t / 0.26);
       ctx.save();
       ctx.translate(P.x - cam.x, P.y - cam.y);

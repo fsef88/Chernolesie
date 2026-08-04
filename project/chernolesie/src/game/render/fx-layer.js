@@ -187,6 +187,14 @@ function drawFxLayer(){
   if (sx < -130 || sy < -130 || sx > W + 130 || sy > H + 130) continue;
 
   if(s._kosa){
+   // v7.35: у косы есть свой лист зоны по заданию (WFX_SHEETS.kosa). Этот след
+   // рисуется на 185% радиуса, сложением и без обрезки по конусу — поверх листа
+   // он расплывался далеко за границу зоны, и удар читался как мазок. Один удар
+   // рисуется один раз: где есть лист, старый след не нужен.
+   // Тот же блок продублирован в render/fx/weapon-trails.js (ветка .modern),
+   // правка внесена в оба, чтобы копии не разъехались.
+   const _kw=(typeof WFX_SHEETS!=='undefined')&&WFX_SHEETS.kosa;
+   if(_kw&&_kw.brief)continue;
    const kk=Math.min(1,s.t/0.26);
    ctx.save();ctx.translate(P.x-cam.x,P.y-cam.y);ctx.rotate(s.ang);
    ctx.globalCompositeOperation='lighter';

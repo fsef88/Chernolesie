@@ -68,37 +68,54 @@ function wfx(id){return WFX[id]||WFX_DEF;}
 //  попадание, без «художественных» множителей: если нарисовано больше, чем
 //  бьёт, игрок учится не верить картинке.
 // ============================================================
+//  v7.35: не всякая зона — круг. Коса бьёт конусом по взгляду (halfArc 0.75 рад,
+//  у эволюции 1.15), а кольцо рисовалось полное — обещало удар вокруг себя при
+//  секторе вперёд, то есть вчетверо больше, чем бьёт. Поэтому граница строится
+//  по той же паре (радиус, полуугол), по которой считается попадание: у конуса
+//  это сектор с двумя радиусами, у круга — прежнее кольцо.
 function zoneStamp(x,y,R,id,a,opts){
  if(!(R>0)||!(a>0))return;
  const f=wfx(id),o=opts||{};
  // толщина кромки НЕ пропорциональна радиусу: у зоны в 500px кольцо в 14px
  // читается как забор вокруг игрока. Растёт медленно и упирается в потолок.
  const rimW=o.rimW||Math.max(2,Math.min(5.5,1.6+R*0.008));
+ // сектор: полуугол меньше пи — значит зона конусная и замыкается на игроке
+ const half=(o.arc>0&&o.arc<Math.PI)?o.arc:0;
+ const ang=o.ang||0;
+ const path=function(){
+  ctx.beginPath();
+  if(half){
+   ctx.moveTo(0,0);
+   ctx.arc(0,0,R,ang-half,ang+half);
+   ctx.closePath();
+  }else ctx.arc(0,0,R,0,TAU);
+ };
  ctx.save();
  ctx.translate(x,y);
  // 1) тёмная кромка — обычным смешиванием, чтобы у зоны был край
  ctx.globalAlpha=Math.min(1,a*0.55);
  ctx.strokeStyle=f.rim;
  ctx.lineWidth=rimW*1.9;
- ctx.beginPath();ctx.arc(0,0,R,0,TAU);ctx.stroke();
+ path();ctx.stroke();
  // 2) цветное кольцо поверх кромки
  ctx.globalCompositeOperation='lighter';
  ctx.globalAlpha=a*0.8;
  ctx.strokeStyle=f.col;
  ctx.lineWidth=rimW;
- ctx.beginPath();ctx.arc(0,0,R,0,TAU);ctx.stroke();
+ path();ctx.stroke();
  // 3) заливка: слабая, только чтобы зона читалась как площадь, а не как обод.
  //    Сильнее нельзя — при трёх зонах внахлёст экран уходит в молоко.
  // заливка — только у небольших зон. У кольца в пол-экрана она затемняет
  // всё поле и спорит с землёй; там достаточно самой границы.
- if(o.fill!==false&&R<220){
+ // у сектора заливка уместна и на большом радиусе: он занимает четверть круга
+ if(o.fill!==false&&(R<220||half)){
   const g=ctx.createRadialGradient(0,0,R*0.25,0,0,R);
   g.addColorStop(0,'rgba(0,0,0,0)');
   g.addColorStop(0.82,f.col+'14');
   g.addColorStop(1,f.col+'30');
   ctx.globalAlpha=a*0.9;
   ctx.fillStyle=g;
-  ctx.beginPath();ctx.arc(0,0,R,0,TAU);ctx.fill();
+  path();ctx.fill();
  }
  ctx.restore();
 }
@@ -109,13 +126,16 @@ function zoneStamp(x,y,R,id,a,opts){
 //  экран в кашу, но игрок успевает прочитать, что именно ударило.
 // ------------------------------------------------------------
 let zonePulses=[];
-function pulseZone(x,y,R,id,life){
+// arc — полуугол конуса в радианах, тот же, по которому считается попадание.
+// Без него зона считается круговой, как и было у шести круглых орудий.
+function pulseZone(x,y,R,id,life,arc){
  if(!(R>0))return;
  if(zonePulses.length>24)zonePulses.shift();   // предохранитель на плотной волне
  // большая зона гаснет быстрее: чем шире кольцо, тем дольше оно мозолит глаз
  const L=life||(R>300?0.3:0.42);
  // угол фиксируется в момент удара: лист не должен крутиться на месте
- zonePulses.push({x:x,y:y,R:R,id:id,t:L,max:L,rot:(typeof P!=='undefined'&&P.fx!=null)?Math.atan2(P.fy||0,P.fx||1):0});
+ zonePulses.push({x:x,y:y,R:R,id:id,t:L,max:L,arc:arc||0,
+  rot:(typeof P!=='undefined'&&P.fx!=null)?Math.atan2(P.fy||0,P.fx||1):0});
 }
 function drawZonePulses(dt){
  for(let i=zonePulses.length-1;i>=0;i--){
@@ -133,8 +153,9 @@ function drawZonePulses(dt){
   // есть, кольцо приглушается, чтобы не спорить с рисунком.
   const RR=z.R*(1+(1-k)*0.06);
   const hasSheet=!!wfxSheet(z.id);
-  zoneStamp(zx,zy,RR,z.id,Math.min(1,k*1.25)*(hasSheet?0.5:1),hasSheet?{fill:false}:null);
-  if(hasSheet)zoneSheetStamp(zx,zy,RR,z.id,k,z.rot);
+  zoneStamp(zx,zy,RR,z.id,Math.min(1,k*1.25)*(hasSheet?0.5:1),
+   {arc:z.arc,ang:z.rot,fill:hasSheet?false:undefined});
+  if(hasSheet)zoneSheetStamp(zx,zy,RR,z.id,k,z.rot,z.arc);
  }
 }
 
@@ -179,7 +200,7 @@ function wfxSheet(id){
  return (im&&im.complete&&im.naturalWidth)?s:null;
 }
 // Кадр листа по прогрессу 0..1 (0 — момент удара, 1 — конец вспышки).
-function zoneSheetStamp(x,y,R,id,k,rot){
+function zoneSheetStamp(x,y,R,id,k,rot,arc){
  const slot=wfxSheet(id);
  if(!slot)return false;
  const raw=slot.im||slot, brief=!!slot.brief;
@@ -190,6 +211,17 @@ function zoneSheetStamp(x,y,R,id,k,rot){
  const d=R*2;
  ctx.save();
  ctx.translate(x,y);
+ // конусная зона: лист приходит веером примерно на 150°, а бьёт коса на 86°.
+ // Без обрезки нарисованное снова шире правил. Режем по тому же сектору,
+ // по которому считается попадание, — с небольшим запасом, чтобы срез не
+ // выглядел ножницами по живому.
+ if(arc>0&&arc<Math.PI){
+  ctx.beginPath();
+  ctx.moveTo(0,0);
+  ctx.arc(0,0,R*1.02,rot-arc*1.06,rot+arc*1.06);
+  ctx.closePath();
+  ctx.clip();
+ }
  if(rot)ctx.rotate(rot);
  if(brief){
   // непрозрачный силуэт поверх карты, как в Vampire Survivors: обводка держит

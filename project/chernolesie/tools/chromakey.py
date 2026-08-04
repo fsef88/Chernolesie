@@ -119,6 +119,62 @@ def union_box(frames, threshold=6.0):
     return box
 
 
+def frame_stats(f):
+    """Где на самом деле лежит рисунок кадра: центр масс и радиус по массе.
+
+    Рамка содержимого для этого не годится. Она берёт крайний непрозрачный
+    пиксель, поэтому одна еле видная искра на затухании растягивает её на всю
+    ячейку — лист выглядит принятым, а на экране яркое ядро сидит вдвое ближе
+    к игроку, чем граница поражения. Масса такого не прощает."""
+    a = f[:, :, 3] / 255.0
+    tot = a.sum()
+    if tot < 1e-6:
+        return None
+    h, w = a.shape
+    yy, xx = np.mgrid[0:h, 0:w]
+    cx, cy = (w - 1) / 2.0, (h - 1) / 2.0
+    R = w / 2.0
+    mx = float((a * (xx - cx)).sum() / tot)
+    my = float((a * (yy - cy)).sum() / tot)
+    rad = (np.hypot(xx - cx, yy - cy) / R).ravel()
+    order = np.argsort(rad)
+    cs = np.cumsum(a.ravel()[order])
+    q = lambda p: float(rad[order][np.searchsorted(cs, tot * p)])
+    # угловой охват массы: у конусного оружия рисунок обязан лежать в его секторе,
+    # иначе на экране удар шире правил — или, после обрезки, от него остаётся полоска
+    ang = np.degrees(np.arctan2(yy - cy, xx - cx)).ravel()
+    ao = np.argsort(ang)
+    cs2 = np.cumsum(a.ravel()[ao])
+    lo = float(ang[ao][np.searchsorted(cs2, tot * 0.05)])
+    hi = float(ang[ao][np.searchsorted(cs2, tot * 0.95)])
+    return {'mass': float(tot / (w * h)), 'cx': mx / R, 'cy': my / R,
+            'r50': q(0.5), 'r90': q(0.9), 'span': hi - lo}
+
+
+def fit_box(frames, weight_pow=2.0):
+    """Рамка по массе: центр — там же, где рисунок, размер — по ядру.
+
+    Считается по пиковым кадрам с весом mass^2: затухающая пыль не должна
+    решать, каким на экране будет удар. Итог — рисунок центрирован на игроке
+    и его ядро выходит на границу поражения, а не сидит на половине радиуса."""
+    st = [frame_stats(f) for f in frames]
+    live = [(s, f) for s, f in zip(st, frames) if s]
+    if not live:
+        raise SystemExit('Все кадры пустые')
+    wts = np.array([s['mass'] ** weight_pow for s, _ in live])
+    wts /= wts.sum()
+    h, w = frames[0].shape[:2]
+    R = w / 2.0
+    cx = (w - 1) / 2.0 + R * sum(wt * s['cx'] for wt, (s, _) in zip(wts, live))
+    cy = (h - 1) / 2.0 + R * sum(wt * s['cy'] for wt, (s, _) in zip(wts, live))
+    # половина стороны: ядро (90% массы пиковых кадров) должно упереться в край
+    half = R * sum(wt * s['r90'] for wt, (s, _) in zip(wts, live))
+    half = max(half, R * 0.2)
+    x0, y0 = int(round(cx - half)), int(round(cy - half))
+    side = int(round(half * 2))
+    return (x0, y0, x0 + side, y0 + side), st
+
+
 def square(box, w, h):
     """Дотянуть рамку до квадрата: ячейки выходного листа квадратные."""
     x0, y0, x1, y1 = box
@@ -152,6 +208,9 @@ def main():
     ap.add_argument('--pick')
     ap.add_argument('--out-grid', default='4x2')
     ap.add_argument('--cell', type=int, default=160)
+    ap.add_argument('--fit', choices=['mass', 'box'], default='mass',
+                    help='mass — кадрировать по массе рисунка (по умолчанию), '
+                         'box — по рамке содержимого, как было до v7.35')
     args = ap.parse_args()
 
     rgba = key(Image.open(args.src))
@@ -165,7 +224,27 @@ def main():
     if args.pick:
         frames = [frames[int(i)] for i in args.pick.split(',')]
 
-    box = square(union_box(frames), frames[0].shape[1], frames[0].shape[0])
+    if args.fit == 'box':
+        box = square(union_box(frames), frames[0].shape[1], frames[0].shape[0])
+        stats = [frame_stats(f) for f in frames]
+    else:
+        box, stats = fit_box(frames)
+
+    # Отчёт по кадрам: на что смотреть при приёмке листа.
+    #  r90 — радиус, внутри которого 90% рисунка, в долях половины ячейки.
+    #        Меньше ~0.8 у пиковых кадров — эффект мельче зоны поражения.
+    #  cx/cy — увод центра масс от центра ячейки, в тех же долях.
+    #        Разброс между кадрами — это то, как эффект ездит вбок на экране.
+    #  охват — угловой разброс массы. У конусного оружия он должен укладываться
+    #        в сектор попадания, иначе лишнее либо врёт, либо срезается обрезкой.
+    print('кадр | масса | r50  r90 | увод центра | охват')
+    for i, s in enumerate(stats):
+        if not s:
+            print(f'{i + 1:>4} | пусто')
+            continue
+        print(f'{i + 1:>4} | {s["mass"]:5.3f} | {s["r50"]:4.2f} {s["r90"]:4.2f} '
+              f'| {s["cx"]:+5.2f} {s["cy"]:+5.2f} | {s["span"]:5.0f}°')
+
     cell = args.cell
     cols, rows = parse_grid(args.out_grid)
     if len(frames) != cols * rows:
