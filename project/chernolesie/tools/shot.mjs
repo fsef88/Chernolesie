@@ -58,7 +58,12 @@ await page.evaluate(([weapon, k]) => {
   window.__K = k;
   const orig = drawZonePulses;
   drawZonePulses = function () {
-    for (const z of zonePulses) { z.t = z.max * window.__K; z.rot = 0; }
+    // держим вспышку на выбранном кадре, но УГОЛ НЕ ТРОГАЕМ. Раньше здесь
+    // стояло z.rot = 0 «чтобы кадры были сравнимы» — и снимок начинал врать
+    // про направление удара: Навий хвост бьёт за спину, а на кадре смотрел
+    // вперёд. Сравнимость даём фиксацией взгляда героя, а не подменой зоны.
+    P.fx = 1; P.fy = 0;
+    for (const z of zonePulses) z.t = z.max * window.__K;
     return orig.call(this, 0);
   };
 }, [WEAPON, K]);

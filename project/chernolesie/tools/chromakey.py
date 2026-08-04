@@ -131,10 +131,18 @@ def despill(fg, alpha):
     return out
 
 
-def cut(rgba, cols, rows):
+def cut(rgba, cols, rows, inset=0):
+    """Нарезка на кадры с необязательной подрезкой по краю ячейки.
+
+    Подрезка нужна, когда генератор рисует поверх листа линии сетки. Они
+    тонкие и тёмные, лежат ровно по границам ячеек, и без подрезки попадают
+    в кадр тёмными полосами — а заодно ломают поиск острия: чёрная линия по
+    верху ячейки оказывается самым левым плотным пикселем и назначается
+    остриём вместо настоящего."""
     h, w = rgba.shape[:2]
     cw, ch = w // cols, h // rows
-    return [rgba[r * ch:(r + 1) * ch, c * cw:(c + 1) * cw]
+    i = int(inset)
+    return [rgba[r * ch + i:(r + 1) * ch - i, c * cw + i:(c + 1) * cw - i]
             for r in range(rows) for c in range(cols)]
 
 
@@ -195,19 +203,24 @@ def apex_box(frames, threshold=6.0):
     остриё обязано оказаться в центре ячейки. Генератор рисует клин от края
     до края: остриё у левого края, дуга у правого. Берём остриё за центр и
     отмеряем радиус до самой дальней точки рисунка — тогда дуга садится
-    ровно на границу поражения, а остриё — под ноги герою."""
-    apex = None
-    far = 0.0
-    for f in frames:
-        ys, xs = np.nonzero(f[:, :, 3] > threshold)
-        if not len(xs):
-            continue
-        i = int(np.argmin(xs))               # самая левая точка кадра — остриё
-        cand = (float(xs[i]), float(ys[i]))
-        if apex is None or cand[0] < apex[0]:
-            apex = cand
-    if apex is None:
+    ровно на границу поражения, а остриё — под ноги герою.
+
+    Остриё ищется по ПЛОТНОМУ рисунку и по самому насыщенному кадру, а не по
+    первому попавшемуся непрозрачному пикселю. Иначе одна точка сглаживания у
+    края кадра назначается остриём, опора уезжает по вертикали, и весь лист
+    садится мимо героя — на двух присланных листах увод доходил до 0.4 радиуса.
+    Высота острия берётся как средневзвешенная по узкой полосе у левого края:
+    у клина там несколько пикселей, и середина между ними и есть остриё."""
+    solid = [f[:, :, 3] > 128 for f in frames]
+    mass = [float(s.sum()) for s in solid]
+    if max(mass, default=0) < 16:
         raise SystemExit('Все кадры пустые')
+    best = solid[int(np.argmax(mass))]
+    ys, xs = np.nonzero(best)
+    x0 = float(xs.min())
+    band = xs <= x0 + max(2.0, best.shape[1] * 0.03)   # полоса у острия
+    apex = (x0, float(ys[band].mean()))
+    far = 0.0
     for f in frames:
         ys, xs = np.nonzero(f[:, :, 3] > threshold)
         if not len(xs):
@@ -278,6 +291,9 @@ def main():
     ap.add_argument('--grid')
     ap.add_argument('--pick')
     ap.add_argument('--out-grid', default='4x2')
+    ap.add_argument('--inset', type=int, default=0,
+                    help='подрезать каждую ячейку на N пикселей по краю — '
+                         'снимает нарисованные генератором линии сетки')
     ap.add_argument('--cell', default='160',
                     help='сторона ячейки выходного листа; можно ШxВ для '
                          'неквадратной (лучевые зоны — вытянутая полоса)')
@@ -296,7 +312,7 @@ def main():
         print(f'{args.dst}: чистка без перекладки, {rgba.shape[1]}x{rgba.shape[0]}')
         return
 
-    frames = cut(rgba, *parse_grid(args.grid))
+    frames = cut(rgba, *parse_grid(args.grid), inset=args.inset)
     if args.pick:
         frames = [frames[int(i)] for i in args.pick.split(',')]
 
