@@ -93,6 +93,12 @@ function hitEnemy(e,dmg,tag,crit){
   if((window._hitFrameDmg=window._hitFrameDmg||0)<8){window._hitFrameDmg++;spawnDmgText(e.x+rnd(-12,12),e.y-e.r-10,finalDmg,tag,true);}
   flashScreen('rgba(255,198,90,',0.18);
   spawnFlash(e.x,e.y,0.75,'#ffd94a');
+  // v7.34: крит получает свою звёздную вспышку листом — до этого он отличался
+  // от обычного удара только числом урона, то есть на плотной волне никак
+  // вспышка идёт под тем же бюджетом, что и цифра урона: на плотной волне
+  // критов десятки в секунду, и без потолка экран забивается звёздами
+  if(typeof IMPACT_BURST_SHEET!=='undefined'&&window._hitFrameDmg<=3)
+   spawnSheetFx(IMPACT_BURST_SHEET,e.x,e.y-e.r*0.5,Math.min(120,46+e.r*2.0),0.26,'#ffe08a');
   if(window._hitFrameParts<14){
    for(let _s=0;_s<4;_s++){
     if(window._hitFrameParts++>=14)break;

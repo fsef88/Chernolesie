@@ -42,7 +42,7 @@ gemPops.length=0;absorbGlow=0;   // v6.42
  // два следующих оператора (сброс _shadowOrbBase/_orbBase/_warQ* и возврат
  // прозрачности spechud). Комментарии к плотным однострочникам — только
  // отдельной строкой СВЕРХУ.
- shake=0;hitstop=0;timeScale=1;slowmo=0;zoomPunch=1;mkN=0;mkX=0;mkY=0;mkFlash=0;mkBest=0;_clutchArmed=false;_minMark=0;_hbT=0;formCd=26;form=null;waveIdx=0;zonePulses.length=0;   // v6.56: ранняя формация сохраняется после resetRun
+ shake=0;hitstop=0;timeScale=1;slowmo=0;zoomPunch=1;mkN=0;mkX=0;mkY=0;mkFlash=0;mkBest=0;_clutchArmed=false;_minMark=0;_hbT=0;formCd=26;form=null;waveIdx=0;zonePulses.length=0;sheetFx.length=0;   // v6.56: ранняя формация сохраняется после resetRun
 directorP=1;directorT=0;directorLastKills=0;directorLogBand=0;directorGrace=0;   // v6.58: сброс директора между забегами
  if(UI.lowHpV)UI.lowHpV.classList.remove('crit');window._sealReadyTold=false;_thudMs=0;   // v6.19: сброс таймера низкого подслоя удара
  if(typeof P==='object'&&P){P._shadowOrbBase=null;P._orbBase=null;P._warQBoost=0;P._warQT=0;}

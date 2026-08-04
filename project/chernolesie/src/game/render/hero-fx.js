@@ -43,6 +43,12 @@ function spawnDeathBurst(e){
   const a=randomVisual()*TAU,sp=rnd(60,260);
   if(!spawnParticle(e.x,e.y-e.r*0.45,Math.cos(a)*sp,Math.sin(a)*sp-80,rnd(.28,.78),cols[i%cols.length],280,0))break;
  }
+ // v7.34: крупный враг оседает столбом пыли. Мелочь его не получает —
+ // при семидесяти убийствах в секунду экран забился бы дымом.
+ if((e.boss||e.mini||e.elite||(e.size||1)>=1.5)&&typeof DUST_PLUME_SHEET!=='undefined'){
+  const big=e.boss?4.2:(e.mini?3.0:(e.elite?2.2:1.5));
+  spawnSheetFx(DUST_PLUME_SHEET,e.x,e.y+e.r*0.35,e.r*big*2.6,e.boss?0.9:0.6,'#d8cbb4',true);
+ }
  // Душа/искры вверх — награда глазу за убийство
  for(let i=0;i<3;i++){spawnParticle(e.x+rnd(-12,12),e.y-e.r*0.9,rnd(-12,12),rnd(-180,-100),rnd(.5,.95),soul,-60,0);}
 }

@@ -84,3 +84,8 @@ const FROST_SPIKE_ANIM_SHEET=(function(){const i=new Image();i.src='@@A:art/art-
 const FIREBALL_ANIM_SHEET=(function(){const i=new Image();i.src='@@A:art/art-registry/fireball-anim-sheet.webp@@';return i;})();
 const activeExplosions=[];
 
+// v7.34: три листа, очищенных от magenta в v7.32. Подключены точечно:
+// дымный серп — зона Косы, звёздная вспышка — крит, пыльный столб — смерть крупного.
+const SLASH_SMOKE_SHEET  = (function(){const i=new Image(); i.src='@@A:art/art-registry/slash-smoke-sheet.webp@@'; return i;})();
+const IMPACT_BURST_SHEET = (function(){const i=new Image(); i.src='@@A:art/art-registry/impact-burst-sheet.webp@@'; return i;})();
+const DUST_PLUME_SHEET   = (function(){const i=new Image(); i.src='@@A:art/art-registry/dust-plume-sheet.webp@@'; return i;})();

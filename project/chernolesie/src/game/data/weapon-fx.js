@@ -128,9 +128,13 @@ function drawZonePulses(dt){
   if(zx+z.R<-40||zy+z.R<-40||zx-z.R>W+40||zy-z.R>H+40)continue;
   // кольцо чуть расширяется на излёте — так удар читается как волна,
   // а не как мигающий обод
-  // лист, если он заведён; иначе кольцо — так арт можно заводить по одному
-  if(!zoneSheetStamp(zx,zy,z.R*(1+(1-k)*0.06),z.id,k,z.rot))
-   zoneStamp(zx,zy,z.R*(1+(1-k)*0.06),z.id,Math.min(1,k*1.25));
+  // кольцо рисуется ВСЕГДА: оно показывает настоящую границу поражения.
+  // Лист ложится поверх и даёт силуэт — одно другого не заменяет. Когда лист
+  // есть, кольцо приглушается, чтобы не спорить с рисунком.
+  const RR=z.R*(1+(1-k)*0.06);
+  const hasSheet=!!wfxSheet(z.id);
+  zoneStamp(zx,zy,RR,z.id,Math.min(1,k*1.25)*(hasSheet?0.5:1),hasSheet?{fill:false}:null);
+  if(hasSheet)zoneSheetStamp(zx,zy,RR,z.id,k,z.rot);
  }
 }
 
@@ -153,24 +157,96 @@ function drawZonePulses(dt){
 //  добавить строку сюда.
 // ============================================================
 const WFX_SHEETS={};
+// заводится после загрузки реестра: дымный серп ложится на взмах Косы
+addEventListener('load',()=>{ if(typeof SLASH_SMOKE_SHEET!=='undefined')WFX_SHEETS.kosa=SLASH_SMOKE_SHEET; });
 function wfxSheet(id){
  const im=WFX_SHEETS[id];
  return (im&&im.complete&&im.naturalWidth)?im:null;
 }
 // Кадр листа по прогрессу 0..1 (0 — момент удара, 1 — конец вспышки).
 function zoneSheetStamp(x,y,R,id,k,rot){
- const sh=wfxSheet(id);
- if(!sh)return false;
+ const raw=wfxSheet(id);
+ if(!raw)return false;
+ const sh=tintedSheet(raw,wfx(id).col)||raw;
  const fi=Math.max(0,Math.min(7,Math.floor((1-k)*8)));
- const sw=Math.floor(sh.naturalWidth/4), sy=Math.floor(sh.naturalHeight/2);
+ const sw=Math.floor((sh.naturalWidth||sh.width)/4), sy=Math.floor((sh.naturalHeight||sh.height)/2);
  const col=fi%4, row=fi>3?1:0;
  const d=R*2;
  ctx.save();
  ctx.translate(x,y);
  if(rot)ctx.rotate(rot);
  ctx.globalCompositeOperation='lighter';
- ctx.globalAlpha=Math.min(1,k*1.2);
+ // потолок 0.5: на 'lighter' лист во весь экран при альфе 1 выбивает всё
+ // в белое, включая героя. Форма читается и на половине силы.
+ ctx.globalAlpha=Math.min(0.5,k*0.6);
  ctx.drawImage(sh,col*sw,row*sy,sw,sy,-R,-R,d,d);
  ctx.restore();
  return true;
+}
+
+// ============================================================
+//  ПОКРАСКА ЛИСТА В ЦВЕТ ОРУЖИЯ
+//
+//  Присланные листы белые. Рисовать их как есть — значит вернуться к тому,
+//  с чего начали: всё на экране одного цвета. Красим один раз при первом
+//  обращении и держим готовый холст в кэше: 'source-in' по силуэту оставляет
+//  форму и заменяет цвет, альфа сохраняется.
+// ============================================================
+const _tintCache={};
+function tintedSheet(sh,col){
+ if(!sh||!sh.complete||!sh.naturalWidth)return null;
+ const key=(sh.src.length+'x'+sh.naturalWidth)+col;
+ let c=_tintCache[key];
+ if(c)return c;
+ c=document.createElement('canvas');
+ c.width=sh.naturalWidth;c.height=sh.naturalHeight;
+ const g=c.getContext('2d');
+ g.drawImage(sh,0,0);
+ g.globalCompositeOperation='source-in';
+ g.fillStyle=col;
+ g.fillRect(0,0,c.width,c.height);
+ // белое ядро возвращаем поверх: чистый цвет без светлой сердцевины
+ // читается как плоское пятно, а не как удар
+ g.globalCompositeOperation='source-atop';
+ g.globalAlpha=0.22;
+ g.drawImage(sh,0,0);
+ _tintCache[key]=c;
+ return c;
+}
+
+// ------------------------------------------------------------
+//  Разовые вспышки листом: крит, смерть крупного врага и прочее,
+//  что не является зоной оружия. Живут своей жизнью, гаснут сами.
+// ------------------------------------------------------------
+let sheetFx=[];
+function spawnSheetFx(sheet,x,y,size,life,col,anchorBottom){
+ if(!sheet||!sheet.complete||!sheet.naturalWidth)return;
+ if(sheetFx.length>30)sheetFx.shift();
+ const L=life||0.4;
+ sheetFx.push({sh:sheet,x:x,y:y,s:size,t:L,max:L,col:col||null,ab:!!anchorBottom,
+               rot:anchorBottom?0:randomVisual()*TAU});
+}
+function drawSheetFx(dt){
+ for(let i=sheetFx.length-1;i>=0;i--){
+  const f=sheetFx[i];
+  f.t-=dt;
+  if(f.t<=0){sheetFx.splice(i,1);continue;}
+  const k=f.t/f.max;
+  const x=f.x-cam.x, y=f.y-cam.y;
+  if(x+f.s<-30||y+f.s<-30||x-f.s>W+30||y-f.s>H+30)continue;
+  const img=f.col?tintedSheet(f.sh,f.col):f.sh;
+  if(!img)continue;
+  const fi=Math.max(0,Math.min(7,Math.floor((1-k)*8)));
+  const sw=Math.floor(img.width/4), sh=Math.floor(img.height/2);
+  const cx=fi%4, cy=fi>3?1:0;
+  ctx.save();
+  ctx.translate(x,y);
+  if(f.rot)ctx.rotate(f.rot);
+  ctx.globalCompositeOperation='lighter';
+  ctx.globalAlpha=Math.min(1,k*1.3);
+  // столб пыли растёт от земли, вспышка — от своего центра
+  if(f.ab)ctx.drawImage(img,cx*sw,cy*sh,sw,sh,-f.s/2,-f.s,f.s,f.s);
+  else     ctx.drawImage(img,cx*sw,cy*sh,sw,sh,-f.s/2,-f.s/2,f.s,f.s);
+  ctx.restore();
+ }
 }

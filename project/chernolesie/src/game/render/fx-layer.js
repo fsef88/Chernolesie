@@ -399,6 +399,7 @@ function drawFxLayer(){
  if(idols.length)drawIdols();   // v6.17b
  if(volki.length)drawVolki();   // v6.17: волки под снарядами
  drawZonePulses(_drawDt);   // v7.33: границы зон оружия, каждая своим цветом
+ drawSheetFx(_drawDt);      // v7.34: криты и оседающая пыль
  drawSerpOrbs();drawVihrStorm();drawKosaTrail();   // v6.19: след жатвы Косы
 function drawKosaTrail(){
  if(!kosaTrail.length)return;
