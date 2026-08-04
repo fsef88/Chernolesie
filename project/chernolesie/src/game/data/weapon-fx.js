@@ -156,18 +156,34 @@ function drawZonePulses(dt){
 //  webp в assets/art/art-registry/, вписать в src/build.manifest.json и
 //  добавить строку сюда.
 // ============================================================
+//  Листы бывают двух сортов, и рисуются они по-разному.
+//
+//  Заглушки (дымный серп и прочее из v7.32) нарисованы белым. Их надо красить
+//  в цвет оружия и класть сложением: белый дым поверх карты и должен светиться.
+//
+//  Листы по заданию из docs/art-briefs.md приходят уже в цветах оружия и с
+//  тёмной обводкой по внешнему краю. Их нельзя ни красить, ни класть сложением:
+//  'source-in' затирает обводку и ядро плоской заливкой, а 'lighter' умеет
+//  только прибавлять свет и тёмный контур не рисует вовсе. А контур — это ровно
+//  то, чем силуэт отделяется от фона, ради чего лист и заказывался.
+//  Поэтому у слота есть режим: tint+lighter для заглушек, как есть для заданий.
 const WFX_SHEETS={};
 // заводится после загрузки реестра: мятный серп ложится на взмах Косы
-addEventListener('load',()=>{ if(typeof KOSA_ZONE_SHEET!=='undefined')WFX_SHEETS.kosa=KOSA_ZONE_SHEET; });
+addEventListener('load',()=>{
+ if(typeof KOSA_ZONE_SHEET!=='undefined')WFX_SHEETS.kosa={im:KOSA_ZONE_SHEET,brief:true};
+});
 function wfxSheet(id){
- const im=WFX_SHEETS[id];
- return (im&&im.complete&&im.naturalWidth)?im:null;
+ const s=WFX_SHEETS[id];
+ if(!s)return null;
+ const im=s.im||s;                     // слот может быть и голой картинкой
+ return (im&&im.complete&&im.naturalWidth)?s:null;
 }
 // Кадр листа по прогрессу 0..1 (0 — момент удара, 1 — конец вспышки).
 function zoneSheetStamp(x,y,R,id,k,rot){
- const raw=wfxSheet(id);
- if(!raw)return false;
- const sh=tintedSheet(raw,wfx(id).col)||raw;
+ const slot=wfxSheet(id);
+ if(!slot)return false;
+ const raw=slot.im||slot, brief=!!slot.brief;
+ const sh=brief?raw:(tintedSheet(raw,wfx(id).col)||raw);
  const fi=Math.max(0,Math.min(7,Math.floor((1-k)*8)));
  const sw=Math.floor((sh.naturalWidth||sh.width)/4), sy=Math.floor((sh.naturalHeight||sh.height)/2);
  const col=fi%4, row=fi>3?1:0;
@@ -175,10 +191,16 @@ function zoneSheetStamp(x,y,R,id,k,rot){
  ctx.save();
  ctx.translate(x,y);
  if(rot)ctx.rotate(rot);
- ctx.globalCompositeOperation='lighter';
- // потолок 0.5: на 'lighter' лист во весь экран при альфе 1 выбивает всё
- // в белое, включая героя. Форма читается и на половине силы.
- ctx.globalAlpha=Math.min(0.5,k*0.6);
+ if(brief){
+  // непрозрачный силуэт поверх карты, как в Vampire Survivors: обводка держит
+  // форму, гасим только на излёте, чтобы вспышка уходила, а не обрывалась
+  ctx.globalAlpha=Math.min(1,k*1.6);
+ }else{
+  ctx.globalCompositeOperation='lighter';
+  // потолок 0.5: на 'lighter' лист во весь экран при альфе 1 выбивает всё
+  // в белое, включая героя. Форма читается и на половине силы.
+  ctx.globalAlpha=Math.min(0.5,k*0.6);
+ }
  ctx.drawImage(sh,col*sw,row*sy,sw,sy,-R,-R,d,d);
  ctx.restore();
  return true;
