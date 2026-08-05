@@ -57,13 +57,20 @@ function drawFxLayer(){
  // (c) сияние насыщения на герое: копится от потока гемов, гаснет за полсекунды.
  //     Даёт обратную связь «я собираю поток», которой не было совсем.
  if(absorbGlow>0.02){
+  // v7.35: было два кольца вокруг героя. Вместе с кольцом состояния и аурами
+  // оружия они складывались в кашу из наложенных окружностей. Сияние
+  // насыщения — не состояние, за которым следят, а фоновая обратная связь,
+  // поэтому вместо колец мягкое пятно: читается боковым зрением и не спорит
+  // с кольцом состояния.
   const ax=P.x-cam.x,ay=P.y-cam.y;
   const ag=Math.min(1,absorbGlow);
-  ctx.globalAlpha=ag*0.32;
-  ctx.strokeStyle=absorbCol;ctx.lineWidth=2*FXS;
-  ctx.beginPath();ctx.arc(ax,ay,(P.r+7+6*ag)*FXS*0.8,0,TAU);ctx.stroke();
-  ctx.globalAlpha=ag*0.18;
-  ctx.beginPath();ctx.arc(ax,ay,(P.r+13+9*ag)*FXS*0.8,0,TAU);ctx.stroke();
+  const rr=(P.r+16+10*ag)*FXS*0.8;
+  const g=ctx.createRadialGradient(ax,ay,rr*0.25,ax,ay,rr);
+  g.addColorStop(0,absorbCol);
+  g.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.globalAlpha=ag*0.26;
+  ctx.fillStyle=g;
+  ctx.beginPath();ctx.arc(ax,ay,rr,0,TAU);ctx.fill();
  }
  ctx.restore();
  ctx.globalAlpha=1;

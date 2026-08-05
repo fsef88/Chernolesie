@@ -36,8 +36,13 @@ function drawPermanentAuras(px, py){
     const R=(130+22*lvl)*wArea('idol')*(P.synIdolRope?1.35:1);
     ctx.save();
     ctx.translate(px,py);
-    ctx.globalCompositeOperation='lighter';
-    ctx.globalAlpha=0.75+0.25*Math.sin(time*2.5);
+    // v7.35: мандала рисуется ОБЫЧНЫМ смешиванием. В ней 71% тёмных пикселей —
+    // при сложении почти весь рисунок не появлялся вовсе, оставалось светлое
+    // кольцо, и вместе со щитом Оберега и кольцом состояния это давало вокруг
+    // героя кашу из наложенных окружностей. Щит Оберега остаётся на сложении:
+    // у него тёмных пикселей 0%, это чистое свечение, и там сложение родное.
+    ctx.globalCompositeOperation='source-over';
+    ctx.globalAlpha=0.60+0.16*Math.sin(time*2.5);
     ctx.rotate(time*0.35);
     if(typeof AURA_ART_IDOL !== 'undefined' && AURA_ART_IDOL.complete && AURA_ART_IDOL.naturalWidth){
       const diam = R * 2.2;

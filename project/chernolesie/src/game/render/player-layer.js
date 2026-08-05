@@ -32,42 +32,43 @@ function drawHeroFocusUnder(px,py,heroY){
  ctx.globalAlpha=0.24;
  ctx.strokeStyle=cv.accent||'#ffe6a0';ctx.lineWidth=1.5;
  ctx.beginPath();ctx.ellipse(px,heroY+13,28,8,0,0,TAU);ctx.stroke();
- if(low){
-  const p=0.5+0.5*Math.sin(time*5.5);
-  ctx.globalAlpha=0.18+0.16*p;
-  ctx.strokeStyle='#ff5d48';ctx.lineWidth=2.2;
-  ctx.beginPath();ctx.arc(px,py-5,34+2*p,0,TAU);ctx.stroke();
- }
- if(ready){
-  const p=0.5+0.5*Math.sin(time*2.2);
-  ctx.globalCompositeOperation='lighter';
-  // Спокойное кольцо готовности Печати прямо у героя. Медленное, без строба.
-  ctx.globalAlpha=0.20+0.11*p;
-  ctx.strokeStyle='#ffdc7a';ctx.lineWidth=2.0;
-  ctx.beginPath();ctx.arc(px,py-6,38+2*p,0,TAU);ctx.stroke();
-  ctx.globalAlpha=0.13+0.07*p;
-  ctx.strokeStyle=cv.color||'#ffcf6a';ctx.lineWidth=5;
-  ctx.beginPath();ctx.arc(px,py-6,43+2*p,-0.7,Math.PI+0.7);ctx.stroke();
- }
  ctx.restore();
 }
-function drawHeroFocusOver(px,py,heroY){
- const ready=typeof specialCharge!=='undefined'&&specialCharge>=1;
- const cv=(CLASS_VISUALS[currentClass]||CLASS_VISUALS.warrior);
+// v7.35: ОДНО КОЛЬЦО СОСТОЯНИЯ ВМЕСТО СЕМИ.
+//
+//  Вокруг героя одновременно рисовались: кольцо низкого здоровья, кольцо
+//  готовности Печати, дуга готовности, четыре вращающиеся риски, кольцо щита,
+//  кольцо неуязвимости и два кольца поглощения — семь окружностей разного
+//  радиуса, каждая своим куском кода, и всё это поверх художественных аур
+//  Идола и Оберега. На экране получалась каша из наложенных кругов, в которой
+//  ни одно состояние не читалось.
+//
+//  Теперь рисуется РОВНО ОДНО кольцо — то, что сейчас важнее всего знать
+//  игроку. Порядок важности сверху вниз: меня нельзя ранить, у меня щит,
+//  я при смерти, у меня готова Печать. Радиус у всех один, поэтому кольцо
+//  не прыгает при смене состояния, а меняет цвет.
+const HERO_STATE_RING=[
+ {ключ:'invuln', цвет:'#9fe8ff', частота:40},   // неуязвимость
+ {ключ:'shield', цвет:'#ffcf6a', частота:10},   // щит
+ {ключ:'low',    цвет:'#ff5d48', частота:5.5},  // при смерти
+ {ключ:'ready',  цвет:'#ffdc7a', частота:2.2},  // Печать готова
+];
+function drawHeroStateRing(px,py){
+ const состояние={
+  invuln: P.invuln>0,
+  shield: P.shieldT>0,
+  low:    P.hp/Math.max(1,P.maxhp)<0.30,
+  ready:  typeof specialCharge!=='undefined'&&specialCharge>=1,
+ };
+ const s=HERO_STATE_RING.find(x=>состояние[x.ключ]);
+ if(!s)return;
+ const p=0.5+0.5*Math.sin(time*s.частота);
  ctx.save();
  ctx.globalCompositeOperation='lighter';
- // v6.67: постоянный силуэт-контур убран — герой и так подсвечен, контур поверх спрайта грязнил картинку
- if(ready){
-  const p=0.5+0.5*Math.sin(time*2.2);
-  ctx.globalAlpha=0.42+0.18*p;
-  ctx.strokeStyle='#fff0a8';ctx.lineWidth=1.5;
-  for(let i=0;i<4;i++){
-   const an=time*0.9+i*TAU/4;
-   const x1=px+Math.cos(an)*31,y1=py-8+Math.sin(an)*31;
-   const x2=px+Math.cos(an)*38,y2=py-8+Math.sin(an)*38;
-   ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
-  }
- }
+ ctx.globalAlpha=0.30+0.22*p;
+ ctx.strokeStyle=s.цвет;
+ ctx.lineWidth=2.4;
+ ctx.beginPath();ctx.arc(px,py-5,35+2*p,0,TAU);ctx.stroke();
  ctx.restore();
 }
 
@@ -78,8 +79,6 @@ function drawPlayerLayer(px,py){
  // После проверки на мобильном: уменьшаем «стикерность» — меньше масштаб, меньше ореол, без плавающего маркера над головой.
  const _heroY=py+9;
  drawHeroFocusUnder(px,py,_heroY);   // v6.57: герой читается на любом фоне
- // v5.11: без постоянных кругов-ореолов (frost/thorn). Щит Q — короткое кольцо только пока shieldT>0.
- if(P.shieldT>0){const k=Math.min(1,P.shieldT);ctx.save();ctx.globalAlpha=.30+.15*Math.sin(time*10);ctx.strokeStyle='#ffcf6a';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(px,py-4,36+4*k,0,7);ctx.stroke();ctx.restore();}
  // v5.10: только тень + силуэт — без рун/метки/золотого ореола («наклеек»)
  shadow(px,py+P.r*0.3+68*0.14+9,32);
  // v5.36 (C2): мигание героя во время i-frames (полупрозрачность пульсирует)
@@ -107,8 +106,7 @@ function drawPlayerLayer(px,py){
   }
  }
  (function(){const _hb=HERO_BATTLE[currentClass]||HERO_BATTLE.warrior;if(heroSprDraw(px,_heroY,P.fx<0)){drawClassAttackFx(px,_heroY);}else if(_hb&&_hb.complete&&_hb.naturalWidth){drawHeroMedallion(px,_heroY,P.fx<0);}else{drawClassSilhouette(px,_heroY,P.fx<0);}})();ctx.restore();
- drawHeroFocusOver(px,py,_heroY);   // v6.57: тонкий контур поверх героя
- if(P.invuln>0){ctx.save();ctx.globalAlpha=0.5*(0.5+0.5*Math.sin(time*40));ctx.strokeStyle='#9fe8ff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(px,py-4,30+2*Math.sin(time*40),0,7);ctx.stroke();ctx.restore();} // v5.36 (C2): циан-обод i-frames
+ drawHeroStateRing(px,py);   // v7.35: одно кольцо состояния вместо семи
 // v6.16: ВСПЫШКА ЛВЛ-АПА — кольцо + мерцание по классу при получении уровня (P.levelFx)
 if(P.levelFx>0){const k=Math.min(1,P.levelFx/0.3);const cv=CLASS_VISUALS[P.levelFxCls]||CLASS_VISUALS.warrior;const col=cv?cv.color:'#ffcf6a';
  ctx.save();ctx.globalAlpha=0.35+0.5*k;ctx.strokeStyle=col;ctx.lineWidth=3;ctx.beginPath();ctx.arc(px,py-4,40+18*(1-k),0,7);ctx.stroke();
