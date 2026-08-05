@@ -1,11 +1,18 @@
 function spawnBoss(){
  // Та же логика — от центра камеры + clamp в мир.
  const cx=cam.x+W/2,cy=cam.y+H/2;
- const a=srnd(0,TAU),rad=Math.max(W,H)*0.85+200,b=ETYPES.dragon;   // v6.72: Горыныч
+ // v7.36: было `b=ETYPES.dragon`, а такого типа в ETYPES нет вовсе. Спред
+ // undefined в объектном литерале молча даёт пустоту, поэтому ошибки никто не
+ // видел — босс собирался целиком из литерала ниже. Убрана мёртвая ссылка.
+ // v7.36: радиус выхода уменьшен с 0.85+200 до 0.62+120. При спавне почти в
+ // километре и скорости 34 подход занимал те самые двадцать секунд, за которые
+ // забег и заканчивался: бой сводился к тому, что босс шёл, доходил и падал.
+ const a=srnd(0,TAU),rad=Math.max(W,H)*0.62+120;
  // v6.74: удалён мёртвый блок minR (minR всегда < rad → условие недостижимо)
  let sx=cx+Math.cos(a)*rad,sy=cy+Math.sin(a)*rad;
  sx=clamp(sx,0,WORLD);sy=clamp(sy,0,WORLD);
- const bhp=safeNum(2600*diffMul,2600); // #10: защита от NaN diffMul
+ // v7.36: HP берётся от кривой забега, а не плоской константой — см. BALANCE.bossHp.
+ const bhp=safeNum(BALANCE.bossHp*enemyHpMul(time,diffMul),BALANCE.bossHp*8); // #10: защита от NaN diffMul
  bossE=acquireEnemy({...b,x:sx,y:sy,hp:bhp,maxhp:bhp,r:46,spd:44,dmg:22,type:'dragon',boss:true,drawH:210,at:0,flash:0,slow:1,kx:0,ky:0,hitT:0,wasInRange:false,boltT:0,frozen:0,poisoned:0,slamT:3.2,phase:1,ringT:5.5,xp:0,ai:'tank',dmgMod:1.5,fireT:0,chargeT:2.5,chargeTelegraph:0,chargeDir:null,chargeDuration:0});   // v6.72: Горынычat:0,flash:0,slow:1,kx:0,ky:0,hitT:0,wasInRange:false,boltT:0,frozen:0,poisoned:0,slamT:3.2,phase:1,ringT:5.5,xp:0,ai:'tank',dmgMod:1.5,fireT:0,chargeT:2.5,chargeTelegraph:0,chargeDir:null,chargeDuration:0});
  document.getElementById('bossbar').style.display='block';
  document.getElementById('bossbar').classList.remove('enrage');

@@ -244,7 +244,7 @@ function updateOneEnemy(e,dt,thornR,thornR2,frostR,frostR2,DENSITY_R2){
     e.x+=e.chargeDir.x*cspd*dt; e.y+=e.chargeDir.y*cspd*dt;
     e.chargeDuration=(e.chargeDuration||0)+dt;
     if(dist2(e.x-P.x,e.y-P.y)<140*140||e.chargeDuration>0.45){
-     hazards.push({x:clamp(e.x,0,WORLD),y:clamp(e.y,0,WORLD),r:ph===3?96:78,state:'tele',t:0.35,kind:'root',dmg:ph===3?32:24});
+     hazards.push({x:clamp(e.x,0,WORLD),y:clamp(e.y,0,WORLD),r:ph===3?96:78,state:'tele',t:0.35,kind:'root',dmg:(ph===3?32:24)*BALANCE.bossHazMul});
      e.chargeDir=null;e.chargeDuration=0;e.spd=baseSpd;e._skipMove=false;
      if(e.boss){shake=ph===3?5:4;}   // v6.17: элиту исключили, амплитуда снижена
      sfxDeath();
@@ -259,11 +259,11 @@ function updateOneEnemy(e,dt,thornR,thornR2,frostR,frostR2,DENSITY_R2){
      const base=time*2.1;
      for(let i=0;i<n;i++){
       const ang=base+i*(TAU/n), rad=90+i*22;
-      hazards.push({x:clamp(P.x+Math.cos(ang)*rad,0,WORLD),y:clamp(P.y+Math.sin(ang)*rad,0,WORLD),r:74,state:'tele',t:0.7+i*0.04,kind:'root',dmg:28});
+      hazards.push({x:clamp(P.x+Math.cos(ang)*rad,0,WORLD),y:clamp(P.y+Math.sin(ang)*rad,0,WORLD),r:74,state:'tele',t:0.7+i*0.04,kind:'root',dmg:28*BALANCE.bossHazMul});
      }
     }else{
     for(let i=0;i<n;i++){
-     hazards.push({x:clamp(P.x+srnd(-spread,spread),0,WORLD),y:clamp(P.y+srnd(-spread*0.85,spread*0.85),0,WORLD),r:ph===3?80:70,state:'tele',t:ph===3?0.75:0.9,kind:'root',dmg:ph===3?30:24});
+     hazards.push({x:clamp(P.x+srnd(-spread,spread),0,WORLD),y:clamp(P.y+srnd(-spread*0.85,spread*0.85),0,WORLD),r:ph===3?80:70,state:'tele',t:ph===3?0.75:0.9,kind:'root',dmg:(ph===3?30:24)*BALANCE.bossHazMul});
     }
     }
     for(let wi=0;wi<18;wi++){
@@ -276,7 +276,7 @@ function updateOneEnemy(e,dt,thornR,thornR2,frostR,frostR2,DENSITY_R2){
     e.ringT=(e.ringT==null?4:e.ringT)-dt;
     if(e.ringT<=0){
      e.ringT=4.2;
-     hazards.push({x:e.x,y:e.y,r:40,state:'tele',t:0.85,kind:'ring',grow:220,dmg:28,ox:e.x,oy:e.y});
+     hazards.push({x:e.x,y:e.y,r:40,state:'tele',t:0.85,kind:'ring',grow:220,dmg:28*BALANCE.bossHazMul,ox:e.x,oy:e.y});
      spawnFlash(e.x,e.y-20,1,'#ff6a4a');
      log('🌀 Змей Горыныч рвёт землю кольцом!','warn');
     }
@@ -296,7 +296,7 @@ function updateOneEnemy(e,dt,thornR,thornR2,frostR,frostR2,DENSITY_R2){
       acquireEnemy({...ETYPES.leshiy,x:clamp(rx,0,WORLD),y:clamp(ry,0,WORLD),hp:h,maxhp:h,type:'leshiy',flash:0,kx:0,ky:0,at:0,slow:1,hitT:0,wasInRange:false,boltT:0,frozen:0,poisoned:0,ai:'chase',dmgMod:1.1,fireT:0});
      }
     }
-    for(let i=0;i<6;i++){const a=i/6*TAU;hazards.push({x:clamp(e.x+Math.cos(a)*120,0,WORLD),y:clamp(e.y+Math.sin(a)*120,0,WORLD),r:68,state:'tele',t:0.8,kind:'root',dmg:24});}
+    for(let i=0;i<6;i++){const a=i/6*TAU;hazards.push({x:clamp(e.x+Math.cos(a)*120,0,WORLD),y:clamp(e.y+Math.sin(a)*120,0,WORLD),r:68,state:'tele',t:0.8,kind:'root',dmg:24*BALANCE.bossHazMul});}
     log('⚠ Змей Горыныч входит в ЯРОСТЬ! Корни встают из земли…','warn');sfxBoss();
    }else if(ph===2&&e.hp<e.maxhp*0.33){
     e.phase=3;e.spd=54;e.dmg=(e.dmg||22)*1.15;shake=7;   // v6.17: хитстоп убран
