@@ -131,18 +131,36 @@ function updateEnemyAnimMeta(e) {
 //  и без корзин кэш рос бы на каждое дробное значение.
 //  Хранится копия прямо на самой картинке (img._sc), поэтому живёт ровно
 //  столько же, сколько кадр, и чистить отдельно нечего.
+let _scN=0;                       // сколько копий уже заведено
+const _SC_MAX=160;                // потолок: дальше рисуем из исходника
 function _fitSpr(img,h){
- const hb=Math.max(8,Math.round(h/4)*4);
- const c=img._sc||(img._sc={});
- let cv=c[hb];
- if(cv)return cv;
- const w=Math.max(1,Math.round(hb*img.naturalWidth/img.naturalHeight));
- cv=document.createElement('canvas');cv.width=w;cv.height=hb;
- const g=cv.getContext('2d');
- g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';
- g.drawImage(img,0,0,w,hb);
- c[hb]=cv;
- return cv;
+ // ЛЮБАЯ неудача здесь возвращает исходную картинку. Это важнее экономии:
+ // первая версия отдавала холст, не проверяя, что он получился, и на телефоне
+ // с плотной памятью выделение падало. Холст нулевого размера в drawImage
+ // БРОСАЕТ исключение, а вся отрисовка обёрнута в try/catch в цикле кадра —
+ // поэтому вместо просадки владелец получил пустой экран. В headless памяти
+ // вдоволь, и воспроизвести это у себя я не мог.
+ try{
+  const nw=img.naturalWidth,nh=img.naturalHeight;
+  if(!nw||!nh||!isFinite(h)||h<=0)return img;
+  const hb=Math.max(8,Math.round(h/4)*4);
+  // Копия оправдана только при заметном уменьшении. Если кадр и так почти
+  // нужного роста, выигрыша нет, а холст в памяти появится.
+  if(nh<hb*1.4)return img;
+  const c=img._sc||(img._sc={});
+  const cv0=c[hb];
+  if(cv0)return cv0;
+  if(_scN>=_SC_MAX)return img;
+  const w=Math.max(1,Math.round(hb*nw/nh));
+  const cv=document.createElement('canvas');cv.width=w;cv.height=hb;
+  if(cv.width<1||cv.height<1)return img;          // выделение не удалось
+  const g=cv.getContext('2d');
+  if(!g)return img;
+  g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';
+  g.drawImage(img,0,0,w,hb);
+  c[hb]=cv;_scN++;
+  return cv;
+ }catch(e){return img;}
 }
 function drawSprite(fr,x,y,h,flip,t,st){   // v6.10: st — состояние КОНКРЕТНОГО врага
  if(!fr||!fr.length)return false;
