@@ -68,7 +68,7 @@ function updateEnemyMovement(e,dt,dx,dy,d,d2,DENSITY_R2){
    spd*=0.25;
    if(e.telegraphT<=0){
     e.fireT=2;
-    let dmg=e.dmg*0.5;
+    let dmg=e.dmg*0.5*enemyDmgMul(time);   // v7.36: снаряд растёт вместе с контактным ударом
     dmg*=armorMul();   // v5.76: та же броня, что и в контактном уроне
     const projDx=dx,projDy=dy;const projD=Math.sqrt(projDx*projDx+projDy*projDy)||1;
     for(let pi=0;pi<6;pi++){const t=0.15+0.12*pi;spawnParticle(e.x+projDx/projD*e.r*2+projDx*t*0.7,e.y+projDy/projD*e.r*2+projDy*t*0.7,rnd(-20,20),rnd(-20,20),rnd(.18,.35),'#b478ff',0,0);}
@@ -411,7 +411,7 @@ function updateOneEnemy(e,dt,thornR,thornR2,frostR,frostR2,DENSITY_R2){
   // wasInRange сбрасывается только при d > e.r + P.r + 25 (явный отход, не микро-отскок).
   if(!isSpawning && d<e.r+P.r){
    if(e.hitT<=0){
-    let dmg=e.dmg*(e.dmgMod||1);
+    let dmg=e.dmg*(e.dmgMod||1)*enemyDmgMul(time);   // v7.36: см. enemyDmgMul в director.js
     // v5.96: условие определяло «крупную цель» ПО ТИПУ (`e.type==='upyr'`), а упырь —
     // это обычный враг из SPAWN_TABLE с 10:00, не только элита. То есть каждый
     // рядовой упырь получал боссовый кулдаун 0.7 с вместо 1.2 с и скидку 0.5 на

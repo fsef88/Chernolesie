@@ -12,9 +12,10 @@ const TREE={
  ]},
  guard:{name:'🛡 Защита',nodes:[
   // БЫЛО: +=25 (константа) → 5 уровней давали только 25 HP. Теперь +=25*l.
-  {id:'gd1',name:'+25 макс. HP',cost:50,max:5,f:(l)=>{P.maxhp+=25*l;P.hp=P.maxhp;},stat:'hp'},
-  // БЫЛО: +0.3 (константа) → все 3 уровня давали те же 0.3 регена. Теперь +0.3*l.
-  {id:'gd2',name:'+0.3 реген/с',cost:100,max:3,f:(l)=>P.regen=(P.regen||0)+0.3*l,stat:'regen'},
+  // v7.36: было +25*l (до +125). Потолок живучести опущен — см. 07-vs-numbers.md.
+  {id:'gd1',name:'+12 макс. HP',cost:50,max:5,f:(l)=>{P.maxhp+=12*l;P.hp=P.maxhp;},stat:'hp'},
+  // БЫЛО: +0.3 (константа) → все 3 уровня давали те же 0.3 регена. Теперь +0.15*l.
+  {id:'gd2',name:'+0.15 реген/с',cost:100,max:3,f:(l)=>P.regen=(P.regen||0)+0.15*l,stat:'regen'},
   {id:'gd3',name:'+15% броня',cost:80,max:3,f:(l)=>P.armor=(P.armor||0)+0.15*l,stat:'armor'},
  ]},
  speed:{name:'⚡ Скорость',nodes:[

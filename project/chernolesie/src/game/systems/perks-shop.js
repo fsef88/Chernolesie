@@ -3,10 +3,10 @@
 // v5.3 Кузница Заставы — 9 мета-перков (между забегами)
 const PERKS=[
  {k:'dmg',t:'Заточка',d:'+10% урон / ур.',tag:'Сталь',base:30,max:8},
- {k:'hp',t:'Кольчуга',d:'+20 макс. HP / ур.',tag:'Стража',base:30,max:8},
+ {k:'hp',t:'Кольчуга',d:'+10 макс. HP / ур.',tag:'Стража',base:30,max:8},
  {k:'spd',t:'Сапоги',d:'+8% бег / ур.',tag:'Путь',base:30,max:8},
  {k:'crit',t:'Глаз ворона',d:'+4% крит / ур.',tag:'Тень',base:45,max:6},
- {k:'regen',t:'Живица',d:'+0.25 реген/с / ур.',tag:'Чаща',base:50,max:5},
+ {k:'regen',t:'Живица',d:'+0.12 реген/с / ур.',tag:'Чаща',base:50,max:5},
  {k:'area',t:'Размах',d:'+8% радиус / ур.',tag:'Сталь',base:40,max:6},
  {k:'pickup',t:'Мешок Велеса',d:'+12% подбор / ур.',tag:'Судьба',base:35,max:6},
  {k:'special',t:'Заряд Ярило',d:'+1 макс. спец / 2 ур.',tag:'Гром',base:80,max:4},
@@ -21,10 +21,10 @@ function applyPerks(){
  const d=perks.dmg|0,h=perks.hp|0,s=perks.spd|0,c=perks.crit|0,r=perks.regen|0;
  const a=perks.area|0,pk=perks.pickup|0,sp=perks.special|0,lk=perks.luck|0;
  if(d)P.dmgMul+=0.10*d;
- if(h){P.maxhp+=20*h;P.hp=P.maxhp;}
+ if(h){P.maxhp+=10*h;P.hp=P.maxhp;}   // v7.36: было 20 — см. потолок живучести в 07-vs-numbers.md
  if(s)P.spd*=(1+0.08*s);
  if(c)P.crit=(P.crit||0)+0.04*c;
- if(r)P.regen=(P.regen||0)+0.25*r;
+ if(r)P.regen=(P.regen||0)+0.12*r;   // v7.36: было 0.25 — реген доходил до 5/с при потолке эталона 1.5/с
  if(a)P.areaMul=(P.areaMul||1)+0.08*a;
  if(pk)P.pickup*=(1+0.12*pk);
  if(sp)specialMax+=(sp>>1);

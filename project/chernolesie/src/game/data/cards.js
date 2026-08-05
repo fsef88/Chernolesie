@@ -4,7 +4,7 @@ const CARD_POOL=[
  {t:'Точильный камень',d:'+16% урона',tag:'phys',f:()=>P.dmgMul+=0.16},
  {t:'Наузы',d:'+15% скорости атак',tag:'phys',f:()=>P.rateMul+=0.15},
  {t:'Сапоги-скороходы',d:'+15% скорости',tag:'phys',f:()=>P.spd*=1.15},
- {t:'Ладанка',d:'+35 макс. HP, лечение',tag:'phys',f:()=>{P.maxhp+=35;P.hp=Math.min(P.maxhp,P.hp+35)}},
+ {t:'Ладанка',d:'+16 макс. HP, лечение',tag:'phys',f:()=>{P.maxhp+=16;P.hp=Math.min(P.maxhp,P.hp+16)}},   // v7.36: было 35, а карту берут до 8 раз
  {t:'Пояс силы',d:'+25% радиус атак',tag:'phys',f:()=>P.areaMul+=0.25},
  {t:'Око Велеса',d:'+50% подбор',tag:'phys',f:()=>P.pickup*=1.5},
  {t:'Грозовая стужа',d:'Молния+мороз',tag:'elec',f:()=>{frost.on=true;if(!hasBolt){hasBolt=true;weapons.push({id:'bolt',cd:1.25,t:0,evo:false});}}},
@@ -15,7 +15,7 @@ const CARD_POOL=[
 
  {t:'Заряд спецатаки',d:'+1 к макс.',tag:'void',f:()=>specialMax++},
  {t:'Воронья стая',d:'+2 ворона на орбите',tag:'void',f:()=>addOrbs(2)},
- {t:'Живая кора',d:'+20 макс. HP и +0.4 реген/с',tag:'phys',f:()=>{P.maxhp+=20;P.hp=Math.min(P.maxhp,P.hp+20);P.regen=(P.regen||0)+0.4;}},
+ {t:'Живая кора',d:'+10 макс. HP и +0.15 реген/с',tag:'phys',f:()=>{P.maxhp+=10;P.hp=Math.min(P.maxhp,P.hp+10);P.regen=(P.regen||0)+0.15;}},   // v7.36: было 20 и 0.4 при восьми уровнях карты
  {t:'Клеймо ярости',d:'+12% крит',tag:'phys',f:()=>{P.crit=(P.crit||0)+0.12;}},
  {t:'Медвежья хватка',d:'+15% урон, −5% скорость',tag:'phys',f:()=>{P.dmgMul+=0.15;P.spd*=0.95;}},
  {t:'Шёпот Нави',d:'+1 реликт-слот (макс. 5)',tag:'void',f:()=>{P.maxRelics=Math.min(5,(P.maxRelics||3)+1);}},

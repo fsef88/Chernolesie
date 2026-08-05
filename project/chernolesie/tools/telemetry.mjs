@@ -84,15 +84,26 @@ await page.evaluate((idle) => {
       cb(window.__t);
       if (time >= window.__next) {
         window.__next = Math.floor(time) + 1;
-        let alive = 0;
-        for (const e of enemies) if (e.hp > 0 && !(e.dying > 0)) alive++;
+        let alive = 0, touch = 0;
+        // touch — сколько врагов реально достали до тела героя. Без этого числа
+        // не отличить «врага не хватает урона» от «враг до героя не доходит»,
+        // а это два разных диагноза с противоположными правками.
+        for (const e of enemies) {
+          if (e.hp > 0 && !(e.dying > 0)) {
+            alive++;
+            const dx = e.x - P.x, dy = e.y - P.y;
+            if (Math.hypot(dx, dy) < e.r + P.r + 6) touch++;
+          }
+        }
         window.__log.push({
-          t: +time.toFixed(1), kills, level, xp: Math.round(xp), xpNext, alive,
+          t: +time.toFixed(1), kills, level, xp: Math.round(xp), xpNext, alive, touch,
           gems: ACTIVE.gems ? ACTIVE.gems.length : 0,
           hp: Math.round(P.hp), maxhp: Math.round(P.maxhp),
+          taken: Math.round(typeof runDmgTaken !== 'undefined' ? runDmgTaken : 0),
           weapons: weapons.length, dmgMul: +(P.dmgMul || 1).toFixed(2),
           cap: enemyCap(time), near: nearCap(time),
           hpMul: +enemyHpMul(time, diffMul).toFixed(2),
+          dmgMulE: +(typeof enemyDmgMul === 'function' ? enemyDmgMul(time) : 1).toFixed(2),
           dirP: +directorP.toFixed(3), gold,
         });
       }
