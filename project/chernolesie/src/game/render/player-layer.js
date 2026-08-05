@@ -34,44 +34,17 @@ function drawHeroFocusUnder(px,py,heroY){
  ctx.beginPath();ctx.ellipse(px,heroY+13,28,8,0,0,TAU);ctx.stroke();
  ctx.restore();
 }
-// v7.35: ОДНО КОЛЬЦО СОСТОЯНИЯ ВМЕСТО СЕМИ.
+// v7.35: кольца состояния вокруг героя НЕТ.
 //
-//  Вокруг героя одновременно рисовались: кольцо низкого здоровья, кольцо
-//  готовности Печати, дуга готовности, четыре вращающиеся риски, кольцо щита,
-//  кольцо неуязвимости и два кольца поглощения — семь окружностей разного
-//  радиуса, каждая своим куском кода, и всё это поверх художественных аур
-//  Идола и Оберега. На экране получалась каша из наложенных кругов, в которой
-//  ни одно состояние не читалось.
+//  Сначала я свёл семь рисованных кодом колец в одно — и это всё равно
+//  осталась нарисованная кодом окружность вокруг героя, ровно то, от чего
+//  договорились уходить. Владелец указал на неё на первом же скриншоте.
 //
-//  Теперь рисуется РОВНО ОДНО кольцо — то, что сейчас важнее всего знать
-//  игроку. Порядок важности сверху вниз: меня нельзя ранить, у меня щит,
-//  я при смерти, у меня готова Печать. Радиус у всех один, поэтому кольцо
-//  не прыгает при смене состояния, а меняет цвет.
-const HERO_STATE_RING=[
- {ключ:'invuln', цвет:'#9fe8ff', частота:40},   // неуязвимость
- {ключ:'shield', цвет:'#ffcf6a', частота:10},   // щит
- {ключ:'low',    цвет:'#ff5d48', частота:5.5},  // при смерти
- {ключ:'ready',  цвет:'#ffdc7a', частота:2.2},  // Печать готова
-];
-function drawHeroStateRing(px,py){
- const состояние={
-  invuln: P.invuln>0,
-  shield: P.shieldT>0,
-  low:    P.hp/Math.max(1,P.maxhp)<0.30,
-  ready:  typeof specialCharge!=='undefined'&&specialCharge>=1,
- };
- const s=HERO_STATE_RING.find(x=>состояние[x.ключ]);
- if(!s)return;
- const p=0.5+0.5*Math.sin(time*s.частота);
- ctx.save();
- ctx.globalCompositeOperation='lighter';
- ctx.globalAlpha=0.30+0.22*p;
- ctx.strokeStyle=s.цвет;
- ctx.lineWidth=2.4;
- ctx.beginPath();ctx.arc(px,py-5,35+2*p,0,TAU);ctx.stroke();
- ctx.restore();
-}
-
+//  Состояния и без кольца видны: здоровье — в полосе сверху, готовность
+//  Печати — в кнопке справа внизу, неуязвимость — миганием самого героя
+//  (P.invuln уже задаёт _iframe), а цвет свечения под героем меняется по
+//  состоянию в drawPlayerLayer ниже. Кольцо ничего к этому не добавляло,
+//  кроме лишней геометрии в самом центре кадра.
 function drawPlayerLayer(px,py){
  // player — главный визуальный центр сцены
  const _hurt=Math.max(0,P.hurtT||0);
@@ -106,7 +79,6 @@ function drawPlayerLayer(px,py){
   }
  }
  (function(){const _hb=HERO_BATTLE[currentClass]||HERO_BATTLE.warrior;if(heroSprDraw(px,_heroY,P.fx<0)){drawClassAttackFx(px,_heroY);}else if(_hb&&_hb.complete&&_hb.naturalWidth){drawHeroMedallion(px,_heroY,P.fx<0);}else{drawClassSilhouette(px,_heroY,P.fx<0);}})();ctx.restore();
- drawHeroStateRing(px,py);   // v7.35: одно кольцо состояния вместо семи
 // v6.16: ВСПЫШКА ЛВЛ-АПА — кольцо + мерцание по классу при получении уровня (P.levelFx)
 if(P.levelFx>0){const k=Math.min(1,P.levelFx/0.3);const cv=CLASS_VISUALS[P.levelFxCls]||CLASS_VISUALS.warrior;const col=cv?cv.color:'#ffcf6a';
  ctx.save();ctx.globalAlpha=0.35+0.5*k;ctx.strokeStyle=col;ctx.lineWidth=3;ctx.beginPath();ctx.arc(px,py-4,40+18*(1-k),0,7);ctx.stroke();
