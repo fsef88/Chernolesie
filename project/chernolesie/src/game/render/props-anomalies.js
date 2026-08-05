@@ -118,19 +118,11 @@ function drawProps(){
    ctx.globalCompositeOperation='source-over';
    ctx.globalAlpha=k*(0.72+beat*0.28);
    ctx.drawImage(KOLOKOL_AURA_ART, zx - drawSize/2, zy - drawSize/2, drawSize, drawSize);
-   // звуковая акустическая волна при звоне
-   for(let i=0;i<3;i++){
-    const wp=(ph+i/3)%1;
-    ctx.globalAlpha=k*(1-wp)*0.55;
-    ctx.lineWidth=1.2+(1-wp)*2.2;
-    ctx.strokeStyle=z._evo?'#ffe6a0':'#ffd77d';
-    ctx.beginPath();ctx.arc(zx,zy,z.r*(0.12+wp*0.9),0,TAU);ctx.stroke();
-   }
-   if(beat>0.72){
-    const s=(beat-0.72)/0.28;
-    ctx.globalAlpha=k*s*0.85;ctx.fillStyle='#fff';
-    ctx.beginPath();ctx.arc(zx,zy,4+s*9,0,TAU);ctx.fill();
-   }
+   // v7.36: поверх мандалы рисовались ещё три расходящихся кольца «звона» и
+   // белый круг в момент удара. Мандала уже показывает круг набата целиком, а
+   // кольца шли поверх её орнамента ровными окружностями — ровно тот случай,
+   // когда геометрия поверх листа читается как поломка. Взвод удара остался:
+   // его несёт дыхание прозрачности самой мандалы (beat в globalAlpha выше).
    ctx.restore();
    continue;
   }

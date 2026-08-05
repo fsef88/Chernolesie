@@ -245,17 +245,7 @@ function drawFxLayer(){
      offsetX, offsetY,
      visualSize, visualSize
    );
-   if(k > 0.32){
-    ctx.globalAlpha = k * 0.95; ctx.strokeStyle = '#fff7d0'; ctx.lineWidth = 1.8;
-    for(let i = 0; i < 4; i++){
-     const t2 = -0.60 + i * 0.40, rr = s.reach * (0.86 + ((i * 29) % 7) / 7 * 0.1);
-     const sx = Math.cos(t2) * rr, sy = Math.sin(t2) * rr, sz = 2.8 * k;
-     ctx.beginPath();
-     ctx.moveTo(sx - sz, sy); ctx.lineTo(sx + sz, sy);
-     ctx.moveTo(sx, sy - sz); ctx.lineTo(sx, sy + sz);
-     ctx.stroke();
-    }
-   }
+   // v7.36: венок крестиков-искр поверх листа убран — см. drawFxLayer ниже.
   } else if(isDruid && typeof DRUID_WAVE_SHEET !== 'undefined' && DRUID_WAVE_SHEET.complete && DRUID_WAVE_SHEET.naturalWidth){
    // (2) ЗНАХАРКА: 8-кадровая анимация морозно-травяной волны посоха из атласа DRUID_WAVE_SHEET
    const progress = 1 - Math.max(0, Math.min(1, k));
@@ -266,17 +256,7 @@ function drawFxLayer(){
    const drawSize = s.reach * 1.55;
    ctx.globalAlpha = Math.max(0.25, k);
    ctx.drawImage(DRUID_WAVE_SHEET, col * sw, row * sh, sw, sh, -drawSize * 0.30, -drawSize * 0.5, drawSize, drawSize);
-   if(k > 0.30){
-    ctx.globalAlpha = k * 0.95; ctx.strokeStyle = '#e9fbff'; ctx.lineWidth = 1.6;
-    for(let i = 0; i < 5; i++){
-     const t2 = -0.65 + i * 0.32, rr = s.reach * (0.85 + ((i * 17) % 5) / 5 * 0.1);
-     const sx = Math.cos(t2) * rr, sy = Math.sin(t2) * rr, sz = 3.5 * k;
-     ctx.beginPath();
-     ctx.moveTo(sx, sy - sz); ctx.lineTo(sx, sy + sz);
-     ctx.moveTo(sx - sz * 0.6, sy); ctx.lineTo(sx + sz * 0.6, sy);
-     ctx.stroke();
-    }
-   }
+   // v7.36: то же — крестики поверх листа убраны.
   } else if(isRogue && typeof ROGUE_SLASH_SHEET !== 'undefined' && ROGUE_SLASH_SHEET.complete && ROGUE_SLASH_SHEET.naturalWidth){
    // (3) ВОРОННИК: 8-кадровая анимация теневого серпа из атласа ROGUE_SLASH_SHEET
    const progress = 1 - Math.max(0, Math.min(1, k));
@@ -287,17 +267,12 @@ function drawFxLayer(){
    const drawSize = s.reach * 1.55;
    ctx.globalAlpha = Math.max(0.25, k);
    ctx.drawImage(ROGUE_SLASH_SHEET, col * sw, row * sh, sw, sh, -drawSize * 0.30, -drawSize * 0.5, drawSize, drawSize);
-   if(k > 0.30){
-    ctx.globalAlpha = k * 0.90; ctx.strokeStyle = '#f0d8ff'; ctx.lineWidth = 1.8;
-    for(let i = 0; i < 4; i++){
-     const t2 = -0.60 + i * 0.40, rr = s.reach * (0.86 + ((i * 23) % 7) / 7 * 0.1);
-     const sx = Math.cos(t2) * rr, sy = Math.sin(t2) * rr, sz = 3.2 * k;
-     ctx.beginPath();
-     ctx.moveTo(sx - sz, sy - sz*0.5); ctx.lineTo(sx + sz, sy + sz*0.5);
-     ctx.moveTo(sx - sz*0.5, sy + sz); ctx.lineTo(sx + sz*0.5, sy - sz);
-     ctx.stroke();
-    }
-   }
+   // v7.36: то же — крестики поверх листа убраны.
+   //
+   //  Один цикл на все три класса: разбросать блики по дуге радиуса удара,
+   //  пока лист уже нарисован. Радиус к листу отношения не имел, поэтому
+   //  искры ложились то внутри рисунка, то за его кромкой — и на кромке
+   //  выдавали, что круг у эффекта всё-таки есть.
   } else {
    for(let g = 4; g >= 1; g--){
     const off = g * 0.13 * (1 - k), al = k * 0.16 * (1 - g / 5.5);
