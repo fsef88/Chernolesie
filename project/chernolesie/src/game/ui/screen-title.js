@@ -114,6 +114,7 @@ function showTitleScreen(){
     started=true;
     // Класс применится внутри resetRun() к свежему P (защита от двойного применения там же).
     resetRun(false);
+    if(__BOSS_RUSH&&typeof devBossRush==='function')devBossRush();   // v7.36: ?boss=1 — сразу к Горынычу
     if(typeof showRunIntro==='function')showRunIntro();
     log(`${currentClass.toUpperCase()} — твой путь начат!`,'gold');
    }catch(err){
