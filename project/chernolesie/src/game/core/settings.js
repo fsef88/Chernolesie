@@ -31,10 +31,35 @@ document.getElementById('fpscap').onchange=(e)=>{fpsCap=+e.target.value;};
 let __PROF_ON=false;
 try{__PROF_ON=/[?&]prof=1/.test(location.search);localStorage.removeItem('cl_prof');}catch(e){swallow('prof.flag',e);}
 const PROF={acc:{},_t:{},frames:0,jank:0,gapMax:0,_gap:0,fps:0};
+// v7.36 ВЫКЛЮЧАТЕЛИ СЛОЁВ. Хронометр меряет только время записи команд в JS,
+// а холст рисует их позже — поэтому три гипотезы подряд промахнулись. Ищем
+// вычитанием: гасим слой, смотрим FPS. Панель появляется вместе с хронометром.
+const __DBG={props:1,auras:1,enemies:1,glow:1,fx:1,dmg:1};
+let __dbgEl=null;
+function __dbgPanel(){
+ if(!__PROF_ON||__dbgEl)return;
+ __dbgEl=document.createElement('div');
+ __dbgEl.style.cssText='position:fixed;top:8px;left:8px;z-index:99;display:flex;flex-wrap:wrap;gap:4px;max-width:60vw';
+ const names={props:'пропсы',auras:'ауры',enemies:'враги',glow:'свет',fx:'эффекты',dmg:'цифры'};
+ for(const k in __DBG){
+  const b=document.createElement('button');
+  b.type='button';b.textContent=names[k];
+  b.style.cssText='font:10px monospace;padding:5px 8px;border-radius:5px;border:1px solid #6a5a34;background:#1a2a1a;color:#cfe0b0';
+  b.onclick=(e)=>{
+   e.preventDefault();e.stopPropagation();
+   __DBG[k]=__DBG[k]?0:1;
+   b.style.background=__DBG[k]?'#1a2a1a':'#3a1414';
+   b.style.color=__DBG[k]?'#cfe0b0':'#ff9a8a';
+  };
+  __dbgEl.appendChild(b);
+ }
+ document.body.appendChild(__dbgEl);
+}
 let __profEl=null,__HUDW={};
 function pT(k,on){if(!__PROF_ON)return;if(on){PROF._t[k]=performance.now();}else{PROF.acc[k]=(PROF.acc[k]||0)+performance.now()-(PROF._t[k]||performance.now());}}
 setInterval(()=>{
  if(!__PROF_ON)return;
+ __dbgPanel();
  const nf=Math.max(1,PROF.frames);
  PROF.fps=Math.round(PROF.frames/0.5);
  if(!__profEl){__profEl=document.createElement('div');__profEl.id='prof';__profEl.style.cssText='position:fixed;top:60px;right:8px;z-index:99;background:rgba(8,8,6,.85);border:1px solid #6a5a34;border-radius:6px;padding:6px 9px;font:10px/1.6 monospace;color:#cfe0b0;white-space:pre;pointer-events:none;text-shadow:0 1px 1px #000';document.body.appendChild(__profEl);}
