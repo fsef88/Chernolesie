@@ -125,6 +125,12 @@ function showTitleScreen(){
    }
   };
   btn.onclick=startTitleRun;
+  // v7.36 ОТЛАДКА: та же кнопка старта, но со взведённым флагом боя. Через
+  // адрес ?boss=1 это не работало у владельца: скачанный файл открывается
+  // двойным щелчком, и параметра в адресе просто нет.
+  const bbtn=document.getElementById('btnBossRush');
+  if(bbtn){const go=(ev)=>{__BOSS_RUSH=true;startTitleRun(ev);};
+   bbtn.onclick=go;bbtn.addEventListener('touchend',go,{passive:false});}
   btn.addEventListener('touchend',startTitleRun,{passive:false});
   btn.addEventListener('pointerup',(ev)=>{if(!ev.pointerType||ev.pointerType==='touch')startTitleRun(ev);},{passive:false});
  }catch(e){console.error('showTitleScreen:',e);}

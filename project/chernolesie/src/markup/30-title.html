@@ -7,6 +7,10 @@
   <div id="tsCorr" role="group" aria-label="Ступень Порчи"></div>
   <div id="tsRow"></div>
   <div id="tsFooter"><button class="big" id="btnStartPoohd" type="button">⚔ В бой</button></div>
+  <!-- v7.36 ОТЛАДКА: вход прямо к Горынычу, чтобы настройка боя не стоила получаса
+       живой игры. Кнопка временная — снять перед отправкой в Яндекс вместе с
+       devBossRush() в systems/bosses.js. -->
+  <div style="text-align:center;margin-top:6px"><button id="btnBossRush" type="button" style="font-size:11px;padding:5px 12px;opacity:.55;background:#241a10;color:#c9a04a;border:1px solid #6a5a34;border-radius:6px">⚙ сразу к Горынычу</button></div>
 </div>
 <!-- #wakeup удалён (#9): был мёртвым — никогда показывался. Заменён авто-паузой на visibilitychange -->
 <div id="classUnlockToast"><div class="u1">ОТКРЫТ НОВЫЙ ПУТЬ</div><div class="u2" id="cutName"></div></div>
