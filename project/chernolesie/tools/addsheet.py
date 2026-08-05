@@ -170,6 +170,12 @@ def main():
     ap.add_argument('weapon', choices=sorted(ZONES))
     ap.add_argument('src')
     ap.add_argument('--dry', action='store_true', help='только проверить, ничего не менять')
+    ap.add_argument('--grid', default='4x2',
+                    help='сетка кадров во ВХОДНОМ листе; генератор не всегда '
+                         'делает 4x2 — костяное копьё пришло 4x4')
+    ap.add_argument('--pick', default=None,
+                    help='какие кадры входного листа взять, через запятую, '
+                         'ровно восемь штук')
     ap.add_argument('--inset', type=int, default=None,
                     help='подрезка ячеек; по умолчанию подбирается сама')
     a = ap.parse_args()
@@ -187,9 +193,12 @@ def main():
     варианты = [a.inset] if a.inset is not None else [0, 8]
     лучший = None
     for ins in варианты:
-        out = run([sys.executable, os.path.join(ROOT, 'tools/chromakey.py'), a.src, tmp,
-                   '--grid', '4x2', '--out-grid', '4x2',
-                   '--fit', z['fit'], '--cell', z['cell'], '--inset', str(ins)])
+        cmd = [sys.executable, os.path.join(ROOT, 'tools/chromakey.py'), a.src, tmp,
+               '--grid', a.grid, '--out-grid', '4x2',
+               '--fit', z['fit'], '--cell', z['cell'], '--inset', str(ins)]
+        if a.pick:
+            cmd += ['--pick', a.pick]
+        out = run(cmd)
         rows = parse_report(out)
         if not rows:
             sys.exit('Не удалось прочитать замер chromakey')

@@ -110,8 +110,13 @@ function drawProps(){
    const bt=z._bt||0;
    const ph=1-Math.min(1,bt/1.2);
    const beat=Math.pow(ph,3);
-   ctx.globalCompositeOperation='lighter';
-   ctx.globalAlpha=k*(0.65+beat*0.35);
+  // v7.35: наземные мандалы рисуются ОБЫЧНЫМ смешиванием, а не сложением.
+  // Они наполовину состоят из тёмного орнамента (41-56% тёмных пикселей), а
+  // 'lighter' тёмное не рисует физически: на экране от мандалы оставался
+  // ровный светящийся блин, весь рисунок пропадал. Та же беда, что была у
+  // листа зоны косы.
+   ctx.globalCompositeOperation='source-over';
+   ctx.globalAlpha=k*(0.72+beat*0.28);
    ctx.drawImage(KOLOKOL_AURA_ART, zx - drawSize/2, zy - drawSize/2, drawSize, drawSize);
    // звуковая акустическая волна при звоне
    for(let i=0;i<3;i++){
@@ -130,24 +135,24 @@ function drawProps(){
    continue;
   }
   if(z._dew && typeof ROSA_AURA_ART !== 'undefined' && ROSA_AURA_ART.complete && ROSA_AURA_ART.naturalWidth){
-   ctx.globalCompositeOperation='lighter';
-   ctx.globalAlpha=k*0.85;
+   ctx.globalCompositeOperation='source-over';   // см. v7.35 выше: сложение съедало орнамент
+   ctx.globalAlpha=k*0.88;
    ctx.drawImage(ROSA_AURA_ART, zx - drawSize/2, zy - drawSize/2, drawSize, drawSize);
    ctx.restore();
    continue;
   }
   if(z._seed && typeof ZERNO_AURA_ART !== 'undefined' && ZERNO_AURA_ART.complete && ZERNO_AURA_ART.naturalWidth){
    const grow=1-k;
-   ctx.globalCompositeOperation='lighter';
-   ctx.globalAlpha=k*(0.75+0.25*Math.abs(Math.sin(time*(4+grow*16))));
+   ctx.globalCompositeOperation='source-over';   // см. v7.35 выше: сложение съедало орнамент
+   ctx.globalAlpha=k*(0.80+0.20*Math.abs(Math.sin(time*(4+grow*16))));
    ctx.drawImage(ZERNO_AURA_ART, zx - drawSize/2, zy - drawSize/2, drawSize, drawSize);
    ctx.restore();
    continue;
   }
   if(z._crown && typeof CROWN_AURA_ART !== 'undefined' && CROWN_AURA_ART.complete && CROWN_AURA_ART.naturalWidth){
    const st=z._st||0;
-   ctx.globalCompositeOperation='lighter';
-   ctx.globalAlpha=k*(0.70+st*0.30);
+   ctx.globalCompositeOperation='source-over';   // см. v7.35 выше: сложение съедало орнамент
+   ctx.globalAlpha=k*(0.76+st*0.24);
    ctx.drawImage(CROWN_AURA_ART, zx - drawSize/2, zy - drawSize/2, drawSize, drawSize);
    ctx.restore();
    continue;

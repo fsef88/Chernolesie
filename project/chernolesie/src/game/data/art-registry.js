@@ -93,4 +93,9 @@ const DUST_PLUME_SHEET   = (function(){const i=new Image(); i.src='@@A:art/art-r
 // v7.35: листы, нарисованные под зоны оружия по заданиям из docs/art-briefs.md.
 // Мятный клин — взмах Косы Моры, рваный саван — Навий хвост.
 const KOSA_ZONE_SHEET    = (function(){const i=new Image(); i.src='@@A:art/art-registry/kosa-zone-sheet.webp@@'; return i;})();
+const KOSTI_ZONE_SHEET     = (function(){const i=new Image(); i.src='@@A:art/art-registry/kosti-zone-sheet.webp@@'; return i;})();
+const ZERCALO_ZONE_SHEET   = (function(){const i=new Image(); i.src='@@A:art/art-registry/zercalo-zone-sheet.webp@@'; return i;})();
+const KOLOKOL_ZONE_SHEET   = (function(){const i=new Image(); i.src='@@A:art/art-registry/kolokol-zone-sheet.webp@@'; return i;})();
+const ZERNO_ZONE_SHEET     = (function(){const i=new Image(); i.src='@@A:art/art-registry/zerno-zone-sheet.webp@@'; return i;})();
+const KLYUKA_ZONE_SHEET    = (function(){const i=new Image(); i.src='@@A:art/art-registry/klyuka-zone-sheet.webp@@'; return i;})();
 const NAVI_ZONE_SHEET    = (function(){const i=new Image(); i.src='@@A:art/art-registry/navi-zone-sheet.webp@@'; return i;})();

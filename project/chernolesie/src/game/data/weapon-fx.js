@@ -139,6 +139,11 @@ const WFX_SHEETS={};
 // заводится после загрузки реестра
 addEventListener('load',()=>{
  if(typeof KOSA_ZONE_SHEET!=='undefined')WFX_SHEETS.kosa={im:KOSA_ZONE_SHEET,brief:true};
+ if(typeof KOSTI_ZONE_SHEET!=='undefined')WFX_SHEETS.kosti={im:KOSTI_ZONE_SHEET,brief:true};
+ if(typeof ZERCALO_ZONE_SHEET!=='undefined')WFX_SHEETS.zercalo={im:ZERCALO_ZONE_SHEET,brief:true};
+ if(typeof KOLOKOL_ZONE_SHEET!=='undefined')WFX_SHEETS.kolokol={im:KOLOKOL_ZONE_SHEET,brief:true};
+ if(typeof ZERNO_ZONE_SHEET!=='undefined')WFX_SHEETS.zerno={im:ZERNO_ZONE_SHEET,brief:true};
+ if(typeof KLYUKA_ZONE_SHEET!=='undefined')WFX_SHEETS.klyuka={im:KLYUKA_ZONE_SHEET,brief:true};
  if(typeof NAVI_ZONE_SHEET!=='undefined')WFX_SHEETS.navi={im:NAVI_ZONE_SHEET,brief:true};
 });
 function wfxSheet(id){
