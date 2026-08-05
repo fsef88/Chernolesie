@@ -1,7 +1,28 @@
 function syncHud(){
  // HUD sync — кэшированные ссылки
  UI.timeEl.textContent=fmt(time);
- if(UI.classdisp){const _cc=CLASSES.find(c=>c.id===currentClass);const _cv=CLASS_VISUALS[currentClass]||CLASS_VISUALS.warrior;if(_cc){UI.classdisp.innerHTML=`<span style="display:inline-flex;vertical-align:middle;width:18px;height:18px;color:${_cv.color};margin-right:5px">${classTiny(currentClass)}</span>${_cc.name}`;UI.classdisp.style.color=_cv.color;}else UI.classdisp.textContent='';}
+ // v7.36 ГЛАВНАЯ ПРИЧИНА ПРОСАДКИ НА ТЕЛЕФОНЕ.
+ //
+ //  Здесь стоял innerHTML БЕЗ КЭША, и внутри — classTiny(), то есть тег <img>
+ //  с картинкой класса. В однофайловой сборке src картинки это data-URI длиной
+ //  38 755 символов. Каждый кадр собиралась строка почти в 39 КБ, парсилась как
+ //  HTML, старый <img> уничтожался, создавался новый, и браузер заново разбирал
+ //  data-URI. Тридцать раз в секунду — больше мегабайта строк в секунду.
+ //
+ //  Почему этого не было видно: присваивание innerHTML в JS мгновенно, а разбор,
+ //  раскладка и декодирование происходят позже, в шаге отрисовки браузера.
+ //  Хронометр показывал hud 0.55мс и rtotal 4.8мс при кадре в 30мс — вся работа
+ //  шла мимо замера. И мимо холста: урезание пикселей вдвое не дало ничего.
+ //
+ //  Ровно этот же дефект чинили для иконок оружия ниже (#11) — там появился
+ //  ключ _weaponsKey. Класс за забег не меняется вовсе, поэтому здесь хватает
+ //  сравнения с прошлым значением.
+ if(UI.classdisp&&__HUDW.cls!==currentClass){
+  __HUDW.cls=currentClass;
+  const _cc=CLASSES.find(c=>c.id===currentClass);const _cv=CLASS_VISUALS[currentClass]||CLASS_VISUALS.warrior;
+  if(_cc){UI.classdisp.innerHTML=`<span style="display:inline-flex;vertical-align:middle;width:18px;height:18px;color:${_cv.color};margin-right:5px">${classTiny(currentClass)}</span>${_cc.name}`;UI.classdisp.style.color=_cv.color;}
+  else UI.classdisp.textContent='';
+ }
  // серия убийств — читаемый juice без нового DOM
  if(killCombo>=5){ctx.save();
    // v6.18e: счётчик был всегда 14px одного цвета — лучшие моменты забега
