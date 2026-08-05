@@ -48,7 +48,12 @@ try {
   process.exit(1);
 }
 
-const browser = await chromium.launch();
+// Там, где браузеры лежат отдельно от пакета, путь берётся из PW_CHROMIUM —
+// как в shot.mjs и gif.mjs. Без этого замер не снять в окружении, где версия
+// установленных браузеров не совпадает с версией пакета.
+const browser = await chromium.launch(
+  process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {}
+);
 const page = await browser.newPage({ viewport: { width: 430, height: 900 } });
 page.on('pageerror', e => console.log('ОШИБКА СТРАНИЦЫ:', e.message));
 
