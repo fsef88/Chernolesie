@@ -21,10 +21,20 @@ let __BOSS_RUSH=false;
 try{__BOSS_RUSH=/[?&]boss=1/.test(location.search);}catch(e){}
 function devBossRush(){
  try{
+  // Хронометр сразу на экране: без него «лагает» — это ощущение, а не диагноз,
+  // и непонятно, что чинить. Панель наверху справа показывает разбивку кадра.
+  __PROF_ON=true;
   // Полный арсенал: шесть слотов — столько же, сколько SLOTS.weapons.
+  //
+  // v7.36: эволюции сняты со ВСЕХ шести. Первая версия выдавала шесть
+  // эволюционировавших орудий разом, и владелец справедливо получил на телефоне
+  // кашу: в живом забеге столько эволюций не собрать, каждая требует сундук и
+  // рецепт. Тест обязан быть тяжёлым, но достижимым, иначе меряется то, чего в
+  // игре не бывает. Две эволюции — верхняя граница реального забега.
   weapons.length=0;
-  const kit=[['kosa',1.5],['kolokol',7.0],['zerno',2.0],['vihr',3.2],['zercalo',1.0],['kosti',1.1]];
-  for(const [id,cd] of kit)weapons.push({id,cd,t:0,evo:true});
+  const kit=[['kosa',1.5,true],['kolokol',7.0,true],['zerno',2.0,false],
+             ['vihr',3.2,false],['zercalo',1.0,false],['kosti',1.1,false]];
+  for(const [id,cd,evo] of kit)weapons.push({id,cd,t:0,evo});
   for(const k in NEWW_LVL)NEWW_LVL[k]=SLOTS.maxLevel;
   swordLvl=boltLvl=bowLvl=SLOTS.maxLevel;
   // Потолок игрока: множители от карт, древа и кузницы разом.
