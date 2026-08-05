@@ -53,7 +53,50 @@ function __dbgPanel(){
   };
   __dbgEl.appendChild(b);
  }
+ // АВТОЗАМЕР. Владелец не должен щёлкать шесть кнопок и запоминать числа.
+ // Прогон гасит по одному слою за раз, держит каждый вариант около двух секунд
+ // и усредняет FPS. Итог — готовая таблица: сколько кадров возвращает каждый
+ // слой. Разница между «всё» и «без X» и есть цена слоя X.
+ const ab=document.createElement('button');
+ ab.type='button';ab.textContent='⏱ автозамер';
+ ab.style.cssText='font:10px monospace;padding:5px 8px;border-radius:5px;border:1px solid #c9a04a;background:#2a2010;color:#ffcf6a';
+ ab.onclick=(e)=>{e.preventDefault();e.stopPropagation();if(!__dbgBusy)__dbgSweep(ab);};
+ __dbgEl.appendChild(ab);
+ __dbgOut=document.createElement('pre');
+ __dbgOut.style.cssText='margin:4px 0 0;font:11px/1.5 monospace;color:#ffcf6a;background:rgba(8,8,6,.9);border:1px solid #6a5a34;border-radius:5px;padding:5px 8px;white-space:pre;width:100%';
+ __dbgOut.textContent='';
+ __dbgEl.appendChild(__dbgOut);
  document.body.appendChild(__dbgEl);
+}
+let __dbgOut=null,__dbgBusy=false;
+async function __dbgSweep(btn){
+ __dbgBusy=true;
+ const names={props:'пропсы',auras:'ауры',enemies:'враги',glow:'свет',fx:'эффекты',dmg:'цифры'};
+ const keys=Object.keys(__DBG);
+ const setAll=(v)=>{for(const k in __DBG)__DBG[k]=v;};
+ const wait=(ms)=>new Promise(r=>setTimeout(r,ms));
+ // Усредняем по четырём окнам хронометра: одиночное значение скачет от того,
+ // сколько врагов на экране прямо сейчас.
+ const sample=async()=>{
+  await wait(700);
+  let s=0;
+  for(let i=0;i<4;i++){await wait(520);s+=PROF.fps;}
+  return Math.round(s/4);
+ };
+ const rows=[];
+ const draw=()=>{if(__dbgOut)__dbgOut.textContent=rows.join('\n');};
+ try{
+  btn.textContent='замер…';
+  setAll(1);rows.push('всё вместе   '+await sample());draw();
+  for(const k of keys){
+   setAll(1);__DBG[k]=0;
+   btn.textContent='без '+names[k];
+   rows.push(('без '+names[k]).padEnd(13)+await sample());draw();
+  }
+  setAll(0);rows.push('пусто        '+await sample());draw();
+ }finally{
+  setAll(1);btn.textContent='⏱ автозамер';__dbgBusy=false;
+ }
 }
 let __profEl=null,__HUDW={};
 function pT(k,on){if(!__PROF_ON)return;if(on){PROF._t[k]=performance.now();}else{PROF.acc[k]=(PROF.acc[k]||0)+performance.now()-(PROF._t[k]||performance.now());}}
