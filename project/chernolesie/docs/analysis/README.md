@@ -14,6 +14,7 @@
 | 4 | [04-vs-comparison.md](./04-vs-comparison.md) | Сравнение с Vampire Survivors + roadmap (оценки на глаз) |
 | 5 | [05-action-plan.md](./05-action-plan.md) | Конкретный план действий по улучшению |
 | 6 | [06-vs-gap-measured.md](./06-vs-gap-measured.md) | **Тот же вопрос по замерам живого забега — выводы другие** |
+| 7 | [07-vs-numbers.md](./07-vs-numbers.md) | **Числа эталона из файлов самой Vampire Survivors** |
 
 ---
 
