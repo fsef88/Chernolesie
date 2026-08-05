@@ -123,6 +123,27 @@ function updateEnemyAnimMeta(e) {
  e._ehurt = e.hit || 0;
  e._eatk = e.atkT || 0;
 }
+// v7.36 КОПИЯ КАДРА ПОД НУЖНЫЙ РОСТ.
+//
+//  Тот же приём, которым в v5.29 запекли тайлы земли, а в v5.99 — свечение
+//  гемов: считаем один раз, дальше только blit. Рост округляется до 4 px, чтобы
+//  копий было немного: у врага рост меняется от размера и предсмертного сжатия,
+//  и без корзин кэш рос бы на каждое дробное значение.
+//  Хранится копия прямо на самой картинке (img._sc), поэтому живёт ровно
+//  столько же, сколько кадр, и чистить отдельно нечего.
+function _fitSpr(img,h){
+ const hb=Math.max(8,Math.round(h/4)*4);
+ const c=img._sc||(img._sc={});
+ let cv=c[hb];
+ if(cv)return cv;
+ const w=Math.max(1,Math.round(hb*img.naturalWidth/img.naturalHeight));
+ cv=document.createElement('canvas');cv.width=w;cv.height=hb;
+ const g=cv.getContext('2d');
+ g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';
+ g.drawImage(img,0,0,w,hb);
+ c[hb]=cv;
+ return cv;
+}
 function drawSprite(fr,x,y,h,flip,t,st){   // v6.10: st — состояние КОНКРЕТНОГО врага
  if(!fr||!fr.length)return false;
  // v6.5: ГЛАВНАЯ ПРИЧИНА «как будто 15 кадров». Профайлер показал 60 FPS, jank 0 и
@@ -210,12 +231,21 @@ function drawSprite(fr,x,y,h,flip,t,st){   // v6.10: st — состояние �
  if(_atk>0){const ak=Math.min(1,_atk*4);tiltDeg+=18*ak;sX*=1+0.06*ak;}
  ctx.save();ctx.translate(x,y+bobY);if(flip)ctx.scale(-1,1);
  ctx.rotate(tiltDeg*Math.PI/180);ctx.scale(sX,sY);
+ // v7.36: рисуем не из исходника, а из копии, ужатой под нужный рост ОДИН раз.
+ // Кадры врагов лежат в 256x256 и 320x320, а рисуются высотой 60-96 px — то есть
+ // на каждого врага каждый кадр шло уменьшение втрое с фильтрацией. Это самая
+ // дорогая форма drawImage, и вся её стоимость сидит в растеризации, мимо
+ // хронометра: в JS вызов мгновенный. При трёх сотнях врагов это триста
+ // фильтрованных уменьшений крупной текстуры за кадр.
+ // Побочно уходит и мерцание: спрайт больше не пересэмплируется заново каждый
+ // кадр под чуть иной дробный размер, а всегда берётся из готовой копии.
+ const _a=_fitSpr(img,h), _wa=_a.width, _ha=_a.height;
  if(_bl>0&&_imgB){
-  const wB=h*_imgB.naturalWidth/_imgB.naturalHeight;
-  ctx.globalAlpha=1-_bl;ctx.drawImage(img,-w/2,-h*0.82,w,h);
-  ctx.globalAlpha=_bl;ctx.drawImage(_imgB,-wB/2,-h*0.82,wB,h);
+  const _b=_fitSpr(_imgB,h);
+  ctx.globalAlpha=1-_bl;ctx.drawImage(_a,-_wa/2,-_ha*0.82,_wa,_ha);
+  ctx.globalAlpha=_bl;ctx.drawImage(_b,-_b.width/2,-_b.height*0.82,_b.width,_b.height);
   ctx.globalAlpha=1;
- } else ctx.drawImage(img,-w/2,-h*0.82,w,h);
+ } else ctx.drawImage(_a,-_wa/2,-_ha*0.82,_wa,_ha);
  ctx.restore();return true;
 }
 // Рисует один конкретный кадр (для незацикленных анимаций Древня)
@@ -246,5 +276,25 @@ function drawBeastFrame(e,x,y,flip){
  }
  return drawSprite(e.frames,x,y,e.drawH,flip,e.at||0,e);
 }
-function shadow(x,y,w){ctx.save();ctx.globalAlpha=.42;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(x,y,w,w*0.34,0,0,7);ctx.fill();ctx.globalAlpha=.22;ctx.beginPath();ctx.ellipse(x,y,w*1.35,w*0.46,0,0,7);ctx.fill();ctx.restore();}
+// v7.36: тень печётся один раз, дальше — один blit вместо пяти операций.
+//
+//  Было: save + два залитых эллипса (каждый со своим beginPath) + restore, то
+//  есть пять вызовов холста НА КАЖДОГО врага. При трёхстах врагах — полторы
+//  тысячи операций за кадр только на тени, и обе заливки ещё и с прозрачностью.
+//  Форма и плотность сохранены точно: те же два эллипса с alpha .42 и .22,
+//  просто нарисованные заранее в маленький холст 128x44.
+const _shCv=(function(){
+ const c=document.createElement('canvas');c.width=128;c.height=44;
+ const g=c.getContext('2d');
+ const cx=64,cy=22,w=128/2.7;   // внешний эллипс шире внутреннего в 1.35 раза
+ g.globalAlpha=.22;g.fillStyle='#000';
+ g.beginPath();g.ellipse(cx,cy,w*1.35,w*0.46,0,0,7);g.fill();
+ g.globalAlpha=.42;
+ g.beginPath();g.ellipse(cx,cy,w,w*0.34,0,0,7);g.fill();
+ return c;
+})();
+function shadow(x,y,w){
+ const dw=w*2.7,dh=dw*44/128;
+ ctx.drawImage(_shCv,x-dw/2,y-dh/2,dw,dh);
+}
 
