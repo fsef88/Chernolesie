@@ -124,53 +124,44 @@ function drawFxLayer(){
    if (sx > -180 && sy > -180 && sx < W + 180 && sy < H + 180) visibleFlashes.push(f);
  }
 
+ // v7.35: ВСПЫШКА ПОПАДАНИЯ — арт вместо рисования кодом.
+ //
+ //  Здесь было около двадцати линий и дуг на КАЖДОЕ попадание: три
+ //  концентрических окружности, белая точка, венок крестиков-искр и ещё
+ //  четыре луча у крупной вспышки. На экране это самая часто повторяющаяся
+ //  геометрия во всей игре — она рисуется по нескольку раз за кадр и в бою
+ //  засыпает поле мелкими кружками.
+ //
+ //  Лист impact-burst-sheet уже лежал в реестре и использовался только на
+ //  критах. Теперь он рисует все вспышки. Лист белый, поэтому красится в цвет
+ //  вспышки и кладётся сложением — это его родной режим, в отличие от листов
+ //  зон по заданию, которые приходят уже цветными.
  for(const f of visibleFlashes){
   const a=f.t/f.max, k=1-a, px=f.x-cam.x, py=f.y-cam.y;
   const _fw=(f.w!=null?f.w:(f.big?1:0));
   const r=(7+9*_fw)*(0.4+k)*FXS;
-
-  // Убрали повторное переключение globalCompositeOperation (уже стоит 'lighter' сверху)
+  const sh=(typeof IMPACT_BURST_SHEET!=='undefined')
+    ?(tintedSheet(IMPACT_BURST_SHEET,f.color||'#ffffff')||IMPACT_BURST_SHEET):null;
+  if(sh&&sh.width!==0&&(sh.naturalWidth===undefined||sh.naturalWidth)){
+   const fi=Math.max(0,Math.min(7,Math.floor(k*8)));
+   const sw=Math.floor((sh.naturalWidth||sh.width)/4), sy2=Math.floor((sh.naturalHeight||sh.height)/2);
+   // 4.6 радиуса, а не 3.2: прежний венок крестиков разлетался примерно на
+   // две величины радиуса, и при 3.2 лист выходил заметно тусклее и мельче
+   // того, что заменял.
+   const d=r*4.6;
+   ctx.save();
+   ctx.globalCompositeOperation='lighter';
+   ctx.globalAlpha=Math.min(1,a*1.6)*(0.7+0.3*_fw);
+   ctx.drawImage(sh,(fi%4)*sw,(fi>3?1:0)*sy2,sw,sy2,px-d/2,py-d/2,d,d);
+   ctx.restore();
+   continue;
+  }
+  // запасной путь, пока лист не декодировался: одно кольцо, без венка искр
   ctx.save();
-  // (1) три кольца
-  ctx.strokeStyle=f.color;
-  const _rings=_fw>=0.5?3:2;
-  for(let i=0;i<_rings;i++){
-   const rr=r*(1+i*0.42), al=a*(1-i*0.3)*(0.45+0.55*_fw);
-   if(al<=0)continue;
-   ctx.globalAlpha=al; ctx.lineWidth=(3-i)*(0.6+0.4*_fw);
-   ctx.beginPath(); ctx.arc(px,py,rr,0,TAU); ctx.stroke();
-  }
-  if(_fw>0.55){
-   ctx.globalAlpha=a*0.34*(_fw-0.55)/0.45; ctx.fillStyle='#fff';
-   ctx.beginPath(); ctx.arc(px,py,r*0.18,0,TAU); ctx.fill();
-  }
-  // (3) крестики-искры
-  const n=3+Math.round(6*_fw);
-  ctx.globalAlpha=a;
-  for(let pass=0;pass<2;pass++){
-   ctx.strokeStyle = pass===0 ? 'rgba(20,14,6,0.85)' : '#fff';
-   ctx.lineWidth   = (pass===0 ? 4.2 : 2.0)*Math.min(1.8,FXS);
-   for(let i=0;i<n;i++){
-    const ang=(f.x*0.7+f.y*1.3+i*2.399);
-    const d=r*(1.15+((i*37)%13)/13*0.95);
-    const sx=px+Math.cos(ang)*d, sy=py+Math.sin(ang)*d;
-    const sz=(3.0+2.2*_fw)*(0.45+a*0.55)*FXS;
-    ctx.beginPath();
-    ctx.moveTo(sx-sz,sy); ctx.lineTo(sx+sz,sy);
-    ctx.moveTo(sx,sy-sz); ctx.lineTo(sx,sy+sz);
-    ctx.stroke();
-   }
-  }
-  if(f.big){
-   ctx.globalAlpha=a*0.55; ctx.lineWidth=2;
-   for(let i=0;i<4;i++){
-    const ang=(f.x*0.3+i*1.5708);
-    ctx.beginPath();
-    ctx.moveTo(px+Math.cos(ang)*r*0.7, py+Math.sin(ang)*r*0.7);
-    ctx.lineTo(px+Math.cos(ang)*r*1.85, py+Math.sin(ang)*r*1.85);
-    ctx.stroke();
-   }
-  }
+  ctx.globalCompositeOperation='lighter';
+  ctx.globalAlpha=a*0.8;
+  ctx.strokeStyle=f.color; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.arc(px,py,r,0,TAU); ctx.stroke();
   ctx.restore();
  }
  // slashes
