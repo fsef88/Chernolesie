@@ -1,3 +1,17 @@
+// v7.36 ИСПЕЧЁННАЯ ИСКРА — см. комментарий в месте вызова.
+const _sparkCache={};
+function _sparkSpr(col){
+ let c=_sparkCache[col];
+ if(c)return c;
+ const R=16;
+ c=document.createElement('canvas');c.width=c.height=R*2;
+ const g=c.getContext('2d');
+ g.fillStyle=col;
+ // тот же ромб: полуширина 0.7 от полувысоты
+ g.beginPath();g.moveTo(R,0);g.lineTo(R+R*0.7,R);g.lineTo(R,R*2);g.lineTo(R-R*0.7,R);g.closePath();g.fill();
+ _sparkCache[col]=c;
+ return c;
+}
 function drawFxLayer(){
  const FXS = Math.max(1, Math.min(2.4, 1 / (ZOOM || 1) * 0.85));
 
@@ -118,9 +132,13 @@ function drawFxLayer(){
     ctx.restore();
    }
   }else{
-   ctx.globalAlpha=al;ctx.fillStyle=p.c;
+   // v7.36: ромб искры собирался путём из семи вызовов на КАЖДУЮ частицу, а
+   // искры — самый массовый тип: в плотном бою их сотни, то есть под две тысячи
+   // операций холста за кадр на одни искры. Ромб испечён по цвету и ставится
+   // одним blit. Цветов в игре десятки, кэш вырастает один раз и не растёт.
+   ctx.globalAlpha=al;
    const s=(1.5+2.2*al)*FXS;
-   ctx.beginPath();ctx.moveTo(px,py-s);ctx.lineTo(px+s*0.7,py);ctx.lineTo(px,py+s);ctx.lineTo(px-s*0.7,py);ctx.closePath();ctx.fill();
+   ctx.drawImage(_sparkSpr(p.c),px-s,py-s,s*2,s*2);
   }
  }ctx.globalAlpha=1;
  // flashes — с culling

@@ -1,3 +1,38 @@
+// ============================================================
+//  v7.36 ИСПЕЧЁННЫЕ ЗНАЧКИ СТАТУСОВ
+//
+//  Статусы висят почти на каждом враге в поздней игре, а рисовались путями:
+//  пять кристаллов льда по шесть вызовов, четыре пузыря яда по три, шесть
+//  нитей замедления по четыре. До сорока вызовов холста НА ОДНОГО врага, и при
+//  трёх сотнях врагов это больше десяти тысяч операций за кадр.
+//
+//  Стоимость такой отрисовки в JS не видна: вызов лишь записывает команду, а
+//  растеризует её браузер потом. Поэтому хронометр честно показывал единицы
+//  миллисекунд при кадре в тридцать.
+//
+//  Тот же приём, что у тайлов земли (v5.29) и свечения гемов (v5.99): рисуем
+//  один раз в маленький холст, дальше только blit.
+// ============================================================
+const _iceCv=(function(){
+ const R=64,c=document.createElement('canvas');c.width=c.height=R*2;
+ const g=c.getContext('2d');
+ g.fillStyle='#e8f6ff';g.strokeStyle='#ffffff';g.lineWidth=2;
+ for(let i=0;i<5;i++){
+  const an=i*1.2566, rr=R*0.66;
+  const bx=R+Math.cos(an)*rr*0.5, by=R+Math.sin(an)*rr*0.667;
+  const tx=R+Math.cos(an)*rr, ty=R+Math.sin(an)*rr*0.9;
+  const nx=-Math.sin(an)*R*0.05, ny=Math.cos(an)*R*0.05;
+  g.beginPath();g.moveTo(bx+nx,by+ny);g.lineTo(tx,ty);g.lineTo(bx-nx,by-ny);g.closePath();g.fill();
+ }
+ return c;
+})();
+function _mkBub(col){
+ const R=16,c=document.createElement('canvas');c.width=c.height=R*2;
+ const g=c.getContext('2d');
+ g.fillStyle=col;g.beginPath();g.arc(R,R,R-1,0,Math.PI*2);g.fill();
+ return c;
+}
+const _bubA=_mkBub('#9ad06a'), _bubB=_mkBub('#c9e08a');
 function drawEnemiesLayer(){
  // ВРАГИ с правильным AI визуалом
  const visR=Math.max(W,H)*0.6,visR2=visR*visR;
@@ -141,17 +176,18 @@ function drawEnemiesLayer(){
     ctx.globalCompositeOperation='source-over';
     ctx.globalAlpha=0.20*fade;ctx.fillStyle='#7fb8e8';
     ctx.beginPath();ctx.ellipse(x,y-_sh*0.28,_sh*0.22,_sh*0.34,0,0,TAU);ctx.fill();
+    // v7.36: пять кристаллов рисовались пятью путями по шесть вызовов каждый —
+    // тридцать операций на одного замороженного врага. Форма от врага не
+    // зависела ничем, кроме поворота венка (e.x*0.03), поэтому венок испечён
+    // целиком и ставится одним blit с поворотом. Вид тот же.
     ctx.globalCompositeOperation='lighter';
-    ctx.globalAlpha=0.9*fade;ctx.strokeStyle='#ffffff';ctx.lineWidth=1.6*_fs;
-    ctx.fillStyle='#e8f6ff';
-    for(let i=0;i<5;i++){                       // кристаллы-шипы по контуру
-     const an=i*1.2566+e.x*0.03, rr=_sh*0.30;
-     const bx=x+Math.cos(an)*rr*0.75, by=y-_sh*0.28+Math.sin(an)*rr;
-     const tx2=x+Math.cos(an)*rr*1.5, ty2=y-_sh*0.28+Math.sin(an)*rr*1.35;
-     const nx=-Math.sin(an)*2.4*_fs, ny=Math.cos(an)*2.4*_fs;
-     ctx.globalAlpha=0.85*fade;
-     ctx.beginPath();ctx.moveTo(bx+nx,by+ny);ctx.lineTo(tx2,ty2);ctx.lineTo(bx-nx,by-ny);ctx.closePath();ctx.fill();
-    }
+    ctx.globalAlpha=0.85*fade;
+    const _ir=_sh*0.30*1.5, _id=_ir*2;
+    // save/restore, а НЕ setTransform: слой врагов рисуется внутри смещения
+    // тряски экрана, и сброс матрицы в базовую стёр бы её для всего дальнейшего.
+    ctx.save();ctx.translate(x,y-_sh*0.28);ctx.rotate(e.x*0.03);
+    ctx.drawImage(_iceCv,-_id/2,-_id/2,_id,_id);
+    ctx.restore();
    }
    // ЯД: пузыри всплывают вверх — движение читается даже мелко.
    // Позиции детерминированы от координат врага, поэтому не «кипят» между кадрами.
@@ -163,8 +199,9 @@ function drawEnemiesLayer(){
      const by=y-_sh*0.12-ph*_sh*0.55;
      const rr=(1.6+1.4*(1-ph))*_fs;
      ctx.globalAlpha=(1-ph)*0.85;
-     ctx.fillStyle=i&1?'#9ad06a':'#c9e08a';
-     ctx.beginPath();ctx.arc(bx,by,rr,0,TAU);ctx.fill();
+     // v7.36: beginPath+arc+fill на каждый пузырь — двенадцать вызовов на врага.
+     // Пузырь испечён двух оттенков, рисуется одним blit.
+     ctx.drawImage(i&1?_bubA:_bubB,bx-rr,by-rr,rr*2,rr*2);
     }
     ctx.globalAlpha=0.30;ctx.fillStyle='#6a9a3a';
     ctx.beginPath();ctx.ellipse(x,y-_sh*0.18,_sh*0.20,_sh*0.26,0,0,TAU);ctx.fill();
@@ -178,18 +215,22 @@ function drawEnemiesLayer(){
     // Цвет тяжей был #7a6a4a — РОВНО цвет лесной подстилки, эффект тонул в фоне
     // (та же ошибка, что чинили у смерти врага в v6.41). Рисуем в два прохода:
     // чёрная подложка, поверх бледно-лиловая нить — читается на любом фоне.
+    // v7.36: было два прохода по три нити, и каждая нить — свой beginPath со
+    // stroke, то есть двадцать четыре вызова на врага. Тёмная подложка нужна
+    // была, чтобы нить не тонула в подстилке; тот же результат даёт обводка
+    // одним путём: собираем все три нити в ОДИН путь и штрихуем дважды.
     for(let pass=0;pass<2;pass++){
      ctx.globalAlpha=(pass===0?0.75:0.55+0.4*st);
      ctx.strokeStyle=pass===0?'rgba(10,6,14,0.9)':'#b9a8d8';
      ctx.lineWidth=(pass===0?3.0:1.3)*_fs;
+     ctx.beginPath();
      for(let i=0;i<3;i++){
       const an=i*2.094+e.y*0.02;
       const jx=Math.sin(time*9+i)*1.2;          // дрожь натяжения
-      ctx.beginPath();
       ctx.moveTo(x+Math.cos(an)*_sh*0.16+jx,y-_sh*0.22);
       ctx.lineTo(x+Math.cos(an)*_sh*0.34,y+_sh*0.04);
-      ctx.stroke();
      }
+     ctx.stroke();
     }
     ctx.globalAlpha=0.34+0.3*st;ctx.fillStyle='#1a1024';
     ctx.beginPath();ctx.ellipse(x,y+_sh*0.04,_sh*0.26,_sh*0.09,0,0,TAU);ctx.fill();
@@ -205,11 +246,15 @@ function drawEnemiesLayer(){
    ctx.globalAlpha=(1-sa)*0.5*ringPulse;
    ctx.strokeStyle='#7fb04a';
    ctx.lineWidth=3;
-   ctx.shadowColor='#9ac06a';
-   ctx.shadowBlur=10;
+   // v7.36: тут стоял shadowBlur — самая дорогая возможность холста: браузер
+   // рисует фигуру в отдельную поверхность и размывает её, и вся эта работа
+   // идёт мимо JS-замера. На 28-й минуте в состоянии спавна одновременно
+   // десятки врагов. Свечение даёт вторая, более широкая и бледная линия —
+   // на глаз то же мягкое кольцо, но без размытия.
    ctx.beginPath();
    ctx.ellipse(x,y+e.r*0.5,e.r*3.2*(0.7+0.3*sa),e.r*1.4*(0.7+0.3*sa),0,0,7);
    ctx.stroke();
+   ctx.globalAlpha*=0.45;ctx.lineWidth=7;ctx.stroke();
    ctx.restore();
    // 2) Внутренний зелёный туман под врагом
    ctx.save();
