@@ -30,7 +30,7 @@ document.getElementById('fpscap').onchange=(e)=>{fpsCap=+e.target.value;};
 // для отладки. Заодно вычищаем старое сохранённое значение cl_prof.
 let __PROF_ON=false;
 try{__PROF_ON=/[?&]prof=1/.test(location.search);localStorage.removeItem('cl_prof');}catch(e){swallow('prof.flag',e);}
-const PROF={acc:{},_t:{},frames:0,jank:0,gapMax:0,_gap:0,fps:0};
+const PROF={acc:{},_t:{},frames:0,draws:0,jank:0,gapMax:0,_gap:0,fps:0};
 // v7.36 ВЫКЛЮЧАТЕЛИ СЛОЁВ. Хронометр меряет только время записи команд в JS,
 // а холст рисует их позже — поэтому три гипотезы подряд промахнулись. Ищем
 // вычитанием: гасим слой, смотрим FPS. Панель появляется вместе с хронометром.
@@ -103,20 +103,23 @@ function pT(k,on){if(!__PROF_ON)return;if(on){PROF._t[k]=performance.now();}else
 setInterval(()=>{
  if(!__PROF_ON)return;
  __dbgPanel();
- const nf=Math.max(1,PROF.frames);
- PROF.fps=Math.round(PROF.frames/0.5);
+ const nf=Math.max(1,PROF.draws);   // v7.36: секции копятся ТОЛЬКО на нарисованных кадрах
+                                    // — делить на все вызовы rAF значило занижать их вдвое
+ PROF.fps=Math.round(PROF.draws/0.5);          // кадры, которые игрок реально увидел
+ PROF.raf=Math.round(PROF.frames/0.5);         // вызовы rAF: по ним видна развёртка экрана
  if(!__profEl){__profEl=document.createElement('div');__profEl.id='prof';__profEl.style.cssText='position:fixed;top:60px;right:8px;z-index:99;background:rgba(8,8,6,.85);border:1px solid #6a5a34;border-radius:6px;padding:6px 9px;font:10px/1.6 monospace;color:#cfe0b0;white-space:pre;pointer-events:none;text-shadow:0 1px 1px #000';document.body.appendChild(__profEl);}
  __profEl.style.display='block';
  const _jd=' joy  down '+JDBG.down+' move '+JDBG.move+' id '+JDBG.lastId+'\n'+
            ' touch '+touchMove.x.toFixed(2)+','+touchMove.y.toFixed(2)+' act '+(touchMove.active?1:0)+'\n'+
            ' move  '+JDBG.mx+','+JDBG.my+'  spd '+JDBG.spd+'  zoom '+ZOOM+'\n';
- const rows=['FPS '+String(PROF.fps).padStart(3)+'  jank '+PROF.jank+'  maxgap '+PROF.gapMax.toFixed(1)+'ms'];
+ const rows=['FPS '+String(PROF.fps).padStart(3)+'  rAF '+String(PROF.raf).padStart(3)+'  шаг '+__vsStride+'/'+(__vsPeriod?Math.round(1000/__vsPeriod):0)+'Гц',
+            'jank '+PROF.jank+'  maxgap '+PROF.gapMax.toFixed(1)+'ms'];
  for(const k of ['upd','ground','world','atmos','hud','mini','rtotal']){
   const ms=(PROF.acc[k]||0)/nf;
   rows.push(k.padEnd(6)+' '+ms.toFixed(2)+'ms'+(ms>8?'  <<<':''));
  }
  __profEl.textContent=rows.join('\n')+'\n'+_jd;   // v6.14: строки ввода
- PROF.frames=0;PROF.acc={};PROF.jank=0;PROF.gapMax=0;
+ PROF.frames=0;PROF.draws=0;PROF.acc={};PROF.jank=0;PROF.gapMax=0;
 },500);
 // v6.4: переключатель хронометра прямо в настройках. Раньше он включался только
 // через ?prof=1 в адресе или запись в localStorage, и флаг читался ОДИН раз при
