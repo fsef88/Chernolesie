@@ -1,0 +1,29 @@
+/* ============================================================
+   v5.16 PREMIUM ART LAYER — живописные медальоны, иконки, кино-виньетка
+   ============================================================ */
+/* Кинематографическая виньетка + тонкая золотая кайма кадра (поверх мира, под HUD) */
+#wrap::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:15;box-shadow:inset 0 0 0 1px rgba(255,207,106,.13),inset 0 0 120px rgba(0,0,0,.58),inset 0 0 42px rgba(0,0,0,.28)}
+#wrap{cursor:crosshair}
+/* Портреты классов — «богатые монеты» с классовым сиянием */
+.classcard .classportrait{width:104px !important;height:104px !important;max-width:none;object-fit:cover;border-radius:50%;border:2px solid var(--class-color,#c9a04a);box-shadow:0 0 0 1px rgba(0,0,0,.85),0 0 22px color-mix(in srgb,var(--class-color,#c9a04a) 55%,transparent),0 10px 22px rgba(0,0,0,.78);filter:saturate(1.06) contrast(1.04);background:#0a0c08;margin:0 auto 6px}
+.classcard.sel .classportrait{box-shadow:0 0 0 1px rgba(0,0,0,.9),0 0 34px var(--class-color,#ffcf6a),0 10px 26px rgba(0,0,0,.82)}
+/* Живописные иконки в карточках улучшений и магазине */
+.upgradeIcon{position:relative;overflow:hidden}
+.upgradeIcon img.pk{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}
+/* Оружия в HUD — круглые медальоны-монеты */
+.wicon{position:relative;border-radius:50%}
+.wicon img.pk{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}
+.wicon .lvl{z-index:2}
+/* Мини-портрет рядом с именем класса (HUD-чип, экран итогов) */
+img.minip{width:18px;height:18px;border-radius:50%;object-fit:cover;vertical-align:-4px;display:inline-block;border:1px solid rgba(255,207,106,.65);box-shadow:0 0 6px rgba(0,0,0,.65);margin-right:2px}
+
+
+/* ===== v5.17 BOON MEDALS + PAINTED ELEMENTS ===== */
+.booncard{text-align:center;border-color:color-mix(in srgb,var(--class-color,#c9a04a) 55%,#3b2817)}
+.booncard:hover,.booncard:active{border-color:var(--class-color,#ffcf6a);box-shadow:0 0 22px color-mix(in srgb,var(--class-color,#ffcf6a) 25%,transparent),0 10px 24px rgba(0,0,0,.6)}
+.booncard h3{text-align:center}
+img.boonmed{width:74px;height:74px;border-radius:50%;object-fit:cover;margin:0 auto 8px;display:block;border:2px solid var(--class-color,#c9a04a);box-shadow:0 0 0 1px rgba(0,0,0,.85),0 0 20px color-mix(in srgb,var(--class-color,#c9a04a) 45%,transparent),0 8px 18px rgba(0,0,0,.72);filter:saturate(1.06);transition:transform .15s}
+.booncard:hover img.boonmed{transform:scale(1.06)}
+.boon-badge img.minip{vertical-align:-3px;margin-right:4px}
+
+

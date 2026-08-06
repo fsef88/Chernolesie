@@ -1,0 +1,33 @@
+/* ============================================================
+   v6.52 iOS START BUTTON FIX.
+   На iPhone Safari связка fixed scroll-контейнер + sticky footer + backdrop-filter
+   иногда ломает hit-test: кнопку видно, но tap не доходит до button/onclick.
+   Делаем слой футера прозрачным для событий, саму кнопку — отдельным
+   кликабельным compositing-слоем, а титульнику явно разрешаем вертикальный pan.
+   ============================================================ */
+#titlescreen{
+  touch-action:pan-y;
+  -webkit-overflow-scrolling:touch;
+  pointer-events:auto;
+}
+#tsFooter{
+  pointer-events:none;
+  transform:translateZ(0);
+  -webkit-transform:translateZ(0);
+}
+#tsFooter::before{pointer-events:none}
+#btnStartPoohd{
+  position:relative;
+  z-index:7;
+  pointer-events:auto;
+  touch-action:manipulation;
+  -webkit-user-select:none;
+  user-select:none;
+}
+@supports (-webkit-touch-callout:none){
+  /* На iOS blur у sticky/fixed-слоя часто даёт неверную область тапа. */
+  #tsFooter{backdrop-filter:none;-webkit-backdrop-filter:none}
+}
+
+
+

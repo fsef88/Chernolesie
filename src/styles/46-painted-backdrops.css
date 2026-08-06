@@ -1,0 +1,68 @@
+/* ============================================================
+   v5.27 «ГЕРБОВАЯ ЗАСТАВА» — скин главного игрового экрана.
+   Единый язык арт-дирекции: резное тёмное дерево + бронза +
+   сургуч + чорнильные тени. Все id сохранены, JS не тронут.
+   ============================================================ */
+:root{--gld:#c9a04a;--gld2:#ffcf6a;--gldH:#d8b46a;--brz:#8a6a34;--wd1:#3b2a16;--wd2:#241708;--wd3:#150d04;--pch:#e6d5b0;--bd1:#c14a3a;--bd2:#7a241a;--bd3:#4a130c;--wax:#a33426;--spec:#b478ff}
+#hud{background:linear-gradient(180deg,#31220f 0%,#1c1206 46%,rgba(16,10,3,.92) 82%,rgba(12,8,2,0) 100%),repeating-linear-gradient(90deg,rgba(0,0,0,.10) 0 2px,transparent 2px 9px),linear-gradient(180deg,#31220f,#1c1206);border-bottom:1px solid rgba(216,180,106,.55);box-shadow:0 10px 26px rgba(0,0,0,.5),inset 0 -1px 0 rgba(255,207,106,.18),inset 0 1px 0 rgba(255,240,176,.08);padding:7px 14px 9px;min-height:34px}
+#hud::after{content:'';position:absolute;left:50%;bottom:-4px;width:8px;height:8px;transform:translateX(-50%) rotate(45deg);background:var(--gld);box-shadow:0 0 7px rgba(255,207,106,.9),0 0 0 2px var(--wd2);pointer-events:none}
+#hud .stat{background:radial-gradient(120% 170% at 50% -30%,rgba(216,180,106,.14),rgba(18,11,4,.9) 60%),linear-gradient(#2b1e10,#170e05);border:1px solid rgba(216,180,106,.42);border-radius:9px;padding:3px 10px;box-shadow:inset 0 1px 0 rgba(255,240,176,.10),inset 0 -2px 4px rgba(0,0,0,.55),0 2px 7px rgba(0,0,0,.45);font-family:'Monomakh',Georgia,serif;font-variant-numeric:tabular-nums;font-size:13px;color:#cdbf9d}
+#hud .stat b{color:var(--gld2);text-shadow:0 0 9px rgba(255,207,106,.35),0 1px 1px #000;font-size:14px}
+#hud .stat .ic{width:17px;height:17px;background-size:contain;background-repeat:no-repeat;background-position:center;display:inline-block;filter:drop-shadow(0 0 2px rgba(255,207,106,.30)) drop-shadow(0 1px 1px rgba(0,0,0,.7));margin-right:2px}
+#hud .stat .ic.i-time{background-image:url("@@A:ui/46-painted-backdrops-1.webp@@")}
+#hud .stat .ic.i-hp{background-image:url("@@A:ui/ic_4126659b.webp@@")}
+#hud .stat .ic.i-boss{background-image:url("@@A:ui/hxwcvm8c8fcfme9w1llpv3c9.webp@@")}
+#hud .stat .ic.i-lvl{background-image:url("@@A:ui/d8laa.webp@@")}
+#hud .stat .ic.i-kills{background-image:url("@@A:ui/taa.webp@@")}
+#hud .stat .ic.i-gold{background-image:url("@@A:ui/xvtae1f3qj8fcga.webp@@")}
+#xpbar{top:36px;left:10px;right:10px;height:7px;background:linear-gradient(#1a1108,#0c0703);border:1px solid rgba(138,106,52,.55);border-radius:4px;box-shadow:inset 0 1px 3px rgba(0,0,0,.8),0 1px 0 rgba(255,240,176,.10)}
+#xpfill{background:linear-gradient(90deg,#6f4f1e,#c9a04a 40%,#fff0b0 50%,#c9a04a 60%,#6f4f1e);background-size:200% 100%;box-shadow:0 0 7px rgba(255,207,106,.6);animation:xpsheen 3.2s linear infinite}
+@keyframes xpsheen{to{background-position:-200% 0}}
+#boondisp{background:linear-gradient(#2b1e10,#160e06);border:1px solid rgba(216,180,106,.4);border-radius:9px;padding:2px 12px;box-shadow:0 2px 8px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,240,176,.08);font-family:'Monomakh',Georgia,serif}
+#boondisp:empty{display:none}
+#bossbar{top:60px;width:min(60%,560px)}
+#bossname{font-family:'Monomakh',Georgia,serif;font-size:14px;letter-spacing:3px;color:#f0c9a8;text-shadow:0 0 10px rgba(255,120,80,.35),0 1px 2px #000;margin-bottom:4px}
+.bbg{height:15px;padding:2px;background:linear-gradient(#2b1e10,#150d04);border:1px solid rgba(216,180,106,.5);border-radius:9px;box-shadow:inset 0 1px 4px rgba(0,0,0,.75),0 3px 10px rgba(0,0,0,.5)}
+#bosshp{border-radius:6px;background:linear-gradient(180deg,#e07040 0%,var(--bd1) 45%,var(--bd2) 70%,#3a0d07 100%);box-shadow:inset 0 1px 0 rgba(255,220,180,.3),inset 0 -2px 4px rgba(0,0,0,.4),0 0 10px rgba(224,112,64,.35)}
+#bossphase{font-family:'Monomakh',Georgia,serif;font-size:11px;letter-spacing:2px;margin-top:3px}
+#relics{top:58px;left:12px;gap:6px}
+.relic-slot{width:30px;height:30px;border-radius:50%;border:2px solid rgba(138,106,52,.55);background:radial-gradient(circle at 50% 30%,rgba(216,180,106,.12),rgba(16,10,4,.92) 65%);box-shadow:inset 0 2px 4px rgba(0,0,0,.7),0 2px 6px rgba(0,0,0,.4);border-style:dashed}
+.relic-slot.full{border-style:solid;border-color:var(--gld);box-shadow:0 0 9px rgba(201,160,74,.6),inset 0 1px 0 rgba(255,240,176,.15)}
+#hpwrap{width:min(340px,74vw);height:24px;padding:3px;background:linear-gradient(#31220f,#150d04);border:1px solid rgba(216,180,106,.6);border-radius:13px;box-shadow:0 4px 14px rgba(0,0,0,.65),inset 0 1px 3px rgba(0,0,0,.8),inset 0 -1px 0 rgba(255,240,176,.10)}
+#hp{position:relative;border-radius:9px;background:linear-gradient(180deg,#d85a44 0%,var(--bd1) 42%,var(--bd2) 68%,var(--bd3) 100%);box-shadow:inset 0 1px 0 rgba(255,220,180,.35),inset 0 -2px 5px rgba(0,0,0,.45),0 0 12px rgba(193,74,58,.35);overflow:hidden}
+#hp::after{content:'';position:absolute;inset:0;background:linear-gradient(100deg,transparent 20%,rgba(255,235,200,.18) 45%,transparent 60%);background-size:250% 100%;animation:hpsheen 4.5s ease-in-out infinite}
+@keyframes hpsheen{0%,100%{background-position:120% 0}50%{background-position:-120% 0}}
+#hptext{bottom:calc(max(12px,env(safe-area-inset-bottom,0)) + 7px);font-family:'Monomakh',Georgia,serif;font-size:11px;color:var(--pch);background:linear-gradient(#3a2a16,#1c1206);border:1px solid rgba(216,180,106,.65);border-radius:8px;padding:2px 12px;text-shadow:0 1px 1px #000;box-shadow:0 2px 6px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,240,176,.12);letter-spacing:1px}
+#regenPulse{bottom:calc(max(12px,env(safe-area-inset-bottom,0)) + 32px)}
+#spechud{bottom:calc(max(12px,env(safe-area-inset-bottom,0)) + 58px)}
+#spechud .slbl{font-family:'Monomakh',Georgia,serif;font-size:11px;letter-spacing:2.5px;color:var(--gld)}
+#spechud .srow{background:linear-gradient(#2b1e10,#150d04);border:1px solid rgba(216,180,106,.45);border-radius:12px;padding:4px 12px;box-shadow:0 3px 10px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,240,176,.08)}
+#specbar{background:linear-gradient(#1a1108,#0c0703);border:1px solid rgba(138,106,52,.6);border-radius:6px;box-shadow:inset 0 1px 3px rgba(0,0,0,.8)}
+#specfill{border-radius:5px;background:linear-gradient(90deg,#5a2c8a,#b478ff 60%,#e0c9ff);box-shadow:0 0 8px rgba(180,120,255,.55)}
+#speckey{font-family:'Monomakh',Georgia,serif;font-size:10px;letter-spacing:1px}
+#minimap{width:96px;height:96px;border-radius:50%;border:3px solid var(--brz);box-shadow:0 0 0 2px var(--wd2),0 6px 18px rgba(0,0,0,.6),inset 0 0 16px rgba(0,0,0,.55)}
+#log{bottom:calc(max(12px,env(safe-area-inset-bottom,0)) + 168px)} /* v5.42 (Г1): выше спехуда (134) + зазор против logfade(8px) */
+.logitem{font-family:'Monomakh',Georgia,serif;font-style:italic;font-size:13px;color:#d8ccb0;background:rgba(12,8,3,.6);border-left:2px solid rgba(216,180,106,.55);border-radius:6px;padding:1px 12px 2px;text-shadow:0 1px 2px #000;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.logitem.gold{color:var(--gld2);border-left-color:var(--gld)}
+#achnotif{background:linear-gradient(#3a2a16,#1c1206);border:2px solid var(--gld);box-shadow:0 6px 22px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,240,176,.12);font-family:'Monomakh',Georgia,serif}
+#achnotif h4{font-family:'Monomakh',Georgia,serif;letter-spacing:1.5px}
+.tbtn{background:radial-gradient(circle at 50% 30%,rgba(216,180,106,.18),rgba(20,12,5,.92) 65%);border:2px solid rgba(138,106,52,.7);box-shadow:0 3px 10px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,240,176,.10)}
+#hint{font-family:'Monomakh',Georgia,serif;font-size:11px;color:#8a825f;top:44px;left:50%;transform:translateX(-50%)}
+@media(max-width:720px){
+ #hud{padding:4px 8px 6px;min-height:30px}
+ #hud .stat{font-size:11px;padding:2px 7px;border-radius:7px}
+ #hud .stat b{font-size:11px}
+ #hud .stat .ic{width:13px;height:13px}
+ #xpbar{top:33px;height:5px}
+ #relics{top:38px;left:8px;gap:4px}
+ .relic-slot{width:22px;height:22px}
+ #minimap{width:74px;height:74px}
+ #hpwrap{width:min(250px,72vw);height:20px}
+ #hptext{bottom:calc(max(12px,env(safe-area-inset-bottom,0)) + 5px);font-size:10px;padding:1px 9px}
+ #regenPulse{bottom:calc(max(12px,env(safe-area-inset-bottom,0)) + 32px)}
+ #spechud{bottom:calc(max(12px,env(safe-area-inset-bottom,0)) + 50px)}
+ #log{bottom:calc(max(12px,env(safe-area-inset-bottom,0)) + 190px)} /* v5.46 (Г5): над джойстиком, зазор спехуду */
+ #bossbar{width:86%;top:66px}
+ .bbg{height:11px}
+}
+

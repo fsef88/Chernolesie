@@ -1,0 +1,82 @@
+<div id="over">
+  <div class="chrays" id="overrays" style="position:absolute;width:160vw;height:160vw;max-width:1200px;max-height:1200px;background:repeating-conic-gradient(from 0deg,rgba(255,207,106,.06) 0deg 6deg,transparent 6deg 20deg);border-radius:50%;pointer-events:none;z-index:-1;animation:chRaysSpin 30s linear infinite, chRaysPulse 3.5s ease-in-out infinite alternate;filter:blur(2px);display:none"></div>
+  <div class="victory-shield-wrap" id="victoryshieldwrap" style="display:none"></div>
+  <h1 id="otitle">Чаща оказалась сильнее</h1>
+  <p id="odeath"></p>
+  <div id="deathadvice-wrap" style="margin:12px auto;max-width:340px;padding:10px 14px;background:rgba(20,16,10,0.85);border:1px solid rgba(255,207,106,0.3);border-radius:8px;text-align:center;display:none">
+    <div id="deathtype" style="font-size:11px;color:#9a8a6a;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">💡 Совет</div>
+    <div id="deathadvice" style="font-size:13px;color:#e8d8b0;line-height:1.4"></div>
+  </div>
+  <p id="ostat"></p>
+  <p id="oclass"></p>
+  <p id="orecord"></p>
+  <p id="onext"></p>
+  <p id="oclassunlock"></p>
+  <div class="btnrow"><button class="big primary" id="btnreset">⚔ Ещё раз</button></div>
+  <button id="btnx2gold" onclick="doubleGoldByAd()" style="display:none;margin:8px auto;padding:10px 18px;
+     font:inherit;font-size:14px;background:#2a2417;color:#ffcf6a;border:1px solid #c9a04a;border-radius:8px;cursor:pointer">▶ Удвоить золото за рекламу</button>
+  <p id="shophead">Кузница Заставы — перки на все забеги</p>
+  <div id="shop"></div>
+  <p style="font-size:12px;color:#8a8f7a">Золото Заставы: <b id="metagold" style="color:#ffcf6a">0</b> ◆</p>
+  <p id="streakline"></p>
+  <p style="font-size:10px;color:#5a604a">Адаптивная сложность: ×<b id="diffmul">1.0</b> · Рекорд: <b id="besttime">--</b></p>
+  <div id="osecondary">
+    <button class="btnsm" id="btnDaily">📅 Daily</button>
+    <button class="btnsm" id="btnJournal">📖 Журнал находок</button>
+    <button class="btnsm" id="btnTree2">🌳 Древо Силы</button>
+    <button class="btnsm" id="btnShare">📤 Поделиться</button>
+    <button class="btnsm" id="btnAd">📺 Реклама</button>
+  </div>
+</div>
+<div id="jourov">
+  <h2>📖 Журнал находок</h2>
+  <p class="sub" style="color:#9fa088;margin:0 0 6px;font-size:11px">Найденное остаётся навсегда. Пустые строки — то, что ещё ждёт.</p>
+  <div class="jgrid" id="jgrid"></div>
+  <button class="big" id="btnJourClose">Закрыть</button>
+</div>
+<div id="surgeov"><div class="sn" id="surgename"></div><div class="ss" id="surgesub"></div></div>
+<div id="chestov">
+  <div class="chrays" id="chestrays"></div>
+  <div class="chbox">
+    <div class="chbadge" id="chestbadge">✨ ДАР ЛЕСА ✨</div>
+    <div class="chk">СУНДУК</div>
+    <div class="chs" id="chestsub"></div>
+    <div class="ch-art-wrap" id="chestartwrap"></div>
+    <div class="chrow" id="chestrow"></div>
+    <button class="chbtn" id="btnChestTake" type="button">✦ Забрать дар ✦</button>
+  </div>
+</div>
+<div id="evoov">
+  <div class="chrays" id="evorays" style="position:absolute;width:150vw;height:150vw;max-width:1100px;max-height:1100px;background:repeating-conic-gradient(from 0deg,rgba(255,207,106,.08) 0deg 6deg,transparent 6deg 20deg);border-radius:50%;pointer-events:none;z-index:-1;animation:chRaysSpin 25s linear infinite, chRaysPulse 3s ease-in-out infinite alternate;filter:blur(2px)"></div>
+  <div class="ek">⚡ ПРОБУЖДЕНИЕ ⚡</div>
+  <div class="evo-art-wrap" id="evoartwrap"></div>
+  <div class="en" id="evoname"></div>
+  <div class="ed" id="evodesc"></div>
+</div>
+<div id="achov" class="pframe">
+  <h2>⚜ Достижения</h2>
+  <div class="achtabs" id="achtabs"></div>
+  <div class="achgrid" id="achgrid"></div>
+  <button class="big" id="btnAchClose">Закрыть</button>
+</div>
+<div id="statsov" class="pframe">
+  <h2>📜 Рекорды</h2>
+  <div class="statstable"><table id="statstable"></table></div>
+<button class="big" id="btnYaLb" style="display:none;margin-top:6px">🏆 Топ Яндекс Игр</button>
+<div id="yatable" style="display:none;max-width:430px;width:100%;max-height:200px;overflow-y:auto"></div>
+  <button class="big" id="btnStatsClose">Закрыть</button>
+</div>
+<div id="treeov" class="pframe">
+  <h2>🌳 Древо Силы</h2>
+  <p class="sub" style="color:#9fa088;margin:0 0 4px;font-size:11px;text-align:center">Кровь Заставы: 6 ветвей. Золото общее с кузницей. Бонусы — на каждый забег.</p>
+  <div class="treerow" id="treerow"></div>
+  <p id="treecost" style="color:#ffcf6a"></p>
+  <button class="big" id="btnTreeClose">Закрыть</button>
+</div>
+<div id="achnotif" style="display:none">
+  <div class="icon" id="achnotifIcon"></div>
+  <div class="text">
+    <h4 id="achnotifTitle"></h4>
+    <p id="achnotifDesc"></p>
+  </div>
+</div>

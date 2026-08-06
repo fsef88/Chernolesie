@@ -1,0 +1,6 @@
+/* =========================================== */
+/* =============== MINIMAP =================== */
+/* =========================================== */
+#minimap{position:fixed;bottom:calc(max(50px,env(safe-area-inset-bottom,0)) + 80px);right:6px;width:100px;height:100px;background:rgba(10,14,8,.95);border:1px solid #5a604a;border-radius:6px;overflow:hidden;z-index:21}
+#minicanvas{width:100%;height:100%;display:block}
+

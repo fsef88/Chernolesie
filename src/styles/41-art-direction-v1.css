@@ -1,0 +1,97 @@
+/* ============================================================
+   VISUAL POLISH V1 — Art Direction pass: UI/materials/hero readability
+   Чистая визуальная правка: без изменения механик.
+   ============================================================ */
+:root{--cl-gold:#ffcf6a;--cl-brass:#c9a04a;--cl-wood:#2a1b10;--cl-wood2:#161009;--cl-parch:#d8c79b;--cl-ink:#25180d;--cl-rune:#5adcff;}
+#hud{background:linear-gradient(180deg,rgba(9,7,4,.98),rgba(28,18,10,.86) 58%,rgba(9,7,4,0));border-bottom:1px solid rgba(201,160,74,.28);box-shadow:0 8px 24px rgba(0,0,0,.35),inset 0 -1px 0 rgba(255,207,106,.12);letter-spacing:.4px;font-family:Georgia,'Times New Roman',serif}
+#hud .stat{background:linear-gradient(180deg,rgba(48,32,18,.55),rgba(18,14,9,.35));border:1px solid rgba(201,160,74,.18);border-radius:8px;padding:2px 6px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+#xpbar{height:5px;top:31px;background:rgba(8,10,7,.75);border:1px solid rgba(0,0,0,.5);box-shadow:0 1px 0 rgba(255,207,106,.15),0 0 10px rgba(0,0,0,.45)}
+#xpfill{background:linear-gradient(90deg,#2b9ec0,#7be7ff,#2b9ec0);box-shadow:0 0 8px rgba(90,220,255,.75)}
+#hpwrap{height:17px;background:linear-gradient(#23170d,#0e0a06);border:1px solid rgba(255,207,106,.36);box-shadow:0 3px 12px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.06)}
+#hp{background:linear-gradient(180deg,#b7dc78,#5a7a34 70%,#31461d);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 0 10px rgba(154,192,106,.28)}
+#hp.hp-low{background:linear-gradient(180deg,#ff8065,#9b2f22 72%,#4b120d);animation:hpDangerPulse .55s ease-in-out infinite alternate}
+@keyframes hpDangerPulse{from{filter:saturate(1)}to{filter:saturate(1.45) brightness(1.16)}}
+.wicon,.relic-slot{background:radial-gradient(circle at 50% 25%,rgba(255,207,106,.18),rgba(20,12,6,.92));border-color:rgba(201,160,74,.72);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 2px 6px rgba(0,0,0,.35)}
+#cards,#boonov,#classov,#achov,#statsov,#treeov,#pauseov,#over{background:radial-gradient(ellipse at 50% 35%,rgba(58,39,20,.35),rgba(6,8,5,.97) 58%),linear-gradient(135deg,rgba(14,20,10,.96),rgba(5,7,4,.98));}
+.cards-title,#boonov h2,#classov h2,#achov h2,#statsov h2,#treeov h2,#pauseov h2{font-family:Georgia,'Times New Roman',serif;letter-spacing:1px;color:#ffcf6a;text-shadow:0 0 14px rgba(255,207,106,.32),0 2px 2px #000;position:relative}
+.cards-title:before,.cards-title:after{content:'⸻';position:absolute;top:50%;transform:translateY(-50%);color:rgba(201,160,74,.45);font-size:18px;letter-spacing:4px}
+.cards-title:before{left:-18px}.cards-title:after{right:-18px}
+/* Орнаментальная полоса над/под заголовками экранов */
+.section-ornament{display:block;width:60%;height:3px;margin:4px auto;background:linear-gradient(90deg,transparent,rgba(201,160,74,.4),rgba(201,160,74,.6),rgba(201,160,74,.4),transparent);border-radius:2px}
+/* v7.4: НАРИСОВАННЫЕ ГЕНЕРАЦИЕЙ СЛАВЯНСКИЕ ТАРО-СКРИЖАЛИ (Tarot Frame Art + Rarity + Stat Steps) */
+.booncard,.classcard,.treenode,.settings,.statstable{background:radial-gradient(circle at 50% 0,rgba(255,207,106,.12),transparent 38%),linear-gradient(180deg,#302215,#191209 62%,#100c07);border-color:#a77b2e;box-shadow:0 8px 22px rgba(0,0,0,.52),inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 1px rgba(72,44,20,.6)}
+.booncard:before,.classcard:before{content:'✦';position:absolute;top:5px;right:12px;color:rgba(255,207,106,.50);font-size:14px;text-shadow:0 0 10px rgba(255,207,106,.35)}
+.booncard:after,.classcard:after{content:'';position:absolute;bottom:6px;left:15%;right:15%;height:2px;background:linear-gradient(90deg,transparent,rgba(201,160,74,.35),rgba(201,160,74,.55),rgba(201,160,74,.35),transparent);border-radius:2px}
+.card{
+  width:170px; min-height:225px;
+  background-color:#16120a;
+  background-image:var(--tarot-bg, none);
+  background-size:100% 100%;
+  background-position:center;
+  background-repeat:no-repeat;
+  border:2px solid rgba(201,160,74,.6);
+  border-radius:14px;
+  padding:18px 12px 12px;
+  cursor:pointer;
+  transition:all .18s cubic-bezier(.18,1.6,.4,1);
+  animation:cardEntry .45s cubic-bezier(.18,1.6,.4,1) both;
+  touch-action:manipulation;
+  position:relative;
+  box-shadow:0 8px 24px rgba(0,0,0,.8), 0 0 20px rgba(201,160,74,.25);
+  display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+}
+.card:hover{
+  transform:scale(1.06) translateY(-6px);
+  border-color:#ffd77d;
+  box-shadow:0 14px 35px rgba(0,0,0,.95), 0 0 35px rgba(255,207,106,.7);
+  z-index:10;
+}
+.card:active{ transform:scale(0.98); }
+
+/* ШИЛЬДИК РЕДКОСТИ («Редкий / Эпический / Легендарный») */
+.card .rar-badge{
+  position:absolute; top:-11px; left:50%; transform:translateX(-50%);
+  font-size:9.5px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+  padding:3px 12px; border-radius:12px; white-space:nowrap;
+  box-shadow:0 2px 8px rgba(0,0,0,.8); z-index:5;
+  font-family:Monomakh, Georgia, serif;
+}
+.card.rar-common .rar-badge{ background:#2e2416; color:#d8b46a; border:1px solid #7e6436; }
+.card.rar-rare .rar-badge{ background:#0e2a38; color:#5adcff; border:1px solid #2a7e98; box-shadow:0 0 12px rgba(90,220,255,.5); }
+.card.rar-epic .rar-badge{ background:#281238; color:#d88aff; border:1px solid #783898; box-shadow:0 0 16px rgba(216,138,255,.6); }
+.card.rar-legendary .rar-badge{ background:#3a1808; color:#ffd77d; border:1px solid #c98020; box-shadow:0 0 22px rgba(255,215,125,.9); }
+
+/* СВЕЧЕНИЕ РАМКИ ПО РЕДКОСТИ */
+.card.rar-rare{ border-color:#328ca8; box-shadow:0 8px 25px rgba(0,0,0,.8), 0 0 25px rgba(90,220,255,.35); }
+.card.rar-epic{ border-color:#8e44ad; box-shadow:0 8px 25px rgba(0,0,0,.8), 0 0 30px rgba(216,138,255,.45); }
+.card.rar-legendary{ border-color:#f39c12; box-shadow:0 8px 30px rgba(0,0,0,.9), 0 0 40px rgba(255,200,80,.65); }
+
+/* ИНДИКАЦИЯ ПРИРОСТА УРОВНЯ («Ур. 4 ➔ Ур. 5») */
+.card .lvl-step{
+  font-size:10.5px; color:#ffd77d; font-weight:700; margin:4px 0 2px;
+  background:rgba(0,0,0,.55); padding:2px 8px; border-radius:6px;
+  border:1px solid rgba(255,207,106,.25);
+}
+.card .stat-bonus{
+  display:block; font-size:10px; color:#7ad06a; font-weight:600; margin-top:2px;
+}
+.upgradeIcon{width:46px;height:46px;margin:0 auto 6px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,#3d2a16,#110c07 72%);border:1px solid currentColor;box-shadow:0 0 14px currentColor,inset 0 0 10px rgba(255,255,255,.08)}.upgradeIcon svg{width:29px;height:29px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}.upgradeIcon.phys{color:#ffcf6a}.upgradeIcon.elec{color:#8fd0ff}.upgradeIcon.pois{color:#9ac06a}.upgradeIcon.frost{color:#bfe0ff}.upgradeIcon.void{color:#b478ff}.upgradeIcon.dar{color:#ffd77d}.card h3,.booncard h3,.classcard h3,.treenode h4{font-family:Georgia,'Times New Roman',serif;color:#ffd77d;text-shadow:0 1px 1px #000;font-weight:600}
+.card p,.booncard p,.classcard p{color:#c7b995}
+.card:hover,.card:active,.booncard:hover,.booncard:active,.classcard:hover,.classcard:active{transform:translateY(-4px) scale(1.035);border-color:#ffcf6a;box-shadow:0 12px 28px rgba(0,0,0,.58),0 0 24px rgba(255,207,106,.22),inset 0 0 0 1px rgba(255,207,106,.22)}
+button.big,.btnsm{background:linear-gradient(180deg,#ffd77d,#b9852f 70%,#6a431b);border:1px solid rgba(255,231,162,.35);box-shadow:0 4px 10px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.25);color:#1b1006;text-shadow:0 1px rgba(255,255,255,.25);font-family:Georgia,'Times New Roman',serif}
+#bossintro{background:radial-gradient(ellipse at 50% 50%,rgba(70,18,12,.36),rgba(0,0,0,.96) 62%)}
+#bossintro .name{font-family:Georgia,'Times New Roman',serif;color:#ff7358;text-shadow:0 0 24px #c95a3c,0 3px 0 #240806}
+/* v5.30: стартовый титр забега — «погружение» в первую секунду боя.
+   Тот же механизм, что и #bossintro (показ/скрытие классом .show + transition). */
+#runintro{position:fixed;inset:0;background:#000;z-index:46;opacity:0;pointer-events:none;transition:opacity .6s;display:flex;align-items:center;justify-content:center;flex-direction:column}
+#runintro.show{opacity:.92}
+#runintro .name{color:#9be86a;font-size:38px;letter-spacing:10px;font-weight:700;opacity:0;transition:opacity .6s .35s;text-shadow:0 0 26px #4f8a2e,0 3px 0 #0d1805;text-align:center;font-family:Georgia,'Times New Roman',serif}
+#runintro .sub{color:#d8c98a;font-size:14px;letter-spacing:3px;opacity:0;transition:opacity .6s .7s;margin-top:12px;text-align:center}
+#runintro.show .name{opacity:1}
+#runintro.show .sub{opacity:1}
+@media (max-width:520px){#runintro .name{font-size:24px;letter-spacing:4px}}
+@media (max-width:380px){#runintro .name{font-size:20px;letter-spacing:2px}#runintro .sub{font-size:11px}}
+.logitem{background:linear-gradient(180deg,rgba(42,30,18,.96),rgba(14,12,8,.96));border-color:rgba(201,160,74,.42);box-shadow:0 4px 12px rgba(0,0,0,.38)}
+#minimap{border-color:rgba(201,160,74,.44);box-shadow:0 4px 14px rgba(0,0,0,.45),inset 0 0 18px rgba(0,0,0,.35)}
+
+

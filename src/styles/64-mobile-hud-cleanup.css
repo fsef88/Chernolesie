@@ -1,0 +1,95 @@
+/* ============================================================
+   v6.56 MOBILE HUD CLEANUP + EARLY PRESSURE PASS
+   Репорт со скрина: сверху каша из плашек — HP, XP, мини-босс, бог,
+   порча, слоты, реликвии и миникарта спорят за одни 90px.
+   На телефоне оставляем боевой минимум:
+   1) верхняя строка статистики;
+   2) HP + тонкий XP;
+   3) босс/мини-босс — только полосой без длинного имени;
+   4) бог и порча — компактные бейджи по краям;
+   5) справочные слоты/синергии/реликвии скрыты в бою.
+   ============================================================ */
+body.touch-ui #hud{
+  top:0;min-height:28px;padding:3px 6px 4px;
+  grid-template-columns:auto 1fr auto;gap:4px;
+  font-size:10.5px;z-index:34;
+  background:linear-gradient(rgba(8,10,6,.96),rgba(8,10,6,.78) 72%,rgba(8,10,6,0));
+}
+body.touch-ui #hud .left,body.touch-ui #hud .center,body.touch-ui #hud .right{gap:4px;min-width:0}
+body.touch-ui #hud .stat{
+  padding:2px 5px;border-radius:8px;
+  background:rgba(22,16,8,.72);border:1px solid rgba(201,160,74,.22);
+  line-height:1.05;
+}
+body.touch-ui #classdisp{display:none!important}
+body.touch-ui #weapons{max-width:92px;overflow:hidden;gap:2px;justify-content:flex-end}
+body.touch-ui .wicon{width:16px;height:16px;font-size:9px;border-radius:3px}
+body.touch-ui .wicon .lvl{font-size:6px;bottom:-3px;right:-3px}
+
+body.touch-ui #hpwrap{
+  top:calc(29px + env(safe-area-inset-top,0)) !important;
+  left:8px;right:8px;height:12px!important;border-radius:7px;z-index:33;
+}
+body.touch-ui #hptext{
+  top:calc(29px + env(safe-area-inset-top,0)) !important;
+  height:12px!important;line-height:12px!important;font-size:9.5px!important;z-index:34;
+}
+body.touch-ui #xpbar{
+  top:calc(44px + env(safe-area-inset-top,0)) !important;
+  left:10px;right:10px;height:2px;z-index:32;opacity:.9;
+}
+
+/* Босс/мини-босс: только компактная полоска. Длинное имя больше не лезет в центр экрана. */
+body.touch-ui #bossbar{
+  top:calc(50px + env(safe-area-inset-top,0)) !important;
+  left:8px;right:94px;width:auto;transform:none;z-index:31;
+}
+body.touch-ui #bossname,body.touch-ui #bossphase{display:none!important}
+body.touch-ui #bossbar .bbg{height:6px;border-radius:4px;opacity:.92}
+
+/* Божество — маленький бейдж справа, над миникартой. */
+body.touch-ui #boondisp{
+  top:calc(50px + env(safe-area-inset-top,0)) !important;
+  left:auto;right:8px;transform:none;z-index:32;max-width:86px;overflow:hidden;
+}
+body.touch-ui #boondisp .boon-badge{
+  font-size:8.5px;padding:2px 6px;max-width:86px;overflow:hidden;text-overflow:ellipsis;
+  border-radius:8px;opacity:.9;
+}
+
+/* Порча — слева под полосой босса, компактно и полупрозрачно. */
+body.touch-ui .curse-icon{
+  top:calc(60px + env(safe-area-inset-top,0)) !important;
+  left:8px!important;max-width:46vw;
+  font-size:8px!important;padding:2px 5px!important;gap:3px;opacity:.82;z-index:30;
+}
+
+/* Справочные панели в бою на телефоне создавали основную кашу. */
+body.touch-ui #slotshud,
+body.touch-ui #synhud,
+body.touch-ui #relics{display:none!important}
+
+body.touch-ui #minimap{
+  top:calc(72px + env(safe-area-inset-top,0)) !important;
+  right:8px!important;width:62px!important;height:62px!important;
+  opacity:.76;z-index:29;
+}
+
+@media (max-width:380px) and (orientation:portrait){
+  body.touch-ui #hud{font-size:9.5px;padding-left:4px;padding-right:4px}
+  body.touch-ui #hud .stat{padding:2px 4px}
+  body.touch-ui #weapons{max-width:76px}
+  body.touch-ui .wicon{width:14px;height:14px}
+  body.touch-ui #boondisp{max-width:74px}
+  body.touch-ui #boondisp .boon-badge{max-width:74px;font-size:8px}
+}
+
+/* ============================================================================
+   v7.28 «горизонтальные карточки прокачки» удалён в v7.32.
+   Блок силой держал три карты в одном ряду (width:0 !important, на телефоне
+   max-width:130px) и ради этого выносил ленту редкости за верхнюю кромку
+   (top:-8px), где её срезал overflow:hidden самой карты. Именно он делал
+   окно уровня нечитаемым на телефоне.
+   Раскладка окна уровня теперь целиком в styles/65-levelup-list.css:
+   список во всю ширину на телефоне, ряд на десктопе — и без !important.
+   ============================================================================ */

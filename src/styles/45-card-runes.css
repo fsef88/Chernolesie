@@ -1,0 +1,45 @@
+/* ============================================================
+   v5.18 MICRO-FX — «страница древней книги»: руны, фольга, искры, дыхание
+   ============================================================ */
+.card,.booncard,.classcard{overflow:hidden}
+.card,.booncard,.classcard{animation:cardEntry .4s ease-out both,cardBreathe 6s ease-in-out 1.2s infinite}
+/* Угловые руны — вырезанный в золоте мотив по 4 углам */
+span.fxRunes{position:absolute;inset:5px;pointer-events:none;opacity:.5;z-index:1;filter:drop-shadow(0 0 2px rgba(255,214,120,.28));
+ background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http://www.w3.org/2000/svg'%20width%3D'18'%20height%3D'18'%20viewBox%3D'0%200%2018%2018'%3E%3Cg%20transform%3D'translate(9%209)%20rotate(0)%20translate(-9%20-9)'%3E%3Cpath%20d%3D'M2,16%20L2,6%20Q2,2%206,2%20L16,2'%20fill%3D'none'%20stroke%3D'rgba(255,214,120,0.55)'%20stroke-width%3D'1'/%3E%3Cpath%20d%3D'M5,13%20L5,7%20Q5,5%207,5%20L13,5'%20fill%3D'none'%20stroke%3D'rgba(255,214,120,0.30)'%20stroke-width%3D'1'/%3E%3Cpath%20d%3D'M9,9%20l1.6,1.6%20-1.6,1.6%20-1.6,-1.6%20z'%20fill%3D'rgba(255,214,120,0.6)'/%3E%3C/g%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg%20xmlns%3D'http://www.w3.org/2000/svg'%20width%3D'18'%20height%3D'18'%20viewBox%3D'0%200%2018%2018'%3E%3Cg%20transform%3D'translate(9%209)%20rotate(90)%20translate(-9%20-9)'%3E%3Cpath%20d%3D'M2,16%20L2,6%20Q2,2%206,2%20L16,2'%20fill%3D'none'%20stroke%3D'rgba(255,214,120,0.55)'%20stroke-width%3D'1'/%3E%3Cpath%20d%3D'M5,13%20L5,7%20Q5,5%207,5%20L13,5'%20fill%3D'none'%20stroke%3D'rgba(255,214,120,0.30)'%20stroke-width%3D'1'/%3E%3Cpath%20d%3D'M9,9%20l1.6,1.6%20-1.6,1.6%20-1.6,-1.6%20z'%20fill%3D'rgba(255,214,120,0.6)'/%3E%3C/g%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg%20xmlns%3D'http://www.w3.org/2000/svg'%20width%3D'18'%20height%3D'18'%20viewBox%3D'0%200%2018%2018'%3E%3Cg%20transform%3D'translate(9%209)%20rotate(180)%20translate(-9%20-9)'%3E%3Cpath%20d%3D'M2,16%20L2,6%20Q2,2%206,2%20L16,2'%20fill%3D'none'%20stroke%3D'rgba(255,214,120,0.55)'%20stroke-width%3D'1'/%3E%3Cpath%20d%3D'M5,13%20L5,7%20Q5,5%207,5%20L13,5'%20fill%3D'none'%20stroke%3D'rgba(255,214,120,0.30)'%20stroke-width%3D'1'/%3E%3Cpath%20d%3D'M9,9%20l1.6,1.6%20-1.6,1.6%20-1.6,-1.6%20z'%20fill%3D'rgba(255,214,120,0.6)'/%3E%3C/g%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg%20xmlns%3D'http://www.w3.org/2000/svg'%20width%3D'18'%20height%3D'18'%20viewBox%3D'0%200%2018%2018'%3E%3Cg%20transform%3D'translate(9%209)%20rotate(270)%20translate(-9%20-9)'%3E%3Cpath%20d%3D'M2,16%20L2,6%20Q2,2%206,2%20L16,2'%20fill%3D'none'%20stroke%3D'rgba(255,214,120,0.55)'%20stroke-width%3D'1'/%3E%3Cpath%20d%3D'M5,13%20L5,7%20Q5,5%207,5%20L13,5'%20fill%3D'none'%20stroke%3D'rgba(255,214,120,0.30)'%20stroke-width%3D'1'/%3E%3Cpath%20d%3D'M9,9%20l1.6,1.6%20-1.6,1.6%20-1.6,-1.6%20z'%20fill%3D'rgba(255,214,120,0.6)'/%3E%3C/g%3E%3C/svg%3E");
+ background-position:0 0,100% 0,0 100%,100% 100%;background-repeat:no-repeat;background-size:16px 16px}
+/* Золотая руна, бегущая по кромке карты (маска-рамка) */
+@property --ra{syntax:'<angle>';inherits:false;initial-value:0deg}
+span.fxEdge{position:absolute;inset:0;border-radius:inherit;padding:2px;pointer-events:none;opacity:0;z-index:2;
+ background:conic-gradient(from var(--ra,0deg),transparent 0 76%,rgba(255,222,140,0) 81%,rgba(255,226,150,.9) 86%,rgba(255,222,140,0) 92%,transparent 100%);
+ -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;
+ animation:fxEdgeRun 3.6s linear .7s infinite}
+@keyframes fxEdgeRun{0%{--ra:0deg;opacity:0}9%{opacity:.8}82%{opacity:.8}100%{--ra:360deg;opacity:0}}
+/* Искры/пыль при появлении карты — один вдох */
+span.fxDust{position:absolute;inset:0;pointer-events:none;z-index:2;opacity:0;
+ background:
+  radial-gradient(3px 3px at 22% 88%,rgba(255,220,130,.95),transparent 70%),
+  radial-gradient(2px 2px at 78% 90%,rgba(255,235,170,.9),transparent 70%),
+  radial-gradient(2.4px 2.4px at 52% 92%,rgba(255,200,90,.9),transparent 70%),
+  radial-gradient(2px 2px at 36% 90%,rgba(255,220,150,.8),transparent 70%),
+  radial-gradient(2px 2px at 66% 87%,rgba(255,215,140,.8),transparent 70%);
+ animation:fxDustUp 1.15s ease-out .1s both}
+@keyframes fxDustUp{0%{opacity:0;transform:translateY(8px) scale(.92)}18%{opacity:1}100%{opacity:0;transform:translateY(-26px) scale(1.06)}}
+/* Фольга-вспышка при вскрытии карты (переопределяем вход) */
+@keyframes cardEntry{0%{transform:scale(.82) translateY(24px);opacity:0;filter:brightness(2.2) saturate(.6)}55%{transform:scale(1.04) translateY(-3px);opacity:1;filter:brightness(1.35)}100%{transform:scale(1) translateY(0);opacity:1;filter:brightness(1)}}
+/* Дыхание свечения в покое (яркость — не конфликтует с hover-тенями) */
+@keyframes cardBreathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.07)}}
+
+
+/* ===== v5.19 CURSE MEDALS ===== */
+.curse-icon img.cminip{border-color:rgba(255,120,90,.85);box-shadow:0 0 8px rgba(201,90,60,.6)}
+.curse-icon{gap:5px}
+
+/* ===== v5.22 PAINTED BACKDROPS ===== */
+#classov{background:linear-gradient(rgba(5,7,4,.40),rgba(5,7,4,.80)),url('@@A:ui/backdrops.webp@@') center 30%/cover no-repeat}
+#classov h2{text-shadow:0 0 26px rgba(255,207,106,.40),0 2px 6px #000}
+#over .victory-shield-wrap{width:180px;height:180px;margin:10px 0 6px;position:relative;display:none;align-items:center;justify-content:center;animation:chArtBounce .65s cubic-bezier(.18,1.6,.4,1)}
+#over .victory-shield-wrap img{width:100%;height:100%;object-fit:contain;-webkit-mask-image:radial-gradient(circle at 50% 50%, black 58%, transparent 92%);mask-image:radial-gradient(circle at 50% 50%, black 58%, transparent 92%);filter:drop-shadow(0 0 35px rgba(255,207,106,.9)) drop-shadow(0 10px 25px rgba(0,0,0,.95));animation:chArtFloat 3.5s ease-in-out infinite alternate}
+#over .victory-shield-wrap{width:180px;height:180px;margin:8px 0 10px;position:relative;display:none;align-items:center;justify-content:center;animation:chArtBounce .65s cubic-bezier(.18,1.6,.4,1)}
+#over .victory-shield-wrap img{width:100%;height:100%;object-fit:contain;-webkit-mask-image:radial-gradient(circle at 50% 50%, black 58%, transparent 92%);mask-image:radial-gradient(circle at 50% 50%, black 58%, transparent 92%);filter:drop-shadow(0 0 35px rgba(255,207,106,.9)) drop-shadow(0 10px 25px rgba(0,0,0,.95));animation:chArtFloat 3.5s ease-in-out infinite alternate}
+#over{background:linear-gradient(rgba(4,6,3,.60),rgba(4,6,3,.86)),url('@@A:ui/chartfloat.webp@@') center 35%/cover no-repeat}
+

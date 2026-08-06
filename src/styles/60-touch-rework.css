@@ -1,0 +1,178 @@
+/* ============================================================
+   v6.27 ПЕРЕРАБОТКА ТАЧ-ИНТЕРФЕЙСА ПО КАНОНУ ЖАНРА
+   ------------------------------------------------------------
+   Было: полоса здоровья, широкий индикатор Печати и лента событий
+   стояли ПО ЦЕНТРУ внизу, поверх игрового поля. На телефоне это
+   съедало треть экрана — ровно ту часть, куда игрок смотрит.
+   Плюс индикатор Печати дублировал кольцо заряда, которое уже
+   нарисовано вокруг самой кнопки.
+
+   Стало (как в Vampire Survivors / Brotato / Survivor.io):
+     • центр экрана СВОБОДЕН — там только игра;
+     • здоровье — тонкой полосой под верхним HUD, где взгляд уже есть;
+     • слева внизу джойстик, справа внизу кнопки — по углам, крупно;
+     • индикатор Печати убран: его роль играет кольцо вокруг кнопки;
+     • миникарта — в правый ВЕРХНИЙ угол, подальше от большого пальца;
+     • лента событий прижата к левому краю над джойстиком.
+   ============================================================ */
+body.touch-ui{--pad:10px; --btm:max(var(--pad),env(safe-area-inset-bottom,0))}
+
+/* --- ЗДОРОВЬЕ: наверх, тонкой полосой во всю ширину --- */
+body.touch-ui #hpwrap{
+  top:calc(30px + env(safe-area-inset-top,0));
+  bottom:auto;left:8px;right:8px;
+  width:auto;max-width:none;transform:none;
+  height:16px;border-radius:8px;
+  z-index:22;
+}
+body.touch-ui #hptext{
+  top:calc(30px + env(safe-area-inset-top,0));
+  bottom:auto;left:50%;transform:translateX(-50%);
+  height:16px;line-height:16px;
+  font-size:11px;padding:0 10px;background:none;border:none;
+  z-index:23;
+}
+body.touch-ui #regenPulse{
+  top:calc(50px + env(safe-area-inset-top,0));
+  bottom:auto;left:auto;right:12px;transform:none;
+}
+/* Полоса опыта прижимается к полосе здоровья — одна связка сверху */
+body.touch-ui #xpbar{top:calc(50px + env(safe-area-inset-top,0))}
+body.touch-ui #boondisp{top:calc(58px + env(safe-area-inset-top,0))}
+body.touch-ui #bossbar{top:calc(74px + env(safe-area-inset-top,0))}
+body.touch-ui #relics{top:calc(76px + env(safe-area-inset-top,0));left:8px}
+
+/* --- ИНДИКАТОР ПЕЧАТИ: убран. Кольцо вокруг кнопки уже всё показывает --- */
+body.touch-ui #spechud{display:none !important}
+
+/* --- МИНИКАРТА: правый верхний угол --- */
+body.touch-ui #minimap{
+  top:calc(78px + env(safe-area-inset-top,0));
+  bottom:auto;right:8px;
+  width:76px;height:76px;
+  opacity:.9;
+}
+
+/* --- ЛЕНТА СОБЫТИЙ: левый край, над джойстиком, не по центру --- */
+body.touch-ui #log{
+  left:8px;right:auto;transform:none;
+  bottom:calc(var(--btm) + 150px);
+  align-items:flex-start;text-align:left;
+  max-width:min(58vw,320px);
+}
+body.touch-ui #log .logitem{text-align:left}
+
+/* --- ОРГАНЫ УПРАВЛЕНИЯ: по углам, крупнее --- */
+body.touch-ui #joystick{
+  left:var(--pad);bottom:var(--btm);
+  width:132px;height:132px;
+  background:rgba(30,22,12,.42);
+  border-color:rgba(255,207,106,.34);
+}
+body.touch-ui #jstick{width:56px;height:56px}
+body.touch-ui #touchBtns{
+  right:var(--pad);bottom:var(--btm);
+  flex-direction:row;align-items:flex-end;gap:12px;
+}
+body.touch-ui .tbtn{width:58px;height:58px}
+body.touch-ui .tbtn.special{width:74px;height:74px;font-size:30px}
+
+/* Подпись «ГОТОВО» больше не нужна: кольцо и пульс кнопки понятнее */
+body.touch-ui #speclabel,body.touch-ui #speckey{display:none}
+
+/* --- Узкий телефон --- */
+@media (max-width:500px) and (orientation:portrait){
+  body.touch-ui #joystick{width:118px;height:118px}
+  body.touch-ui #jstick{width:50px;height:50px}
+  body.touch-ui .tbtn{width:52px;height:52px}
+  body.touch-ui .tbtn.special{width:76px;height:76px;font-size:26px}
+  body.touch-ui #minimap{width:66px;height:66px}
+  body.touch-ui #log{bottom:calc(var(--btm) + 136px);max-width:62vw}
+  body.touch-ui #hpwrap{height:14px}
+  body.touch-ui #hptext{height:14px;line-height:14px;font-size:10px}
+}
+
+/* --- Ландшафт: высоты мало, всё жмётся к краям --- */
+@media (max-height:450px) and (orientation:landscape){
+  body.touch-ui #joystick{width:104px;height:104px}
+  body.touch-ui #jstick{width:44px;height:44px}
+  body.touch-ui .tbtn{width:48px;height:48px}
+  body.touch-ui .tbtn.special{width:66px;height:66px;font-size:22px}
+  body.touch-ui #minimap{width:58px;height:58px;top:calc(56px + env(safe-area-inset-top,0))}
+  body.touch-ui #log{bottom:auto;top:26vh;max-height:32vh;overflow:hidden;max-width:40vw}
+  body.touch-ui #hpwrap{top:calc(24px + env(safe-area-inset-top,0));height:12px}
+  body.touch-ui #hptext{top:calc(24px + env(safe-area-inset-top,0));height:12px;line-height:12px;font-size:9px}
+  body.touch-ui #xpbar{top:calc(40px + env(safe-area-inset-top,0))}
+  body.touch-ui #minimap{top:calc(48px + env(safe-area-inset-top,0))}
+}
+
+/* --- v6.27 доводка после первого прогона на телефоне --- */
+
+/* Список прогресса оружия (#evohud) висел поверх игрового поля справа
+   и перекрывал половину обзора. Это справочная информация, а не боевая:
+   на телефоне убираем совсем, на десктопе оставляем. */
+body.touch-ui #evohud{display:none !important}
+
+/* Счётчик слотов «Оружие 3/6 · Пассивки 0/6» обрезался краем экрана,
+   потому что стоял под миникартой. Переносим влево под шапку. */
+body.touch-ui #slotshud{
+  top:calc(78px + env(safe-area-inset-top,0)) !important;
+  right:auto !important;left:8px !important;
+  font-size:10px;opacity:.75;
+  max-width:52vw;text-align:left;
+}
+/* Реликвии не должны сталкиваться со счётчиком слотов */
+body.touch-ui #relics{top:calc(96px + env(safe-area-inset-top,0))}
+
+/* Плашка достижения вылезала на игровое поле по центру — сдвигаем
+   под верхнюю панель и делаем компактнее. */
+body.touch-ui #achnotif{
+  top:calc(66px + env(safe-area-inset-top,0));
+  font-size:11px;padding:6px 12px;
+}
+
+/* Полоса здоровья: цифры читаются лучше с лёгкой тенью,
+   а сама полоса — чуть контрастнее на светлом фоне леса. */
+body.touch-ui #hpwrap{
+  border:1px solid rgba(0,0,0,.75);
+  box-shadow:0 2px 8px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.08);
+}
+body.touch-ui #hptext{text-shadow:0 1px 3px #000,0 0 6px #000}
+
+/* Лента событий: полупрозрачнее, чтобы не спорила с полем боя */
+body.touch-ui #log{opacity:.82}
+body.touch-ui #log .logitem{font-size:10px;padding:2px 7px}
+
+/* v6.27: КВАДРАТЫ ВМЕСТО ЭМОДЗИ.
+   В интерфейсе используются символы из плоскости U+1F300+ (🔥 🩸 🌳 🏹 …).
+   Шрифты игры — Monomakh и Georgia — их не содержат, и браузер рисует
+   пустой прямоугольник. Достаточно дописать системный эмодзи-шрифт
+   в конец цепочки: латиница и кириллица по-прежнему берутся из Monomakh,
+   а недостающие символы подхватываются из системного набора. */
+body,button,input,select,textarea,
+#log,#log .logitem,#hud,.tbtn,#achnotif,.card,.classcard,.booncard,
+#over,#tsMode,#tsCorr,.modebtn,.lockreq,.lockseal{
+  font-family:'Monomakh',Georgia,'Times New Roman',
+    'Noto Color Emoji','Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',
+    'Noto Emoji',sans-serif;
+}
+
+/* v6.28: иконка паузы рисуется CSS, а не символом шрифта.
+   Символ (‖ / ⏸) давал тонкие мелкие палки и зависел от того,
+   какой шрифт нашёлся в системе. Здесь толщина и высота заданы явно
+   и масштабируются вместе с кнопкой. */
+.pauseIco{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;height:100%}
+.pauseIco i{
+  display:block;width:7px;height:40%;
+  background:currentColor;border-radius:2.5px;
+  box-shadow:0 1px 2px rgba(0,0,0,.55);
+}
+@media (max-width:500px) and (orientation:portrait){
+  .pauseIco{gap:6px}
+  .pauseIco i{width:6px;height:38%}
+}
+@media (max-height:450px) and (orientation:landscape){
+  .pauseIco{gap:5px}
+  .pauseIco i{width:5px;height:38%}
+}
+
