@@ -24,7 +24,7 @@ function buildGrid(){
  _gridUsed.length=0;
  for(const e of enemies){
   if(e.alive===false||e.hp<=0&&!(e.dying>0))continue;
-  const cx=Math.floor(e.x/CELL),cy=Math.floor(e.y/CELL);
+  const cx=(e.x/CELL)|0,cy=(e.y/CELL)|0;
   if(cx<0||cy<0||cx>=GRID_N||cy>=GRID_N)continue;
   const k=cy*GRID_N+cx;
   let arr=gridArr[k];
@@ -41,32 +41,62 @@ function buildGrid(){
 // Быстрый поиск ближайших врагов через spatial hash (используется в doSword/doBolt/useSpecial)
 // v6.3: было enemiesNear(...).filter(...) — ДВА массива и замыкание на каждый вызов.
 // Пишем сразу в один массив.
+// v10.0 COMMERCIAL ENGINE ARCHITECTURE (Zero-GC Spatial Query Pool & Inline Euclidean):
+// Заменяем аллокацию новых массивов const out = [] при каждом боевом запросе на статический пул переиспользуемых буферов.
+const _nearPool = [ [], [], [], [], [], [], [], [] ];
+let _nearPoolIdx = 0;
+function _getNearBuf(){
+ const buf = _nearPool[(_nearPoolIdx++) & 7];
+ buf.length = 0;
+ return buf;
+}
 function aliveNear(x,y,r){
- const out=[];const r2=r*r;
- let minCx=Math.floor((x-r)/CELL),maxCx=Math.floor((x+r)/CELL);
- let minCy=Math.floor((y-r)/CELL),maxCy=Math.floor((y+r)/CELL);
+ const out=_getNearBuf();const r2=r*r;
+ let minCx=((x-r)/CELL)|0,maxCx=((x+r)/CELL)|0;
+ let minCy=((y-r)/CELL)|0,maxCy=((y+r)/CELL)|0;
  if(minCx<0)minCx=0; if(minCy<0)minCy=0;
  if(maxCx>=GRID_N)maxCx=GRID_N-1; if(maxCy>=GRID_N)maxCy=GRID_N-1;
  for(let cy=minCy;cy<=maxCy;cy++)for(let cx=minCx;cx<=maxCx;cx++){
   const arr=gridArr[cy*GRID_N+cx];if(!arr||arr.length===0)continue;
-  for(const e of arr){
+  for(let i=0;i<arr.length;i++){
+   const e=arr[i];
    if(e.hp<=0||e.dying>0)continue;
-   if(dist2(e.x-x,e.y-y)<=r2)out.push(e);
+   const dx=e.x-x,dy=e.y-y;if(dx*dx+dy*dy<=r2)out.push(e);
   }
  }
  return out;
 }
+function findClosestEnemy(x,y,r,ignoreList){
+ const r2=r*r;
+ let minCx=((x-r)/CELL)|0,maxCx=((x+r)/CELL)|0;
+ let minCy=((y-r)/CELL)|0,maxCy=((y+r)/CELL)|0;
+ if(minCx<0)minCx=0; if(minCy<0)minCy=0;
+ if(maxCx>=GRID_N)maxCx=GRID_N-1; if(maxCy>=GRID_N)maxCy=GRID_N-1;
+ let best=null, bestD=r2;
+ for(let cy=minCy;cy<=maxCy;cy++)for(let cx=minCx;cx<=maxCx;cx++){
+  const arr=gridArr[cy*GRID_N+cx];if(!arr||arr.length===0)continue;
+  for(let i=0;i<arr.length;i++){
+   const e=arr[i];
+   if(e.hp<=0||e.dying>0)continue;
+   if(ignoreList&&ignoreList.indexOf(e)>=0)continue;
+   const dx=e.x-x,dy=e.y-y,d=dx*dx+dy*dy;
+   if(d<bestD){bestD=d;best=e;}
+  }
+ }
+ return best;
+}
 function enemiesNear(x,y,r,predicate){
- const out=[];const r2=r*r;
- let minCx=Math.floor((x-r)/CELL),maxCx=Math.floor((x+r)/CELL);
- let minCy=Math.floor((y-r)/CELL),maxCy=Math.floor((y+r)/CELL);
+ const out=_getNearBuf();const r2=r*r;
+ let minCx=((x-r)/CELL)|0,maxCx=((x+r)/CELL)|0;
+ let minCy=((y-r)/CELL)|0,maxCy=((y+r)/CELL)|0;
  if(minCx<0)minCx=0; if(minCy<0)minCy=0;
  if(maxCx>=GRID_N)maxCx=GRID_N-1; if(maxCy>=GRID_N)maxCy=GRID_N-1;
  for(let cy=minCy;cy<=maxCy;cy++)for(let cx=minCx;cx<=maxCx;cx++){
-  const arr=gridArr[cy*GRID_N+cx];if(!arr||arr.length===0)continue;   // v6.3: числовой индекс вместо строки
+  const arr=gridArr[cy*GRID_N+cx];if(!arr||arr.length===0)continue;
   for(let i=0;i<arr.length;i++){
    const e=arr[i];
-   if(dist2(e.x-x,e.y-y)<=r2&&(!predicate||predicate(e)))out.push(e);
+   const dx=e.x-x,dy=e.y-y;
+   if(dx*dx+dy*dy<=r2&&(!predicate||predicate(e)))out.push(e);
   }
  }
  return out;

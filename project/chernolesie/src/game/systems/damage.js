@@ -40,6 +40,11 @@ function hitEnemy(e,dmg,tag,crit){
  if(tag==='phys'&&e.weak==='elec')dmg*=0.7;
  if(e.boss&&P.bossMul)dmg*=P.bossMul;
  if(e.markT>0){dmg*=(1+0.08*Math.min(5,e.markStacks||1));}
+ // v8.10 COMMERCIAL ENGINE INTEGRATION: активные эффекты синергий в бою
+ if(P.synThunderChoir && tag==='elec'){ dmg*=1.25; if(seedRandom()<0.25)e.frozen=Math.max(e.frozen||0,0.5); }
+ if(P.synVoidChoir && tag==='void'){ dmg*=1.25; }
+ if(P.synNaviSwarm && tag==='void'){ dmg*=1.25; e.markT=4; }
+ if(P.synTriune && (tag==='phys'||tag==='elec')){ dmg*=1.15; }
  // v6.39 ЭФФЕКТ ПО СТИХИИ. Раньше вспышка и искры были захардкожены золотом
  // (#ffe6a0) для ВСЕХ 23 орудий: молния, яд, мороз и кровь выглядели одинаково.
  // В Vampire Survivors каждое оружие узнаётся по цвету удара, поэтому берём
@@ -77,7 +82,7 @@ function hitEnemy(e,dmg,tag,crit){
  // В Vampire Survivors хитстопа нет вообще: вес там несут вспышка, отдача и звук.
  // v5.73 ОТДАЧА: враг отлетает сильнее и на крите заметно дальше.
  // Раньше отбрасывание было фиксированным (90) независимо от силы удара.
- const _kb=crit?1.9:1.25;e.kx*=_kb;e.ky*=_kb;
+ // v8.0 VS FEEL: убрано экспоненциальное умножение отталкивания
  // v5.73 звук попадания: раньше на удар по врагу звука не было вообще —
  // звучал только взмах (sfxSwing) и смерть. Удар уходил в тишину.
  if(typeof sfxHit==='function')sfxHit(crit);
@@ -91,8 +96,7 @@ function hitEnemy(e,dmg,tag,crit){
  if(crit){
   const finalDmg=Math.round(dmg);
   if((window._hitFrameDmg=window._hitFrameDmg||0)<8){window._hitFrameDmg++;spawnDmgText(e.x+rnd(-12,12),e.y-e.r-10,finalDmg,tag,true);}
-  flashScreen('rgba(255,198,90,',0.18);
-  spawnFlash(e.x,e.y,0.75,'#ffd94a');
+  // v8.8: удалены вызовы DOM flashScreen и дублирующий spawnFlash при критических ударах — устранена причина просадок FPS (через раз)
   // v7.34: крит получает свою звёздную вспышку листом — до этого он отличался
   // от обычного удара только числом урона, то есть на плотной волне никак
   // вспышка идёт под тем же бюджетом, что и цифра урона: на плотной волне

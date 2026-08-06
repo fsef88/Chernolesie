@@ -39,13 +39,15 @@ function spawnDeathBurst(e){
  else if(e.type==='bognik'){cols=['#405020','#9ac06a','#cfe86a'];soul='#cfe86a';}
  else if(e.type==='baba_yaga'||e.type==='leshiy'){cols=['#6a4a28','#7fb04a','#bfe08a'];soul='#8aff5a';}
  else if(e.boss||e.elite){cols=['#ffaa44','#7a241a','#b478ff'];soul='#ffcf6a';}
+ spawnFlash(e.x,e.y,e.boss||e.elite?1:0,e.elite?'#ffcf6a':'#ffffff');
  for(let i=0;i<Math.floor(10*partMul);i++){
   const a=randomVisual()*TAU,sp=rnd(60,260);
   if(!spawnParticle(e.x,e.y-e.r*0.45,Math.cos(a)*sp,Math.sin(a)*sp-80,rnd(.28,.78),cols[i%cols.length],280,0))break;
  }
  // v7.34: крупный враг оседает столбом пыли. Мелочь его не получает —
  // при семидесяти убийствах в секунду экран забился бы дымом.
- if((e.boss||e.mini||e.elite||(e.size||1)>=1.5)&&typeof DUST_PLUME_SHEET!=='undefined'){
+ // v10.1: столб пыли при гибели оставлен только для боссов и мини-боссов
+ if((e.boss||e.mini)&&typeof DUST_PLUME_SHEET!=='undefined' ){
   const big=e.boss?4.2:(e.mini?3.0:(e.elite?2.2:1.5));
   spawnSheetFx(DUST_PLUME_SHEET,e.x,e.y+e.r*0.35,e.r*big*2.6,e.boss?0.9:0.6,'#d8cbb4',true);
  }

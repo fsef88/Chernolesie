@@ -20,11 +20,14 @@ function updateEnemies(dt){
  _sepClear();
  for(const e of enemies){
   if(!e.alive||e.hp<=0||e.dying>0)continue;
-  const cx=Math.floor(e.x/_SEP_CELL),cy=Math.floor(e.y/_SEP_CELL);
-  const key=cx*73856093^cy*19349663;
-  let cell=_sepGrid.get(key);
-  if(!cell){cell=_sepFree.pop()||[];_sepGrid.set(key,cell);}
-  cell.push(e);
+  const cx=(e.x/_SEP_CELL)|0,cy=(e.y/_SEP_CELL)|0;
+  if(cx>=0&&cy>=0&&cx<_SEP_N&&cy<_SEP_N){
+   const k=cy*_SEP_N+cx;
+   let cell=_sepGridArr[k];
+   if(!cell){cell=[];_sepGridArr[k]=cell;}
+   if(cell.length===0)_sepUsedCells.push(k);
+   cell.push(e);
+  }
  }
  for(const e of enemies)updateOneEnemy(e,dt,thornR,thornR2,frostR,frostR2,DENSITY_R2);
  markExplored(P.x,P.y);

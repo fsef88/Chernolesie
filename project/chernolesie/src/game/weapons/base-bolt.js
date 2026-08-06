@@ -41,6 +41,14 @@ function doBolt(){
  bolts.push({x:e.x,y:e.y,t:0.18});
  for(let i=0;i<4;i++){const a=Math.random()*TAU,sp=rnd(80,200);if(!spawnParticle(e.x,e.y,Math.cos(a)*sp,Math.sin(a)*sp,rnd(.2,.5),'#8fd0ff',-50,0))break;}
  if(frost.on&&seedRandom()<0.4)e.frozen=2; // #6: детерминизм Daily
+ // v11.5 SHAMAN STARTING POWER: Волхв со старта бьёт цепной молнией по 2 целям
+ if(currentClass === 'shaman' || evo){
+  const second = findClosestEnemy(e.x, e.y, 160, [e]);
+  if(second){
+   hitEnemy(second, dmg * 0.85, 'elec');
+   bolts.push({x: second.x, y: second.y, t: 0.18});
+  }
+ }
  if(evo){let prev=e;const hops=3+((P.evoBoltStorm||1)-1);for(let k=0;k<hops;k++){
   // spatial hash вместо линейного поиска + кулдаун boltT на каждой цели
   // чтобы молния не прыгала бесконечно между двумя ближайшими

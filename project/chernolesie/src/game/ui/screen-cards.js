@@ -237,6 +237,25 @@ const pool=[...CARD_POOL].filter(c=>!(c.t==='Ледяная хватка'&&!fros
 }
 
 // v7.4: ГЕНЕРАЦИЯ СЛАВЯНСКОЙ ТАРО-СКРИЖАЛИ С РЕДКОСТЬЮ И ЦИФРАМИ
+// v11.0 RC1 EVOLUTION GRIMOIRE HINT: подсказка связи оружия и пассивки в окне прокачки
+function getCardEvoHint(o){
+  if(!o || !o.t) return null;
+  for(const k in EVO_RECIPES){
+    const rec = EVO_RECIPES[k];
+    if(rec.p === o.t || (o.t.indexOf(rec.p) >= 0)){
+      const hasW = weapons.some(w => w.id === k);
+      if(hasW){
+        return '⚡ Эволюция для: ' + (WNAME[k] || k) + ' ➔ ' + rec.n;
+      }
+    }
+  }
+  const wid = o.id || (o.wid);
+  if(wid && EVO_RECIPES[wid]){
+    const rec = EVO_RECIPES[wid];
+    return '⚡ Эволюция с пассивкой: ' + rec.p;
+  }
+  return null;
+}
 function buildTarotCardEl(o, isNew, isFree){
   const d=document.createElement('div');
   const tag=o.tag||'dar';
@@ -259,11 +278,14 @@ function buildTarotCardEl(o, isNew, isFree){
 
   // v7.32: строка «Ур. 2 ➔ Ур. 3 (+20% урон)» убрана — на строке во всю ширину
   // важнее название и что оружие делает; шаг прокачки виден в HUD арсенала.
+  const evoHint = getCardEvoHint(o);
+  const hintHtml = evoHint ? `<div class="cardEvoHint">${evoHint}</div>` : '';
   d.innerHTML =
     `<div class="upgradeIcon ${tag}${isEvo?' evo':''}">${iconPaint(ic)}</div>` +
     `<div class="cbody">` +
       `<h3>${o.t}</h3>` +
       `<p>${o.d}</p>` +
+      hintHtml +
     `</div>` +
     `<span class="tag ${tag}">${tag==='phys'?'сталь':tag==='elec'?'гром':tag==='pois'?'мор':tag==='frost'?'стужа':tag==='void'?'тень':'дар'}</span>` +
     `<span class="fxRunes"></span><span class="fxEdge"></span><span class="fxDust"></span>`;

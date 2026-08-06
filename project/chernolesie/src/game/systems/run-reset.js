@@ -101,7 +101,7 @@ directorP=1;directorT=0;directorLastKills=0;directorLogBand=0;directorGrace=0;  
  _gridUsed.length=0;
  // v7.8: сетка разведения жила через ВСЕ забеги сессии — пятый забег стартовал
  // с ячейками первых четырёх. Чистим вместе с остальной геометрией.
- _sepGrid.clear();_sepFree.length=0;
+ _sepClear();
  document.querySelectorAll('.anomaly').forEach(e=>e.remove());
  const cBadge=document.getElementById('curseBadge');if(cBadge)cBadge.remove();
  document.querySelectorAll('.relic-slot').forEach(s=>{
@@ -149,12 +149,17 @@ directorP=1;directorT=0;directorLastKills=0;directorLogBand=0;directorGrace=0;  
    {t:27500, html:'Хранитель приходит к <span class="tk">'+fmt(BALANCE.bossTime)+'</span>. Мини-боссы — Древень и Стрыга.'}
   ];
   steps.forEach((s,i)=>{
-   const id=setTimeout(()=>{
+   const showStep = ()=>{
+    if(paused || document.getElementById('cards').style.display==='flex' || document.getElementById('chestov').style.display==='flex'){
+      setTimeout(showStep, 1500);
+      return;
+    }
     tut.innerHTML=s.html;
     tut.classList.add('show');
     setTimeout(()=>tut.classList.remove('show'), i===steps.length-1?9000:7500); // v5.46: не мелькают
     if(i===steps.length-1){LS.set('cl_tut_v2','1');LS.set('cl_tutdone','1');}
-   }, s.t);
+   };
+   const id = setTimeout(showStep, s.t);
    tutTimers.push(id);
   });
  }

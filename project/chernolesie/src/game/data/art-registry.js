@@ -38,7 +38,7 @@ const VICTORY_SHIELD_ART={ src: '@@A:art/art-registry/victory-shield-art.webp@@'
 // v7.17: 8-КАДРОВЫЙ АТЛАС СЛАВЯНСКОГО ВЗМАХА МЕЧА (с хромакея Magenta #FF00FF в 100% прозрачный альфа-канал)
 // Сетка строго 4x2 по 160px, как у остальных атласов эффектов — код везде режет лист как naturalWidth/4 x naturalHeight/2.
 // Исходник на magenta лежит в assets/art/_chromakey-src/, пересобирается через tools/chromakey.py.
-const SLASH_ANIM_SHEET=(function(){const i=new Image();i.src='@@A:art/art-registry/slash-anim-sheet-v9.webp@@';return i;})();
+const SLASH_ANIM_SHEET=(function(){const i=new Image();i.src='@@A:art/art-registry/slash-anim-sheet.webp@@';return i;})();
 // v7.20: 8-КАДРОВЫЙ АТЛАС МОРОЗНО-ТРАВЯНОЙ ВОЛНЫ ЗНАХАРКИ (с хромакея Magenta #FF00FF в 100% прозрачный альфа-канал)
 const DRUID_WAVE_SHEET=(function(){const i=new Image();i.src='@@A:art/art-registry/druid-wave-sheet.webp@@';return i;})();
 // v7.20: 8-КАДРОВЫЙ АТЛАС ТЕНЕВОГО СЕРПА ВОРОННИКА (с хромакея Magenta #FF00FF в 100% прозрачный альфа-канал)

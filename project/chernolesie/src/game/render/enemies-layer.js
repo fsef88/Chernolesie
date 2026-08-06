@@ -50,7 +50,10 @@ function drawEnemiesLayer(){
   const x=interpolatedX-cam.x,y=interpolatedY-cam.y;
   updateEnemyAnimMeta(e);
    const flip=(P.x-e.x)<0;
-  shadow(x,y+e.r*0.3+e.drawH*0.14,e.drawH*0.30);
+  // v10.0 LOD (Level of Detail): в густой орде (>200) отсекаем тени у дальних рядовых врагов
+  if(!(enemies.length > 200 && !e.boss && !e.elite && !e.mini && x*x + y*y > 78400)){
+   shadow(x,y+e.r*0.3+e.drawH*0.14,e.drawH*0.38);
+  }
   if(e.elite||e.boss||e.mini||e.courier||e.beacon||e.shaman){const gc=e.boss?(e.phase===2?'rgba(255,60,40,':'rgba(200,90,255,'):e.mini?(e.type==='naviya'?'rgba(180,255,210,':'rgba(255,190,90,'):e.courier?'rgba(255,220,90,':e.beacon?'rgba(190,120,255,':e.shaman?'rgba(255,90,60,':(AFFIX_AURA[e.affix]||'rgba(120,255,140,');ctx.save();ctx.globalCompositeOperation='lighter';const gr=ctx.createRadialGradient(x,y-e.drawH*0.3,4,x,y-e.drawH*0.3,e.drawH*0.55);gr.addColorStop(0,gc+'0.22)');gr.addColorStop(1,gc+'0)');
    // v6.68: аура мягче — не шумит поверх тела
    ctx.fillStyle=gr;ctx.beginPath();ctx.arc(x,y-e.drawH*0.3,e.drawH*0.55,0,7);ctx.fill();ctx.restore();}
@@ -62,9 +65,8 @@ function drawEnemiesLayer(){
    ctx.save();
    ctx.globalAlpha=0.25+0.45*k;
    ctx.strokeStyle='#c98bff';ctx.lineWidth=2;
-   ctx.setLineDash([6,10]);
+   // v8.7: сплошной лазерный прицел без штриховой пунктирной линии
    ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(px,py);ctx.stroke();
-   ctx.setLineDash([]);
    // пульсирующая мишень на игроке
    const pulse=1+0.25*Math.sin(time*22);
    ctx.globalAlpha=0.4+0.4*k;
@@ -165,7 +167,8 @@ function drawEnemiesLayer(){
   // и работают ли вообще стихии. Теперь у каждого статуса СВОЙ СИЛУЭТ,
   // читаемый по форме, а не по цвету: лёд — кристаллы-шипы, яд — пузыри,
   // замедление — тяжёлые цепи. Все три могут висеть одновременно и не сливаются.
-  if(e.frozen>0||e.poisoned>0||(e.slow||1)<0.92){
+  // v10.3 LOD: в густой толпе (>150) отсекаем статус-иконки у дальних рядовых врагов, экономя до 3000 операций холста в кадр
+  if((e.frozen>0||e.poisoned>0||(e.slow||1)<0.92) && !(enemies.length > 150 && !e.boss && !e.elite && !e.mini && x*x+y*y > 40000)){
    const _sh=e.drawH||60, _fs=Math.max(1,Math.min(2.2,1/(ZOOM||1)*0.8));
    ctx.save();
    // ЛЁД: корка на туловище + острые кристаллы наружу. Мигает на исходе.

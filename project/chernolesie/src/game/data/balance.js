@@ -172,7 +172,7 @@ const DENSITY_REF=244000;
 // равно почти не видно, потому что обзор шире.
 // Множитель применяется и к врагам, и к снарядам, чтобы погоня и уклонение
 // сохранили те же пропорции, что при обзоре один к одному.
-function viewSpeedMul(){return Math.sqrt(Math.max(1,(W*H)/(412*915)));}
+function viewSpeedMul(){return 1;}
 function viewDensityMul(){
  const m=(W*H)/DENSITY_REF;
  // v6.11: потолок поднят с 2.2 до 4.5 — иначе в «Толпе» те же враги размазались

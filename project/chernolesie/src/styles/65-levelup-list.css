@@ -123,19 +123,53 @@
 
 /* десктоп: ряд остаётся рядом — там ширины хватает и три колонки читаются
    быстрее, чем список */
-@media (min-width:900px) and (min-height:620px){
-  #cards{justify-content:center}
-  #cardrow{flex-direction:row;max-width:900px;gap:16px}
-  #cards .card{
-    grid-template-columns:1fr;
-    justify-items:center;
-    text-align:center;
-    width:230px;
-    padding:16px 14px;
-    gap:8px;
+/* v11.4 COMMERCIAL DESKTOP & TABLET LAYOUT (Золотое сечение таро-карт и крупные медальоны):
+   1) Отключаем вертикальное растягивание строки (#cardrow) и карт (.card), фиксируя классическую пропорцию 3:4.
+   2) Увеличиваем размер медальонов оружия с 76px до 104px для героического акцента.
+   3) Убираем пустоты и выравниваем текст и подсказки по центру. */
+@media (min-width:860px) and (min-height:580px){
+  #cards{justify-content:center;padding:24px}
+  #cardrow{
+    flex-direction:row;
+    align-items:center;
+    justify-content:center;
+    flex:0 1 auto;
+    max-width:960px;
+    gap:22px;
   }
-  #cards .card .cbody{align-items:center}
-  #cards .card .upgradeIcon{width:76px;height:76px}
-  #cards .card .tag{position:static;margin-top:4px}
-  #cardbtns{max-width:520px;margin-inline:auto}
+  /* v11.6 COMMERCIAL DESKTOP & TABLET LAYOUT (Крупные медальоны 180px + Славянский солнечный узор):
+     1) Увеличиваем медальоны с 104px до 180x180 px — теперь иконка занимает 70% ширины карты и является главным акцентом.
+     2) Добавляем богатый многослойный славянский солнечный узор на задний фон карты (repeating-conic-gradient + radial-gradient).
+     3) Исключаем пустоты и растягивание: карточка плотно заполнена контентом по всей высоте. */
+  #cards .card{
+    flex:0 0 280px;
+    width:280px;
+    min-height:390px;
+    max-height:410px;
+    grid-template-columns:1fr;
+    grid-template-rows:auto 1fr auto;
+    justify-items:center;
+    align-content:space-between;
+    text-align:center;
+    padding:24px 20px 20px;
+    gap:14px;
+    background:
+      radial-gradient(circle at 50% 27%, rgba(255,207,106,0.24) 0%, rgba(20,16,8,0) 65%),
+      repeating-conic-gradient(from 0deg at 50% 27%, rgba(255,207,106,0.06) 0deg 8deg, transparent 8deg 16deg),
+      linear-gradient(180deg, rgba(42,30,14,0.96) 0%, rgba(20,15,8,0.98) 52%, rgba(10,8,4,0.99) 100%) !important;
+    border:2px solid #ffd77d;
+    box-shadow:0 12px 35px rgba(0,0,0,0.85), inset 0 0 32px rgba(255,180,60,0.18), 0 0 22px rgba(255,207,106,0.25);
+  }
+  #cards .card .cbody{align-items:center;margin-top:0;display:flex;flex-direction:column;gap:6px}
+  #cards .card .upgradeIcon{
+    width:180px;
+    height:180px;
+    margin:0 auto 4px;
+    box-shadow:0 0 35px rgba(255,207,106,0.75), inset 0 0 18px rgba(255,230,150,0.45);
+    border:2px solid rgba(255,220,130,0.6);
+  }
+  #cards .card h3{font-size:20px;margin:0;color:#ffcf6a;text-shadow:0 0 15px rgba(255,207,106,0.75)}
+  #cards .card p{font-size:14px;line-height:1.42;color:#e8e0d0;margin:0}
+  #cards .card .tag{position:static;margin-top:auto;font-size:11px;padding:4px 14px}
+  #cardbtns{max-width:540px;margin-inline:auto}
 }

@@ -1,7 +1,7 @@
 {
- "source": "chernolesie_v7 (2).html",
- "sha256": "2ed0b7f0282e70189da682b40deaecb8c374100ed958e4481aa251e61f7ab01d",
- "generated": "2026-08-03",
+ "source": "chernolesie_v8.html",
+ "sha256": "84bf4d406c4c5cdac0546b432d29dff585d538f42901b1c1a89fed9a89f1f769",
+ "generated": "2026-08-06",
  "assets": {
   "ui/control.jpg": "image/jpeg",
   "ui/xqvxtkifevdu4z.jpg": "image/jpeg",
@@ -11,10 +11,12 @@
   "ui/backdrops.webp": "image/webp",
   "ui/chartfloat.webp": "image/webp",
   "ui/46-painted-backdrops-1.webp": "image/webp",
+  "ui/gnasjfyurd7r0bx7xdk8ry4qqstaq3rzs7lve4adswe.webp": "image/webp",
   "ui/hxwcvm8c8fcfme9w1llpv3c9.webp": "image/webp",
   "ui/d8laa.webp": "image/webp",
   "ui/taa.webp": "image/webp",
   "ui/xvtae1f3qj8fcga.webp": "image/webp",
+  "ui/aaa.jpg": "image/jpeg",
   "art/30-title.html/tsglyph.webp": "image/webp",
   "sprites/Enemies/Chashob_norm/f_01.webp": "image/webp",
   "sprites/Enemies/Chashob_norm/f_02.webp": "image/webp",
@@ -300,6 +302,7 @@
   "art/world/aaa.webp": "image/webp",
   "art/world/gaaa.webp": "image/webp",
   "art/world/cntv3xqpnm7h3fgwt4wgz6tfkaa.webp": "image/webp",
+  "art/world/idb9fj3slxisdmfcyyo5kmj5aqwdj1nqio7ee40iaaa.webp": "image/webp",
   "art/world/aaaa.webp": "image/webp",
   "art/world/rlqkz41fgaaa.webp": "image/webp",
   "art/world/djhomhwx3mb2oa.webp": "image/webp",
@@ -339,17 +342,6 @@
   "art/art-registry/evo-altar-art.webp": "image/webp",
   "art/art-registry/victory-shield-art.webp": "image/webp",
   "art/art-registry/slash-anim-sheet.webp": "image/webp",
-  "art/art-registry/slash-anim-sheet-v9.webp": "image/webp",
-  "art/art-registry/slash-smoke-sheet.webp": "image/webp",
-  "art/art-registry/impact-burst-sheet.webp": "image/webp",
-  "art/art-registry/dust-plume-sheet.webp": "image/webp",
-  "art/art-registry/kosa-zone-sheet.webp": "image/webp",
-  "art/art-registry/kosti-zone-sheet.webp": "image/webp",
-  "art/art-registry/zercalo-zone-sheet.webp": "image/webp",
-  "art/art-registry/kolokol-zone-sheet.webp": "image/webp",
-  "art/art-registry/zerno-zone-sheet.webp": "image/webp",
-  "art/art-registry/klyuka-zone-sheet.webp": "image/webp",
-  "art/art-registry/navi-zone-sheet.webp": "image/webp",
   "art/art-registry/druid-wave-sheet.webp": "image/webp",
   "art/art-registry/rogue-slash-sheet.webp": "image/webp",
   "art/art-registry/altar-world-prop-art.webp": "image/webp",
@@ -379,6 +371,16 @@
   "art/art-registry/poison-anim-sheet.webp": "image/webp",
   "art/art-registry/frost-spike-anim-sheet.webp": "image/webp",
   "art/art-registry/fireball-anim-sheet.webp": "image/webp",
+  "art/art-registry/slash-smoke-sheet.webp": "image/webp",
+  "art/art-registry/impact-burst-sheet.webp": "image/webp",
+  "art/art-registry/dust-plume-sheet.webp": "image/webp",
+  "art/art-registry/kosa-zone-sheet.webp": "image/webp",
+  "art/art-registry/kosti-zone-sheet.webp": "image/webp",
+  "art/art-registry/zercalo-zone-sheet.webp": "image/webp",
+  "art/art-registry/kolokol-zone-sheet.webp": "image/webp",
+  "art/art-registry/zerno-zone-sheet.webp": "image/webp",
+  "art/art-registry/klyuka-zone-sheet.webp": "image/webp",
+  "art/art-registry/navi-zone-sheet.webp": "image/webp",
   "art/icons/class-art.webp": "image/webp",
   "art/icons/class-art-2.webp": "image/webp",
   "art/icons/class-art-3.webp": "image/webp",
@@ -388,19 +390,49 @@
   "art/icons/class-art-6.webp": "image/webp",
   "art/icons/painted-icons.jpg": "image/jpeg",
   "art/icons/nnjxqfpawnpjqa2lnsxpy0alsxpy0saap.jpg": "image/jpeg",
+  "art/icons/bfb8stabgmy5tu5ojkk83gu1pbzlynlbjx9zrfxpy0zgozlxay7v1dekvrpmntluvqqg9m4gqzynyk6bgnxrqagyzdps6xfsxtpy11cwlnsxpy0is0tlgnxoqm0s6wnlghcwlpy0sael.jpg": "image/jpeg",
+  "art/icons/jy9txzpu4yyfsc2kjuidawlyfsaaccdatgw2wadawlyfsabypatgwwaf.jpg": "image/jpeg",
+  "art/icons/yj4gm8amaamvhsfcm9ho0y0y0xwm6ngngnaadjpcamaadroxoxoanjpcamaap.jpg": "image/jpeg",
+  "art/icons/nqnbpegtrpq17qoosixmp596ulz2mtxhedgwdkb8kjamflflfpaa4esstyys0qwkwk9nkwavlflfeiqvlflfeiqwkwkziie.jpg": "image/jpeg",
+  "art/icons/fvwzjtzs1hqvrjzstmtz6lltuwm17jtxvzxrijok7odix4ydk6x1fksekutraamblr2ad04qgdfefxvfdw4r1womk8uyqwudyspyncwzrriu4q0icooxriiekkmuyohcjngkmuqhniijfhwie.jpg": "image/jpeg",
+  "art/icons/tqnhxxl6nnfuk81qjp614xriigdnfgkmvibmjvrijfabmijfgnqadnfgkmuaffgkmuaf.jpg": "image/jpeg",
   "art/icons/uxl.jpg": "image/jpeg",
   "art/icons/by5gcaewgh8kgkmjusrxp.jpg": "image/jpeg",
+  "art/icons/gh3b9zpy40bygjfva6dx0gidqkmeql8yolarsyby9h8d4h201py0saebsqte6wdc13gljuuszrmu40saii5ruljsxqkl.jpg": "image/jpeg",
+  "art/icons/n0tgjbhcowpvimszu4ispwprjj3uccvhwwrb4zaiofhwx22jjoyv8lctisrywfbctist.jpg": "image/jpeg",
+  "art/icons/zlryt6quesap2dsxvivsonpctzq3fjot0txbjhw4srueqlhjneawkwksytfmlsxsxukizspypyqsrdavlhnlfssf.jpg": "image/jpeg",
+  "art/icons/m1hsxt4qgo1lnlflfacpususuakl2pypyoavkliligd.jpg": "image/jpeg",
   "art/icons/kit.jpg": "image/jpeg",
+  "art/icons/zci3ziir5pp8ajhqe9bwfuvluvluvkpuk5nfimq4amcviufeyei4je2fluepumbicfduclszmo9dfdfujw2j27gzqoyoyroaoumumuafqo8ukap.jpg": "image/jpeg",
+  "art/icons/lf9tomck5j15jtx00smotqjj5hkblknwovca8xqgpntuxqy0atu1mbamnae1ntgpjqb.jpg": "image/jpeg",
+  "art/icons/zidc9gngnsqgjjrj76maadojrjrjqaz0mlxoxoam6ngngnacauamamaap.jpg": "image/jpeg",
+  "art/icons/iffbk2cw52wlhhbwi12xpdlihclknskbzusfws54h8ql9flcvnmlgca2lpo4ohiwlorjaa2wmcqniitfftqh4gezqjz5yzofgkdwgsbnjrrqauasiigbtsuuuafflijfabrijboxqae0llijfabrrijfabmijfgkadnfgkmuaffgn6muagakmuy3oadrrijfabrrijfabmijfgkacijfgdigaooxrigbkkxfligd.jpg": "image/jpeg",
+  "art/icons/dgwgsbxxwsk2fbekixjgbbyvsssywszthwxjj.jpg": "image/jpeg",
+  "art/icons/eqkzo7zdix9sc6ljrssbbiculry84dboa241txnmtzupkxoetxptoy0ma1argfljjxkgddqxoy1apa6ghjqxqklmu6gndgoov.jpg": "image/jpeg",
+  "art/icons/rxq9jt6bjpsnczj4hbwajypmvykdtajs7ncfpwudiuoxcnmkedxst1avdrnemuyopig2wpamuyrpwtnhwjflg0ajrmjfgkacijfligbkm0yoxqauuyoxqb.jpg": "image/jpeg",
+  "art/icons/m4fot8v2xvxwc1ztvlfhyl7j8ht15x50upokwsnjuo5jrxsxsxwpaia5xcuscuaklsxsxqbyu0sv3fah.jpg": "image/jpeg",
+  "art/icons/qjltk9of2doy0ajgochsgwvd6mokdfltclzmz33h5fzwppufihimrpxjwieqkpcsgafdfdftiaozoyoyoafchihigaum0mumuachqxqxqb.jpg": "image/jpeg",
+  "art/icons/ggskkqaiu5ezz98a4kenc6saueo3lhun0i0ul745ffc1ptuajc3vcklvzmo5hsam6q9fda651mk9xmxeruzsbzpvqhjt6etnv4iwctzg0tpjty0ccls0safgpjg0s6wnlgpjfpawnlgpjp.jpg": "image/jpeg",
+  "art/icons/qku1dn5f2yyjnystxruvfxacvujcxzl7pip5rsmnbyvjgjwgblkuj3svhyvsk2olsv8lcthwxfeslcthwxfesiyvsk2iov.jpg": "image/jpeg",
+  "art/icons/kkzbwkdkjaqeugtnq3fonozi20nog2uhagevsodfgkngjcoyisqze7orcw4ve4ts1hqvhjrz3oxxcu0wcooxrigaooxrjigaooxrigazrrijfah.jpg": "image/jpeg",
   "art/icons/cg5p21g93dlnsi.jpg": "image/jpeg",
   "art/icons/c5o85zj5znpwcuf.jpg": "image/jpeg",
   "art/icons/tzmvyc3eem25.jpg": "image/jpeg",
   "art/icons/xroc.jpg": "image/jpeg",
   "art/icons/h1emsiccx9s.jpg": "image/jpeg",
   "art/icons/wdmcftjzi9imum.jpg": "image/jpeg",
+  "art/icons/vumnacnse9fzsijkw9i7q06zn6jn5dec0pqdk3.jpg": "image/jpeg",
+  "art/icons/vy5hg0lpgz0oflgmbtkvlqzo0qyqe0nb9om3heipzjeo0y8pr5xdelc7enr84xeqiuc695v0hjwxw4ewepqmkktc3w63n.jpg": "image/jpeg",
   "art/icons/s8ugjyngwwkltkjqfnqdziu9xp.jpg": "image/jpeg",
   "art/icons/painted-boons.jpg": "image/jpeg",
   "art/icons/yrwhd39fz.jpg": "image/jpeg",
+  "art/icons/uq9c0cdka1su1phihxesr4ecckicacvnkdb5hwfceuh0e2dhx6yykgunclm.jpg": "image/jpeg",
+  "art/icons/jixbo8a9hwydxdb7pweowahzcpcbqgibysprizb4abxp9jziiwv1eqz9p8c.jpg": "image/jpeg",
+  "art/icons/u7nia8vjhalnzdiibas1jvgdxiexobdukq7rn.jpg": "image/jpeg",
   "art/icons/painted-curses.jpg": "image/jpeg",
+  "art/icons/mgdgnsp8dorxqpd58inb2od4csveofrhsjnqok9qegqtpbce68zprhg8yr8lxvp.webp": "image/webp",
+  "art/icons/ks8eqzd3yeiym1husznjnqvqzcqjku5y2ainsgkodowtdooilqtqixmfkqsihgaaaa.jpg": "image/jpeg",
+  "art/icons/crpgvxrcmvlgceds5wokicrriwlt7yhcw4cwoeeszkvecbdhxzbinsydgx0geilvcobnnbq3nvgjejhbvhdlowbaibhwjacmcx9ndicxyjngxmbptvzh67rjj1wpzwgff6dj2rvrefagwrp5ya4prljhawwkhsewebu3ossxdmqk2txgcb3d7yunp6x5hmsemhi2d5zhg5jfsnfocutsw0h1kcgt0z.webp": "image/webp",
   "art/hero-fx/hero-battle.webp": "image/webp",
   "art/hero-fx/hero-battle-2.webp": "image/webp",
   "art/hero-fx/hero-battle-3.webp": "image/webp",
@@ -408,38 +440,10 @@
   "art/hero-fx/hero-battle-5.webp": "image/webp",
   "art/hero-fx/hero-battle-6.webp": "image/webp",
   "art/hero-fx/hero-battle-7.webp": "image/webp",
-  "art/icons/ico-01.jpg": "image/jpeg",
-  "art/icons/ico-02.webp": "image/webp",
-  "art/icons/ico-03.jpg": "image/jpeg",
-  "art/icons/ico-04.jpg": "image/jpeg",
-  "art/icons/ico-05.jpg": "image/jpeg",
-  "art/icons/ico-06.jpg": "image/jpeg",
-  "art/icons/ico-07.jpg": "image/jpeg",
-  "art/icons/ico-08.jpg": "image/jpeg",
-  "art/icons/ico-09.jpg": "image/jpeg",
-  "art/icons/ico-10.jpg": "image/jpeg",
-  "art/icons/ico-11.jpg": "image/jpeg",
-  "art/icons/ico-12.jpg": "image/jpeg",
-  "art/icons/ico-13.jpg": "image/jpeg",
-  "art/icons/ico-14.jpg": "image/jpeg",
-  "art/icons/ico-15.jpg": "image/jpeg",
-  "art/icons/ico-16.webp": "image/webp",
-  "art/icons/ico-17.jpg": "image/jpeg",
-  "art/icons/ico-18.jpg": "image/jpeg",
-  "art/icons/ico-19.jpg": "image/jpeg",
-  "art/icons/ico-20.jpg": "image/jpeg",
-  "art/icons/ico-21.jpg": "image/jpeg",
-  "art/icons/ico-22.jpg": "image/jpeg",
-  "art/icons/ico-23.jpg": "image/jpeg",
-  "art/icons/ico-24.jpg": "image/jpeg",
-  "art/icons/ico-25.jpg": "image/jpeg",
-  "art/icons/ico-26.jpg": "image/jpeg",
-  "art/icons/ico-27.jpg": "image/jpeg",
-  "art/icons/ico-28.jpg": "image/jpeg",
-  "art/icons/ico-29.jpg": "image/jpeg",
-  "art/icons/ico-30.jpg": "image/jpeg",
-  "art/world/ico-31.webp": "image/webp",
-  "ui/ico-32.webp": "image/webp"
+  "art/fx-layer/-bakedchainspr.png": "image/png",
+  "art/fx-layer/-bakeddrainspr.png": "image/png",
+  "art/fx-layer/-bakedidolspr.png": "image/png",
+  "art/fx-layer/-bakedlaserspr.png": "image/png"
  },
  "parts": [
   {
@@ -458,172 +462,176 @@
    "note": "Устав Мономах (встроенный шрифт) + назначение гарнитуры",
    "srcLines": [
     13,
-    22
+    33
    ]
   },
   {
    "file": "styles/10-hud.css",
    "note": "Верхний HUD: время/HP/класс/оружие, XP-полоса, босс-бар, реликвии",
    "srcLines": [
-    23,
-    66
+    34,
+    77
    ]
   },
   {
    "file": "styles/11-hp-bar.css",
    "note": "Нижняя полоса здоровья",
    "srcLines": [
-    67,
-    75
+    78,
+    86
    ]
   },
   {
    "file": "styles/12-log.css",
    "note": "Лента событий + бейджи синергий",
    "srcLines": [
-    76,
-    94
+    87,
+    105
    ]
   },
   {
    "file": "styles/13-minimap.css",
    "note": "Миникарта",
    "srcLines": [
-    95,
-    100
+    106,
+    111
    ]
   },
   {
    "file": "styles/14-touch-ui.css",
    "note": "Джойстик, кнопки, медальон Печати",
    "srcLines": [
-    101,
-    139
+    112,
+    150
    ]
   },
   {
    "file": "styles/20-screens.css",
    "note": "Оверлеи: карты, пауза, смерть, достижения, древо, журнал",
    "srcLines": [
-    140,
-    458
+    151,
+    469
    ]
   },
   {
    "file": "styles/30-responsive-mobile.css",
    "note": "Портрет и ландшафт на телефоне",
    "srcLines": [
-    459,
-    546
+    470,
+    557
    ]
   },
   {
    "file": "styles/40-ornaments.css",
    "note": "Славянский орнамент, классовые свечения, пергамент, руны",
    "srcLines": [
-    547,
-    657
+    558,
+    668
    ]
   },
   {
    "file": "styles/41-art-direction-v1.css",
    "note": "Редкость, прирост уровня, стартовый титр забега",
    "srcLines": [
-    658,
-    754
+    669,
+    765
    ]
   },
   {
    "file": "styles/42-meta-shop-boss.css",
    "note": "Мета-магазин, древо, ритм боссов, UX спецатаки",
    "srcLines": [
-    755,
-    812
+    766,
+    823
    ]
   },
   {
    "file": "styles/43-iconostas-chrome.css",
    "note": "Иконостас: единая SVG-иконография и хром интерфейса",
    "srcLines": [
-    813,
-    910
+    824,
+    921
    ]
   },
   {
    "file": "styles/44-painted-elements.css",
    "note": "Премиум-слой: медальоны, виньетка, живописные иконки",
    "srcLines": [
-    911,
-    939
+    922,
+    950
    ]
   },
   {
    "file": "styles/45-card-runes.css",
    "note": "Микро-эффекты: угловые руны, бегущая руна, искры, фольга",
    "srcLines": [
-    940,
-    984
+    951,
+    995
    ]
   },
   {
    "file": "styles/46-painted-backdrops.css",
    "note": "«Гербовая застава»: скин героя и живописные подложки",
    "srcLines": [
-    985,
-    1052
+    996,
+    1063
    ]
   },
   {
    "file": "styles/50-title-screen.css",
    "note": "Титульный экран: классы, длительность, ступени Порчи",
    "srcLines": [
-    1053,
-    1194
+    1064,
+    1214
    ]
   },
   {
    "file": "styles/60-touch-rework.css",
    "note": "v6.27 переработка тач-интерфейса по канону жанра",
    "srcLines": [
-    1195,
-    1372
+    1215,
+    1392
    ]
   },
   {
    "file": "styles/61-title-cta.css",
    "note": "v6.29 фикс кнопки «В бой»",
    "srcLines": [
-    1373,
-    1419
+    1393,
+    1439
    ]
   },
   {
    "file": "styles/62-bottom-action-bar.css",
    "note": "v6.30 нижняя панель главного действия",
    "srcLines": [
-    1420,
-    1497
+    1440,
+    1517
    ]
   },
   {
    "file": "styles/63-ios-start-fix.css",
    "note": "v6.52 фикс стартовой кнопки на iOS",
    "srcLines": [
-    1498,
-    1530
+    1518,
+    1550
    ]
   },
   {
    "file": "styles/64-mobile-hud-cleanup.css",
    "note": "v6.56 чистка мобильного HUD + раннее давление",
    "srcLines": [
-    1531,
-    1673
+    1551,
+    1645
    ]
   },
   {
    "file": "styles/65-levelup-list.css",
-   "note": "v7.32 окно уровня: список во всю ширину"
+   "note": "v7.32 окно уровня: список во всю ширину",
+   "srcLines": [
+    1646,
+    1820
+   ]
   },
   {
    "lit": "</style>\n<!-- v5.38: Google Fonts удалены — шрифт Мономах встроен (@font-face выше) -->\n</head>\n<body>\n"
@@ -632,48 +640,48 @@
    "file": "markup/10-hud.html",
    "note": "HUD, XP, божество, босс-бар, реликвии",
    "srcLines": [
-    1678,
-    1705
+    1825,
+    1852
    ]
   },
   {
    "file": "markup/20-field.html",
    "note": "Канвас, HP, лог, миникарта, тач-контролы, панели прогресса",
    "srcLines": [
-    1706,
-    1725
+    1853,
+    1872
    ]
   },
   {
    "file": "markup/30-title.html",
    "note": "Титульный экран, тост открытия класса, оверлеи удара",
    "srcLines": [
-    1726,
-    1739
+    1873,
+    1890
    ]
   },
   {
    "file": "markup/40-overlays.html",
    "note": "Выбор карт/божества/класса, пауза, интро, воскрешение",
    "srcLines": [
-    1740,
-    1798
+    1891,
+    1949
    ]
   },
   {
    "file": "markup/50-endgame.html",
    "note": "Экран итогов, журнал, всплеск, сундук, эволюция, статы, древо",
    "srcLines": [
-    1799,
-    1880
+    1950,
+    2031
    ]
   },
   {
    "file": "markup/60-misc.html",
    "note": "Крупный титр, туториал, орнамент",
    "srcLines": [
-    1881,
-    1884
+    2032,
+    2035
    ]
   },
   {
@@ -683,16 +691,16 @@
    "file": "game/data/sprite-atlas.js",
    "note": "window.EMB — все кадры анимаций",
    "srcLines": [
-    1886,
-    1900
+    2037,
+    2051
    ]
   },
   {
    "file": "game/data/hero-warrior-v674.orphan.js",
-   "note": "v6.74: Новый Воин — 16 кадров (исправлено: теперь внутри <script>)",
+   "note": "НЕ ИСПОЛНЯЕТСЯ: в оригинале лежит между </script> и <script>. См. docs/known-issues.md",
    "srcLines": [
-    1902,
-    1924
+    2052,
+    2074
    ]
   },
   {
@@ -702,708 +710,712 @@
    "file": "game/boot/00-build-log.js",
    "note": "История сборок и заметки по масштабу мира",
    "srcLines": [
-    1926,
-    1959
+    2077,
+    2114
    ]
   },
   {
    "file": "game/core/world.js",
    "note": "TILE/WORLD, набор декораций, тайл земли",
    "srcLines": [
-    1960,
-    2028
+    2115,
+    2183
    ]
   },
   {
    "file": "game/core/canvas.js",
    "note": "Канвас, DPR, зум, resize",
    "srcLines": [
-    2029,
-    2110
+    2184,
+    2270
    ]
   },
   {
    "file": "game/core/util.js",
    "note": "RNG (игровой/визуальный), seed для Daily, clamp/prune, LocalStorage",
    "srcLines": [
-    2111,
-    2186
+    2271,
+    2346
    ]
   },
   {
    "file": "game/render/atmosphere-cache.js",
    "note": "Прегенерённые спрайты мотыльков/светлячков/листьев",
    "srcLines": [
-    2187,
-    2206
+    2347,
+    2366
    ]
   },
   {
    "file": "game/core/input.js",
    "note": "Клавиатура (в т.ч. ЙЦУКЕН), джойстик, определение мобилы",
    "srcLines": [
-    2207,
-    2257
+    2367,
+    2417
    ]
   },
   {
    "file": "game/audio/engine.js",
    "note": "Аудиошина, слои, компрессор, SFX боя",
    "srcLines": [
-    2258,
-    2457
+    2418,
+    2616
    ]
   },
   {
    "file": "game/audio/ambient-music.js",
    "note": "Фоновый лес, всплески, процедурная музыка, совет при смерти",
    "srcLines": [
-    2458,
-    2606
+    2617,
+    2782
    ]
   },
   {
    "file": "game/state/run-state.js",
    "note": "Игрок, камера, массивы сущностей, тряска, комбо, оружие",
    "srcLines": [
-    2607,
-    2683
+    2783,
+    2859
    ]
   },
   {
    "file": "game/data/balance.js",
    "note": "BALANCE: все ручки сложности, таблица спавна, плотность",
    "srcLines": [
-    2684,
-    2800
+    2860,
+    3050
    ]
   },
   {
    "file": "game/systems/director.js",
    "note": "Динамический директор: давление, капы, HP-мультипликатор",
    "srcLines": [
-    2801,
-    2891
+    3051,
+    3160
    ]
   },
   {
    "file": "game/data/run-modes.js",
    "note": "Полный (30 мин) и короткий (12 мин) забег, расписание мини-боссов",
    "srcLines": [
-    2892,
-    2954
+    3161,
+    3223
    ]
   },
   {
    "file": "game/systems/corruption.js",
    "note": "Ступени Порчи, рекорды по ступеням, классовые пассивки",
    "srcLines": [
-    2955,
-    3008
+    3224,
+    3277
    ]
   },
   {
    "file": "game/systems/class-unlocks.js",
    "note": "Условия открытия классов, подсказки, прогресс",
    "srcLines": [
-    3009,
-    3061
+    3278,
+    3330
    ]
   },
   {
    "file": "game/data/classes.js",
    "note": "CLASSES: 7 архетипов + базовые скорости",
    "srcLines": [
-    3062,
-    3123
+    3331,
+    3392
    ]
   },
   {
    "file": "game/data/boons.js",
    "note": "BOONS: 5 божеств",
    "srcLines": [
-    3124,
-    3145
+    3393,
+    3414
    ]
   },
   {
    "file": "game/data/curses.js",
    "note": "CURSES: 4 проклятия",
    "srcLines": [
-    3146,
-    3155
+    3415,
+    3424
    ]
   },
   {
    "file": "game/data/enemies.js",
    "note": "ETYPES: типы врагов и их поведение",
    "srcLines": [
-    3156,
-    3179
+    3425,
+    3448
    ]
   },
   {
    "file": "game/render/sprites.js",
    "note": "Кадры анимаций, отрисовка спрайтов, тени",
    "srcLines": [
-    3180,
-    3429
+    3449,
+    3769
    ]
   },
   {
    "file": "game/world/decorations.js",
    "note": "Расстановка декораций мира",
    "srcLines": [
-    3430,
-    3516
+    3770,
+    3856
    ]
   },
   {
    "file": "game/core/pool.js",
    "note": "Пулы объектов: враги, частицы, тексты урона",
    "srcLines": [
-    3517,
-    3613
+    3857,
+    3953
    ]
   },
   {
    "file": "game/core/particles.js",
    "note": "Типы частиц, спрайты, самоцветы опыта, вспышки",
    "srcLines": [
-    3614,
-    3782
+    3954,
+    4122
    ]
   },
   {
    "file": "game/core/spatial-hash.js",
    "note": "Сетка соседства для быстрых выборок врагов",
    "srcLines": [
-    3783,
-    3856
+    4123,
+    4226
    ]
   },
   {
    "file": "game/systems/fog-of-war.js",
    "note": "Туман войны 3×3 тайла",
    "srcLines": [
-    3857,
-    3888
+    4227,
+    4258
    ]
   },
   {
    "file": "game/data/relics.js",
    "note": "RELICS",
    "srcLines": [
-    3889,
-    3900
+    4259,
+    4270
    ]
   },
   {
    "file": "game/systems/achievements.js",
    "note": "Достижения: список, проверка, уведомления, экран",
    "srcLines": [
-    3901,
-    4059
+    4271,
+    4429
    ]
   },
   {
    "file": "game/ui/screen-stats.js",
    "note": "Экран рекордов",
    "srcLines": [
-    4060,
-    4110
+    4430,
+    4480
    ]
   },
   {
    "file": "game/systems/skill-tree.js",
    "note": "Древо силы: узлы, экран, применение",
    "srcLines": [
-    4111,
-    4193
+    4481,
+    4564
    ]
   },
   {
    "file": "game/ui/juice.js",
    "note": "Крупные титры, вехи минут, сердцебиение, вехи комбо",
    "srcLines": [
-    4194,
-    4293
+    4565,
+    4664
    ]
   },
   {
    "file": "game/systems/omens.js",
    "note": "Знамения: волны раз в ~90 с",
    "srcLines": [
-    4294,
-    4320
+    4665,
+    4691
    ]
   },
   {
    "file": "game/systems/spawner.js",
    "note": "Спавн врагов и формации (стена/кольцо/поток)",
    "srcLines": [
-    4321,
-    4477
+    4692,
+    4877
    ]
   },
   {
    "file": "game/systems/elites.js",
    "note": "Аффиксы и элитные враги",
    "srcLines": [
-    4478,
-    4515
+    4878,
+    4915
    ]
   },
   {
    "file": "game/systems/special-events.js",
    "note": "Курьер, маяк, шаман",
    "srcLines": [
-    4516,
-    4573
+    4916,
+    4973
    ]
   },
   {
    "file": "game/systems/bosses.js",
    "note": "Босс и три мини-босса, интро забега",
    "srcLines": [
-    4574,
-    4664
+    4974,
+    5120
    ]
   },
   {
    "file": "game/systems/levelup.js",
    "note": "Выдача реликвий, добор карт, окно прокачки",
    "srcLines": [
-    4665,
-    4800
+    5121,
+    5259
    ]
   },
   {
    "file": "game/systems/anomalies.js",
    "note": "Аномалии на карте и их сбор",
    "srcLines": [
-    4801,
-    4854
+    5260,
+    5313
    ]
   },
   {
    "file": "game/systems/seal.js",
    "note": "Печать: спецатака каждого класса",
    "srcLines": [
-    4855,
-    5061
+    5314,
+    5520
    ]
   },
   {
    "file": "game/data/cards.js",
    "note": "CARD_POOL, слоты, эволюции, SYNERGIES",
    "srcLines": [
-    5062,
-    5310
+    5521,
+    5776
    ]
   },
   {
    "file": "game/systems/slots.js",
    "note": "Учёт слотов оружия/пассивок, взятие карты, эволюция",
    "srcLines": [
-    5311,
-    5487
+    5777,
+    5953
    ]
   },
   {
    "file": "game/data/art-registry.js",
    "note": "Реестр живописных ассетов (сундук, алтарь, ауры, боссы, эффекты)",
    "srcLines": [
-    5488,
-    5571
+    5954,
+    6054
    ]
   },
   {
    "file": "game/systems/chest.js",
    "note": "Сундук: призы, вскрытие, показ",
    "srcLines": [
-    5572,
-    5738
+    6055,
+    6242
    ]
   },
   {
    "file": "game/ui/screen-cards.js",
    "note": "Экран выбора карт: пул, таро-карточка, показ/закрытие",
    "srcLines": [
-    5739,
-    6076
+    6243,
+    6593
    ]
   },
   {
    "file": "game/systems/perks-shop.js",
    "note": "Мета-перки и магазин",
    "srcLines": [
-    6077,
-    6154
+    6594,
+    6671
    ]
   },
   {
    "file": "game/systems/run-stats.js",
    "note": "Статистика забега, кто убил, пожизненные счётчики",
    "srcLines": [
-    6155,
-    6219
+    6672,
+    6736
    ]
   },
   {
    "file": "game/platform/ads.js",
    "note": "Реклама, воскрешение, удвоение золота, шаринг",
    "srcLines": [
-    6220,
-    6391
+    6737,
+    6908
    ]
   },
   {
    "file": "game/ui/screen-gameover.js",
    "note": "Экран итогов забега",
    "srcLines": [
-    6392,
-    6601
+    6909,
+    7124
    ]
   },
   {
    "file": "game/ui/screen-select.js",
    "note": "Выбор класса и божества",
    "srcLines": [
-    6602,
-    6685
+    7125,
+    7208
    ]
   },
   {
    "file": "game/ui/screen-title.js",
    "note": "Титульный экран",
    "srcLines": [
-    6686,
-    6816
+    7209,
+    7346
    ]
   },
   {
    "file": "game/systems/run-reset.js",
    "note": "Полный сброс забега",
    "srcLines": [
-    6817,
-    6985
+    7347,
+    7523
    ]
   },
   {
    "file": "game/ui/overlays.js",
    "note": "Учёт модалок, закрытие, пауза",
    "srcLines": [
-    6986,
-    7027
+    7524,
+    7565
    ]
   },
   {
    "file": "game/core/settings.js",
    "note": "Качество частиц, вибро, FPS-кап, профайлер, тема",
    "srcLines": [
-    7028,
-    7105
+    7566,
+    7716
    ]
   },
   {
    "file": "game/ui/registry.js",
    "note": "Карта элементов UI и кэш getElementById",
    "srcLines": [
-    7106,
-    7179
+    7717,
+    7790
    ]
   },
   {
    "file": "game/core/update.js",
    "note": "Главный update() и агрегатор мульти-килла",
    "srcLines": [
-    7180,
-    7232
+    7791,
+    7841
    ]
   },
   {
    "file": "game/entities/player.js",
    "note": "Движение игрока",
    "srcLines": [
-    7233,
-    7366
+    7842,
+    7975
    ]
   },
   {
    "file": "game/systems/spawn-tick.js",
    "note": "Тик спавна и спецсобытий",
    "srcLines": [
-    7367,
-    7469
+    7976,
+    8078
    ]
   },
   {
    "file": "game/weapons/tick.js",
    "note": "Диспетчер оружий по откатам",
    "srcLines": [
-    7470,
-    7534
+    8079,
+    8143
    ]
   },
   {
    "file": "game/weapons/set-a.js",
    "note": "Серп, Коса, Угли, Камень, Оберег, Зов + волки",
    "srcLines": [
-    7535,
-    7754
+    8144,
+    8364
    ]
   },
   {
    "file": "game/weapons/set-b.js",
    "note": "Колокол, Вервь, Идол, Навь, Роса, Вихрь, Клюка, Зерно",
    "srcLines": [
-    7755,
-    8057
+    8365,
+    8684
    ]
   },
   {
    "file": "game/weapons/set-c.js",
    "note": "Кости, Упырь, Зерцало, Сопель, Тризна, Голод + тик состояний",
    "srcLines": [
-    8058,
-    8348
+    8685,
+    8984
    ]
   },
   {
    "file": "game/weapons/fx-state.js",
    "note": "Орбы серпов, стена оберега, буря вихря, след косы",
    "srcLines": [
-    8349,
-    8432
+    8985,
+    9074
    ]
   },
   {
    "file": "game/systems/projectiles.js",
    "note": "Снаряды и ядовитые зоны",
    "srcLines": [
-    8433,
-    8538
+    9075,
+    9180
    ]
   },
   {
    "file": "game/entities/enemy-ai.js",
    "note": "Таймеры, движение, ауры и обновление одного врага",
    "srcLines": [
-    8539,
-    8991
+    9181,
+    9635
    ]
   },
   {
    "file": "game/entities/enemies-tick.js",
    "note": "Обход всех врагов за кадр",
    "srcLines": [
-    8992,
-    9023
+    9636,
+    9671
    ]
   },
   {
    "file": "game/systems/pickups.js",
    "note": "Частицы, подбор лута, уровни, деспавн, HUD",
    "srcLines": [
-    9024,
-    9217
+    9672,
+    9865
    ]
   },
   {
    "file": "game/weapons/base-melee-bow.js",
    "note": "Меч и лук: базовые оружия",
    "srcLines": [
-    9218,
-    9398
+    9866,
+    10045
    ]
   },
   {
    "file": "game/weapons/base-bolt.js",
    "note": "Молния: поиск цели и разряд",
    "srcLines": [
-    9399,
-    9455
+    10046,
+    10110
    ]
   },
   {
    "file": "game/systems/drops.js",
    "note": "Лечение с убийства и выпадение лута",
    "srcLines": [
-    9456,
-    9692
+    10111,
+    10364
    ]
   },
   {
    "file": "game/systems/damage.js",
    "note": "Нанесение урона и реакция врага",
    "srcLines": [
-    9693,
-    9800
+    10365,
+    10482
    ]
   },
   {
    "file": "game/ui/icons.js",
    "note": "Иконография: классы, божества, проклятия, SVG-набор",
    "srcLines": [
-    9801,
-    9990
+    10483,
+    10672
    ]
   },
   {
    "file": "game/ui/icon-mapping.js",
    "note": "Сопоставление карт/оружий с иконками, визуалы классов",
    "srcLines": [
-    9991,
-    10145
+    10673,
+    10827
    ]
   },
   {
    "file": "game/render/hero-fx.js",
    "note": "Медальон героя, всплеск смерти, эффекты классовых атак",
    "srcLines": [
-    10146,
-    10399
+    10828,
+    10981
    ]
   },
   {
    "file": "game/render/hero-anim.js",
    "note": "Клипы и стейт-машина анимации героя",
    "srcLines": [
-    10400,
-    10527
+    10982,
+    11109
    ]
   },
   {
    "file": "game/render/hero-sprite.js",
    "note": "Риг, спрайты, обводка и отрисовка героя",
    "srcLines": [
-    10528,
-    10723
+    11110,
+    11305
    ]
   },
   {
    "file": "game/render/world-layers.js",
    "note": "Атмосфера, земля, самоцветы, бакеты декораций",
    "srcLines": [
-    10724,
-    10933
+    11306,
+    11536
    ]
   },
   {
    "file": "game/render/props-anomalies.js",
    "note": "Аномалии и пропсы мира",
    "srcLines": [
-    10934,
-    11366
+    11537,
+    11969
    ]
   },
   {
    "file": "game/render/enemies-layer.js",
    "note": "Слой врагов",
    "srcLines": [
-    11367,
-    11626
+    11970,
+    12277
    ]
   },
   {
    "file": "game/render/glow-auras.js",
    "note": "Свечение, постоянные ауры, следы оружия",
    "srcLines": [
-    11627,
-    11795
+    12278,
+    12445
    ]
   },
   {
    "file": "game/render/fx-layer.js",
    "note": "Слой эффектов и след косы",
    "srcLines": [
-    11796,
-    12263
+    12446,
+    12935
    ]
   },
   {
    "file": "game/render/player-layer.js",
    "note": "Фокус на герое, игрок, монеты, цифры урона, кромка мира",
    "srcLines": [
-    12264,
-    12441
+    12936,
+    13084
    ]
   },
   {
    "file": "game/render/compose.js",
    "note": "Синхронизация HUD, камера, сборка кадра, миникарта",
    "srcLines": [
-    12442,
-    12634
+    13085,
+    13316
    ]
   },
   {
    "file": "game/core/loop.js",
    "note": "Фиксированный шаг физики, интерполяция, rAF",
    "srcLines": [
-    12635,
-    12782
+    13317,
+    13523
    ]
   },
   {
    "file": "game/systems/evolutions.js",
    "note": "Рецепты эволюций, HUD прогресса, фанфары",
    "srcLines": [
-    12783,
-    12957
+    13524,
+    13698
    ]
   },
   {
    "file": "game/systems/journal.js",
    "note": "Журнал находок",
    "srcLines": [
-    12958,
-    13006
+    13699,
+    13747
    ]
   },
   {
    "file": "game/systems/goals.js",
    "note": "Открытия, следующая цель, готовность пар",
    "srcLines": [
-    13007,
-    13139
+    13748,
+    13880
    ]
   },
   {
    "file": "game/data/weapon-scaling.js",
    "note": "WAFF/WBAL: как статы игрока масштабируют каждое оружие",
    "srcLines": [
-    13140,
-    13221
+    13881,
+    13962
    ]
   },
   {
    "file": "game/data/weapon-fx.js",
-   "note": "v7.33 цвет и форма каждого оружия + отпечаток зоны"
+   "note": "v7.33 цвет и форма каждого оружия + отпечаток зоны",
+   "srcLines": [
+    13963,
+    14243
+   ]
   },
   {
    "file": "game/systems/surges.js",
    "note": "Всплески: баннеры, ярость, камбэк",
    "srcLines": [
-    13222,
-    13333
+    14244,
+    14355
    ]
   },
   {
    "file": "game/systems/recipe-guard.js",
    "note": "Блокировщик рецептов и смягчение старых синергий",
    "srcLines": [
-    13334,
-    13407
+    14356,
+    14429
    ]
   },
   {
    "file": "game/boot/init.js",
    "note": "Инициализация и вход в титульный экран",
    "srcLines": [
-    13408,
-    13438
+    14430,
+    14460
    ]
   },
   {
@@ -1413,12 +1425,12 @@
    "file": "game/platform/yandex-games.js",
    "note": "Инициализация SDK, облачные сохранения, лидерборды",
    "srcLines": [
-    13448,
-    13552
+    14470,
+    14574
    ]
   },
   {
-   "lit": "</script>\n</body>\n</html>\n"
+   "lit": "</script>\n<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML=\"window.__CF$cv$params={r:'a26d5cb87d465b28',t:'MTc4NjAxMjE4NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);\";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>\n</html>"
   }
  ]
 }

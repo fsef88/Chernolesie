@@ -28,6 +28,9 @@ function killDrops(e){
  if(e.dead)return;e.dead=true;e.hp=0;kills++;gold+=goldFor(e);sfxDeath();spawnDeathBurst(e);
  // v6.22: копим смерти текущего шага для общего ответа (см. flushMultiKill)
  mkN++;mkX+=e.x;mkY+=e.y;
+ // v8.10 COMMERCIAL ENGINE INTEGRATION: синергии при гибели врага
+ if(P.synApocalypse4 && seedRandom()<0.15 && typeof doBolt==='function'){ doBolt(); }
+ if(P.synVoidChoir && seedRandom()<0.35){ P.hp=Math.min(P.maxhp,P.hp+1); }
  onEnemyKilledW(e.x,e.y);   // v6.17c: серия венца + метка для тризны
  // v6.63: награды сюрпризов
  if(e.courier){
@@ -75,7 +78,8 @@ function killDrops(e){
   e.deathFlash=0.09;
   // v5.76: без e.dying туша удалялась в ТОМ ЖЕ кадре (updateDespawn), поэтому
   // ни кадры смерти f_11..f_14, ни белая вспышка, ни отлёт трупа не показывались.
-  if(e.dieFrames&&e.dieFrames.length)e.dying=e.dieMax||0.75;
+  // v10.1: короткая анимация гибели (0.28с для рядовых врагов) без зависания мёртвых тел на экране
+  if(e.dieFrames&&e.dieFrames.length)e.dying=(e.boss||e.mini)?(e.dieMax||1.25):0.28;
   // восходящий тон по серии — см. sfxKillTone
   if(typeof sfxKillTone==='function')sfxKillTone(killCombo+1);
  }
@@ -209,8 +213,8 @@ function killDrops(e){
    }
   }
  }
- if(e.elite){
-  slowmoHit(0.22,1.04);   // v6.61: элита падает — короткое слоу-мо
+  if(e.elite){
+   // v7.38: slowmoHit убран со смерти элиты для динамики без тормозов
   // v6.62: Взрывной — взрывается при смерти, бьёт по игроку
   if(e.affix==='booming'){
    flashScreen('rgba(255,120,40,',0.35);

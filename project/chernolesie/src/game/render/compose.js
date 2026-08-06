@@ -98,13 +98,9 @@ function syncHud(){
 }
 // v6.1: сглаживание камеры вынесено из физики в отрисовку.
 function camFollow(dt){
- const k=1-Math.exp(-12*Math.max(0.001,dt));
- cam.x+=(camTarget.x-cam.x)*k;
- cam.y+=(camTarget.y-cam.y)*k;
- if(Math.abs(camTarget.x-cam.x)<0.15)cam.x=camTarget.x;
- if(Math.abs(camTarget.y-cam.y)<0.15)cam.y=camTarget.y;
- cam.x=clamp(cam.x,0,camTarget.maxX);
- cam.y=clamp(cam.y,0,camTarget.maxY);
+ // v10.2 VAMPIRE SURVIVORS SMOOTHNESS (1:1 Мгновенная камера без инерции):
+ cam.x=clamp(camTarget.x,0,camTarget.maxX);
+ cam.y=clamp(camTarget.y,0,camTarget.maxY);
  // v6.5: ВТОРОЙ дефект подачи. Земля рисуется тайлами 768px по координатам
  // sx=_cx*768-cam.x, то есть по ДРОБНЫМ. Сглаживание canvas включено по умолчанию,
  // поэтому каждый кадр вся текстура пересэмплируется с новым сдвигом внутри пикселя.
@@ -124,36 +120,41 @@ function camFollow(dt){
  //  Итог был хуже, чем без округления: сдвиг внутри пикселя не исчезал, а ещё
  //  и менялся рывками по 0.64 пикселя. Отсюда «дёргано» при честных кадрах —
  //  двигается вся картина сразу, и глаз ловит именно неравномерность шага.
- const _q=(DPR||1)*(ZOOM||1);
- cam.x=Math.round(cam.x*_q)/_q;
- cam.y=Math.round(cam.y*_q)/_q;
+  const _q=(DPR||1)*(ZOOM||1)*(zoomPunch||1);
+  cam.x=Math.round(cam.x*_q)/_q;
+  cam.y=Math.round(cam.y*_q)/_q;
 }
 function draw(){ // v6.16
  if(__PROF_ON)pT('ground',1);
  // ЗАЩИТА: если canvas не инициализирован (W=0,H=0), не рисовать
  if(W===0||H===0){return;}
- const frameStart=performance.now();
- // v6.1: камера сглаживается здесь, по РЕАЛЬНОМУ времени кадра, а не шагами физики.
- _drawDt=Math.min(0.05,(frameStart-(draw._t||frameStart))/1000)||1/60;   // v6.16: время кадра нужно и анимации врагов
- camFollow(_drawDt);
- draw._t=frameStart;
- // v6.1: игрок рисуется по интерполированной позиции — тем же interpFactor, что и враги.
- // v6.1: null здесь значит «была телепортация, не интерполировать».
- const _pix=P._prevX!=null?P._prevX+(P.x-P._prevX)*interpFactor:P.x;
- const _piy=P._prevY!=null?P._prevY+(P.y-P._prevY)*interpFactor:P.y;
+  const frameStart=performance.now();
+  // v6.1: камера сглаживается здесь, по РЕАЛЬНОМУ времени кадра, а не шагами физики.
+  _drawDt=Math.min(0.05,(frameStart-(draw._t||frameStart))/1000)||1/60;   // v6.16: время кадра нужно и анимации врагов
+  draw._t=frameStart;
+  // v6.1: игрок рисуется по интерполированной позиции — тем же interpFactor, что и враги.
+  // v6.1: null здесь значит «была телепортация, не интерполировать».
+  const _pix=P._prevX!=null?P._prevX+(P.x-P._prevX)*interpFactor:P.x;
+  const _piy=P._prevY!=null?P._prevY+(P.y-P._prevY)*interpFactor:P.y;
+  // v7.37: синхронизация цели камеры с интерполированной позицией игрока для идеальной плавности
+  const _camMaxX=Math.max(0,WORLD-W), _camMaxY=Math.max(0,WORLD-H);
+  camTarget.x=clamp(_pix-W/2,0,_camMaxX);
+  camTarget.y=clamp(_piy-H/2,0,_camMaxY);
+  camTarget.maxX=_camMaxX;camTarget.maxY=_camMaxY;
+  camFollow(_drawDt);
+  const _sh=shake, _st=frameStart/1000;
+  ctx.save();
+  if(zoomPunch!==1){ctx.translate(W/2,H/2);ctx.scale(zoomPunch,zoomPunch);ctx.translate(-W/2,-H/2);}
+  if(_sh > 0.05){
+   const _shX = Math.round(Math.sin(_st*42)*_sh*0.65*_q)/_q;
+   const _shY = Math.round(Math.cos(_st*53)*_sh*0.45*_q)/_q;
+   ctx.translate(_shX, _shY);
+  }
  const px=_pix-cam.x,py=_piy-cam.y;
  drawGround();
  drawCombatGroundVeil(px,py);   // v6.57: приглушаем только фон, не врагов/эффекты
  if(__PROF_ON){pT('ground',0);pT('world',1);}
- // v6.1: тряска бралась из Math.random КАЖДЫЙ кадр — на 60+ Гц это не «удар»,
- // а высокочастотный дребезг всей картинки, который читается как потеря плавности.
- // Делаем колебание по времени: та же амплитуда, но движение непрерывное.
- const _sh=shake, _st=frameStart/1000;
- ctx.save();
- // v6.61: zoom-punch — лёгкое приближение вокруг центра экрана (внутри save/restore тряски)
- if(zoomPunch!==1){ctx.translate(W/2,H/2);ctx.scale(zoomPunch,zoomPunch);ctx.translate(-W/2,-H/2);}
- ctx.translate(Math.sin(_st*47)*_sh*0.8,Math.cos(_st*61)*_sh*0.5);
- // groundBlobs удалены (#15) — фон полностью покрывает тайлинг GT выше.
+ // Тряска и zoomPunch применены до drawGround() для устранения микролагов
  ctx.globalAlpha=1;
  // v7.36 ВЫКЛЮЧАТЕЛИ СЛОЁВ (__DBG, панель включается вместе с хронометром).
  //

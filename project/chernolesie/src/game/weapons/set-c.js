@@ -121,10 +121,9 @@ function doZercalo(){
 }
 // ---------- СОПЕЛЬ ПЕРУНА: цепная молния ----------
 function doSopel(){
- const lvl=nwLvl('sopel'),w=weapons.find(x=>x.id==='sopel'),evo=w&&w.evo;
- let cur=aliveNear(P.x,P.y,260)
-   .sort((a,b)=>dist2(a.x-P.x,a.y-P.y)-dist2(b.x-P.x,b.y-P.y))[0];
- if(!cur)return false;
+  const lvl=nwLvl('sopel'),w=weapons.find(x=>x.id==='sopel'),evo=w&&w.evo;
+  let cur=findClosestEnemy(P.x,P.y,260);
+  if(!cur)return false;
  // синергия «Венец грозы»: серия убийств удлиняет цепь
  const jumps=Math.max(1,Math.round(((evo?9:5)+Math.floor(lvl/2))*wAmt('sopel')))+(P.synBoneStorm?Math.floor(Math.min(24,kostiStacks)/6):0);
  const used=[];
@@ -136,10 +135,9 @@ function doSopel(){
   used.push(cur);
   aimLines.push({x1:px,y1:py,x2:cur.x,y2:cur.y,t:0.18,_idol:true,_evo:!!evo});
   px=cur.x;py=cur.y;
-  dmg*=evo?0.94:0.85;
-  const nx=aliveNear(px,py,170).filter(e=>used.indexOf(e)<0);
-  cur=nx.length?nx.sort((a,b)=>dist2(a.x-px,a.y-py)-dist2(b.x-px,b.y-py))[0]:null;
- }
+   dmg*=evo?0.94:0.85;
+   cur=findClosestEnemy(px,py,170,used);
+  }
  // v6.19: Цепь небес — эволюция ЗАМЫКАЕТ цепь на игроке: последний разряд
  // бьёт от последнего врага к герою, и часть урона возвращается здоровьем.
  if(evo&&totalDmg>0){

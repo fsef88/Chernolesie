@@ -10,7 +10,7 @@
 #hud .stat b{color:var(--gld2);text-shadow:0 0 9px rgba(255,207,106,.35),0 1px 1px #000;font-size:14px}
 #hud .stat .ic{width:17px;height:17px;background-size:contain;background-repeat:no-repeat;background-position:center;display:inline-block;filter:drop-shadow(0 0 2px rgba(255,207,106,.30)) drop-shadow(0 1px 1px rgba(0,0,0,.7));margin-right:2px}
 #hud .stat .ic.i-time{background-image:url("@@A:ui/46-painted-backdrops-1.webp@@")}
-#hud .stat .ic.i-hp{background-image:url("@@A:ui/ico-32.webp@@")}
+#hud .stat .ic.i-hp{background-image:url("@@A:ui/gnasjfyurd7r0bx7xdk8ry4qqstaq3rzs7lve4adswe.webp@@")}
 #hud .stat .ic.i-boss{background-image:url("@@A:ui/hxwcvm8c8fcfme9w1llpv3c9.webp@@")}
 #hud .stat .ic.i-lvl{background-image:url("@@A:ui/d8laa.webp@@")}
 #hud .stat .ic.i-kills{background-image:url("@@A:ui/taa.webp@@")}

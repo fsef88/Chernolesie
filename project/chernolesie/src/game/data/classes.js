@@ -3,13 +3,13 @@
 // ============================================================
 const CLASSES=[
  {id:'warrior',name:'Кровавый Воин',icon:'⚔',arch:'Клинок и ярость',desc:'+28% HP, меч чаще, вампиризм с убийств. Q: Кровавый круг + щит 2.5с.',passive:()=>{P.maxhp*=1.28;P.hp=P.maxhp;P.swordRate=1.22;P.lifesteal=0.35;},startWeapon:'sword'},
- {id:'druid',name:'Знахарка Чернолесья',icon:'❄',arch:'Травы, оберег и стужа',desc:'+18% HP, старт стужа+яд (контроль). Q: Морозный обет.',passive:()=>{P.maxhp*=1.18;P.hp=P.maxhp;poison.on=true;frost.on=true;P.frostR=1.25;P.dmgMul*=0.92;},startWeapon:'sword'},
- {id:'shaman',name:'Волхв-Громовик',icon:'⚡',arch:'Гром и руны',desc:'Старт с молнией, реген, +20% область, молнии чаще и сильнее. Q: Гнев Перуна.',passive:()=>{
+ {id:'druid',name:'Знахарка Чернолесья',icon:'❄',arch:'Травы, оберег и стужа',desc:'+15% HP, аура стужи (контроль). Q: Морозный обет.',passive:()=>{P.maxhp*=1.15;P.hp=P.maxhp;frost.on=true;P.frostR=1.0;P.dmgMul*=0.88;},startWeapon:'sword'},
+ {id:'shaman',name:'Волхв-Громовик',icon:'⚡',arch:'Гром и руны',desc:'Старт с цепной молнией, реген, +20% область, молнии бьют по 2 целям. Q: Гнев Перуна.',passive:()=>{
   hasBolt=true;
   P.regen=(P.regen||0)+0.45;
   P.areaMul*=1.2;
-  P.boltRateMul=(P.boltRateMul||1)*1.1;
-  P.boltDmgMul=(P.boltDmgMul||1)*1.08;
+  P.boltRateMul=(P.boltRateMul||1)*1.25;
+  P.boltDmgMul=(P.boltDmgMul||1)*1.25;
   // Шаман — кастер БЕЗ меча. Страж (archer) тоже без меча — стартует с луком.
   // Воин/Ведун/Воронник стартуют с мечом (weapons в resetRun).
   // Шаман не должен иметь двойное оружие (меч+молния со старта).

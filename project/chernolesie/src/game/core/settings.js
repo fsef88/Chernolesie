@@ -29,7 +29,7 @@ document.getElementById('fpscap').onchange=(e)=>{fpsCap=+e.target.value;};
 // висела на экране у игрока навсегда. Остался только вход по адресу ?prof=1
 // для отладки. Заодно вычищаем старое сохранённое значение cl_prof.
 let __PROF_ON=false;
-try{__PROF_ON=/[?&]prof=1/.test(location.search);localStorage.removeItem('cl_prof');}catch(e){swallow('prof.flag',e);}
+try{__PROF_ON=/[?&]prof=1/.test(location.search);if(/[?&](?:boss|dev|prof)=1/.test(location.search)){const _br=document.getElementById('devBossRushWrap');if(_br)_br.style.display='block';}localStorage.removeItem('cl_prof');}catch(e){swallow('prof.flag',e);}
 const PROF={acc:{},_t:{},frames:0,draws:0,jank:0,gapMax:0,_gap:0,fps:0};
 // v7.36 ВЫКЛЮЧАТЕЛИ СЛОЁВ. Хронометр меряет только время записи команд в JS,
 // а холст рисует их позже — поэтому три гипотезы подряд промахнулись. Ищем

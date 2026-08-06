@@ -188,8 +188,9 @@ function drawSprite(fr,x,y,h,flip,t,st){   // v6.10: st — состояние �
   const _smoothSp=st._smoothSp!=null?(st._smoothSp*0.82+_rawSp*0.18):_rawSp;
   st._smoothSp=_smoothSp;
   const _sp=_smoothSp;
-  // стоящий враг не должен молотить цикл ходьбы на полной скорости
-  _fps=_sp>5?Math.max(6,Math.min(18,_fps*_sp/80)):_fps*0.5;
+   // v7.37 ПЛАВНОСТЬ АНИМАЦИЙ: расширен потолок до 26 кадров/с, а пол при движении — до 10,
+   // чтобы идущие юниты не меняли позу ступенчато на 6-9 Гц, вызывая иллюзию лагов.
+   _fps=_sp>5?Math.max(10,Math.min(26,_fps*_sp/65)):_fps*0.5;
   // v6.17: _prevFps лежал на fr — а fr это ОБЩИЙ объект ETYPES[type].frames,
   // один на всех врагов типа. Каждый леший перетирал сглаживание соседа, и чем
   // больше лешаков на экране, тем сильнее дёргались все. Храним на самом враге.
@@ -239,7 +240,8 @@ function drawSprite(fr,x,y,h,flip,t,st){   // v6.10: st — состояние �
   }
  }
  const w=h*img.naturalWidth/img.naturalHeight;
- const _time=(typeof time!=='undefined')?time:t;
+  // v7.37: покачивание спрайта по реальному времени отрисовки для гладкой анимации
+  const _time=performance.now()*0.001;
  const _spd=st?(Math.abs(st._evx||0)+Math.abs(st._evy||0)):0;
  const _isMoving=_spd>5;const _hurt=(st&&st._ehurt)||0;const _atk=(st&&st._eatk)||0;
  let bobY=0,tiltDeg=0,sX=1,sY=1;
@@ -264,6 +266,7 @@ function drawSprite(fr,x,y,h,flip,t,st){   // v6.10: st — состояние �
   ctx.globalAlpha=_bl;ctx.drawImage(_b,-_b.width/2,-_b.height*0.82,_b.width,_b.height);
   ctx.globalAlpha=1;
  } else ctx.drawImage(_a,-_wa/2,-_ha*0.82,_wa,_ha);
+ // v8.4: source-atop убран для сохранения 60 FPS (вспышка удара через аппаратный lighter)
  ctx.restore();return true;
 }
 // Рисует один конкретный кадр (для незацикленных анимаций Древня)

@@ -12,6 +12,13 @@ function _sparkSpr(col){
  _sparkCache[col]=c;
  return c;
 }
+
+// v11.0 RC1 100% SPRITE ASSET VFX (Аутентичные PNG-спрайты с альфа-каналом, без рисования кодом):
+// Все визуальные эффекты заклинаний загружаются из готовых PNG-ассетов. В цикле отрисовки — ТОЛЬКО drawImage.
+const _bakedChainSpr = (function(){ const i=new Image(); i.src='@@A:art/fx-layer/-bakedchainspr.png@@'; return i; })();
+const _bakedDrainSpr = (function(){ const i=new Image(); i.src='@@A:art/fx-layer/-bakeddrainspr.png@@'; return i; })();
+const _bakedIdolSpr  = (function(){ const i=new Image(); i.src='@@A:art/fx-layer/-bakedidolspr.png@@'; return i; })();
+const _bakedLaserSpr = (function(){ const i=new Image(); i.src='@@A:art/fx-layer/-bakedlaserspr.png@@'; return i; })();
 function drawFxLayer(){
  const FXS = Math.max(1, Math.min(2.4, 1 / (ZOOM || 1) * 0.85));
 
@@ -90,12 +97,14 @@ function drawFxLayer(){
  ctx.globalAlpha=1;
    // v7.11: 8-кадровая анимация славянского огненного взрыва из атласа EXPLOSION_ANIM_SHEET (сетка 4x2, кадр 80x80)
   if(typeof EXPLOSION_ANIM_SHEET !== 'undefined' && EXPLOSION_ANIM_SHEET.complete && EXPLOSION_ANIM_SHEET.naturalWidth && typeof activeExplosions !== 'undefined'){
-    for(let i = activeExplosions.length - 1; i >= 0; i--){
-      const ex = activeExplosions[i];
-      ex.t += 1/60;
-      const prog = Math.min(1, ex.t / ex.maxT);
-      if(prog >= 1){ activeExplosions.splice(i, 1); continue; }
-      const fIdx = Math.min(7, Math.floor(prog * 8));
+     for(let i = activeExplosions.length - 1; i >= 0; i--){
+       const ex = activeExplosions[i];
+       ex.t += _drawDt;
+       const prog = Math.min(1, ex.t / ex.maxT);
+       if(prog >= 1){ activeExplosions.splice(i, 1); continue; }
+       const sx_cam = ex.x - cam.x, sy_cam = ex.y - cam.y;
+       if (sx_cam < -120 || sy_cam < -120 || sx_cam > W + 120 || sy_cam > H + 120) continue;
+       const fIdx = Math.min(7, Math.floor(prog * 8));
       const col = fIdx % 4, row = Math.floor(fIdx / 4);
       const sx = col * 80, sy = row * 80, sw = 80, sh = 80;
       const drawSize = 90 * (ex.sc || 1);
@@ -324,8 +333,10 @@ function drawFxLayer(){
    ctx.restore();
   } else {
    ctx.save();ctx.globalAlpha=k;ctx.globalCompositeOperation='lighter';
-   ctx.strokeStyle='#e8fbff';ctx.lineWidth=2;ctx.shadowColor='#8fd0ff';ctx.shadowBlur=10;
-   ctx.beginPath();ctx.moveTo(bx,by-48);
+   // v8.7 VISUAL POLISH: мощный разряд молнии с толстым белым ядром и синим ореолом
+   ctx.strokeStyle='rgba(140,200,255,0.45)';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(bx,by-48);
+   for(let s=1;s<=5;s++){const ty=by-48+s*(48/5),tx=bx+(s%2?1:-1)*(6+s*1.5)*k;ctx.lineTo(tx,ty);}ctx.stroke();
+   ctx.strokeStyle='#ffffff';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(bx,by-48);
    for(let s=1;s<=5;s++){
     const ty=by-48+s*(48/5);
     const tx=bx+(s%2?1:-1)*(6+s*1.5)*k;
@@ -345,50 +356,32 @@ function drawFxLayer(){
   // v6.17b: ВЕРВЬ — цепь между двумя врагами (абсолютные координаты, не от игрока)
   if(L._verv){
    const kk=Math.max(0,L.t/0.3);
-   ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=kk*0.9;
-   ctx.strokeStyle=L._evo?'#d8c0ff':'#bfe0ff';ctx.lineWidth=L._evo?4:2.5;
-   ctx.shadowColor=L._evo?'#c9a0ff':'#8fd0ff';ctx.shadowBlur=12;
-   ctx.beginPath();ctx.moveTo(L.x1-cam.x,L.y1-cam.y);ctx.lineTo(L.x2-cam.x,L.y2-cam.y);ctx.stroke();
-   // звенья
-   const dx=L.x2-L.x1,dy=L.y2-L.y1,len=Math.hypot(dx,dy)||1,n=Math.floor(len/16);
-   ctx.lineWidth=1.4;ctx.globalAlpha=kk*0.7;
-   for(let q=1;q<n;q++){
-    const px=L.x1+dx*(q/n)-cam.x,py=L.y1+dy*(q/n)-cam.y;
-    ctx.beginPath();ctx.arc(px,py,2.6,0,7);ctx.stroke();
-   }
+   const sx=L.x1-cam.x, sy=L.y1-cam.y, ex=L.x2-cam.x, ey=L.y2-cam.y;
+   const dx=ex-sx, dy=ey-sy, len=Math.hypot(dx,dy)||1, ang=Math.atan2(dy,dx);
+   ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=kk*0.95;
+   ctx.translate(sx,sy);ctx.rotate(ang);
+   ctx.drawImage(_bakedChainSpr, 0, -12, len, 24);
    ctx.restore();continue;
   }
   // v6.17c: УПЫРЬ — нить вытягивания жизни к игроку
   if(L._drain){
    const kk=Math.max(0,L.t/0.22);
-   ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=kk*0.85;
-   ctx.strokeStyle=L._evo?'#ff8ab0':'#c94a6a';ctx.lineWidth=2.2;
-   ctx.shadowColor='#ff4a7a';ctx.shadowBlur=12;
-   const sx=L.x1-cam.x,sy=L.y1-cam.y,ex=L.x2-cam.x,ey=L.y2-cam.y;
-   ctx.beginPath();ctx.moveTo(sx,sy);
-   const mx=(sx+ex)/2,my=(sy+ey)/2-18;
-   ctx.quadraticCurveTo(mx,my,ex,ey);ctx.stroke();
-   ctx.globalAlpha=kk;ctx.fillStyle=L._evo?'#ffb0d0':'#ff6a8a';
-   const t3=1-kk;
-   const bx=(1-t3)*(1-t3)*sx+2*(1-t3)*t3*mx+t3*t3*ex;
-   const by=(1-t3)*(1-t3)*sy+2*(1-t3)*t3*my+t3*t3*ey;
-   ctx.beginPath();ctx.arc(bx,by,3,0,7);ctx.fill();
+   const sx=L.x1-cam.x, sy=L.y1-cam.y, ex=L.x2-cam.x, ey=L.y2-cam.y;
+   const dx=ex-sx, dy=ey-sy, len=Math.hypot(dx,dy)||1, ang=Math.atan2(dy,dx);
+   ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=kk*0.9;
+   ctx.translate(sx,sy);ctx.rotate(ang);
+   ctx.drawImage(_bakedDrainSpr, 0, -12, len, 24);
    ctx.restore();continue;
   }
   // v6.17b: ИДОЛ — короткий разряд к цели
   if(L._idol){
    const kk=Math.max(0,L.t/0.16);
+   const sx=L.x1-cam.x, sy=L.y1-cam.y, ex=L.x2-cam.x, ey=L.y2-cam.y;
+   const dx=ex-sx, dy=ey-sy, len=Math.hypot(dx,dy)||1, ang=Math.atan2(dy,dx);
    ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=kk;
-   ctx.strokeStyle=L._evo?'#ffd27a':'#cfe8ff';ctx.lineWidth=2;
-   ctx.shadowColor=L._evo?'#ffcf6a':'#8fd0ff';ctx.shadowBlur=10;
-   ctx.beginPath();
-   const sx=L.x1-cam.x,sy=L.y1-cam.y,ex=L.x2-cam.x,ey=L.y2-cam.y;
-   ctx.moveTo(sx,sy);
-   for(let q=1;q<4;q++){
-    const t2=q/4,jx=(Math.random()-0.5)*10,jy=(Math.random()-0.5)*10;
-    ctx.lineTo(sx+(ex-sx)*t2+jx,sy+(ey-sy)*t2+jy);
-   }
-   ctx.lineTo(ex,ey);ctx.stroke();ctx.restore();continue;
+   ctx.translate(sx,sy);ctx.rotate(ang);
+   ctx.drawImage(_bakedIdolSpr, 0, -14, len, 28);
+   ctx.restore();continue;
   }
   ctx.save();ctx.translate(P.x-cam.x,P.y-cam.y-6);ctx.rotate(L.ang);
   ctx.globalAlpha=0.22*k;ctx.strokeStyle='#cfe6a0';ctx.lineWidth=2;ctx.setLineDash([4,6]);
@@ -420,7 +413,7 @@ function drawKosaTrail(){
   if(a._boom){
    ctx.save();ctx.translate(ax,ay);ctx.rotate(time*17);ctx.globalCompositeOperation='lighter';
    ctx.strokeStyle=a._col||'#cfe0ff';ctx.lineWidth=3.2;
-   ctx.shadowColor=a._col||'#cfe0ff';ctx.shadowBlur=12;
+   ctx.shadowBlur=0;
    ctx.beginPath();ctx.arc(0,0,9,0.5,4.2);ctx.stroke();
    ctx.lineWidth=1.4;ctx.globalAlpha=0.8;
    ctx.beginPath();ctx.arc(0,0,12,0.7,3.9);ctx.stroke();
@@ -442,7 +435,7 @@ function drawKosaTrail(){
     ctx.restore();continue;
    }
    ctx.save();ctx.translate(ax,ay);ctx.rotate(time*9);ctx.globalCompositeOperation='lighter';
-   ctx.fillStyle=a._col||'#d8d0c0';ctx.shadowColor=a._col||'#d8d0c0';ctx.shadowBlur=10;
+   ctx.fillStyle=a._col||'#d8d0c0';ctx.shadowBlur=0;
    ctx.beginPath();
    for(let k2=0;k2<5;k2++){const an=k2*1.2566,rr=k2%2?4:7.5;
     const px=Math.cos(an)*rr,py=Math.sin(an)*rr;

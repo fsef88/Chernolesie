@@ -22,7 +22,7 @@ const DECO_SRC=[
 /*v5.5 deco 1*/"@@A:art/world/aaa.webp@@",
 /*v5.5 deco 2*/"@@A:art/world/gaaa.webp@@",
 /*v5.5 deco 3*/"@@A:art/world/cntv3xqpnm7h3fgwt4wgz6tfkaa.webp@@",
-/*v5.5 deco 4*/"@@A:art/world/ico-31.webp@@",
+/*v5.5 deco 4*/"@@A:art/world/idb9fj3slxisdmfcyyo5kmj5aqwdj1nqio7ee40iaaa.webp@@",
 /*v5.5 deco 5*/"@@A:art/world/aaaa.webp@@",
 /*v5.5 deco 6*/"@@A:art/world/rlqkz41fgaaa.webp@@",
 /*v5.5 deco 7*/"@@A:art/world/djhomhwx3mb2oa.webp@@",

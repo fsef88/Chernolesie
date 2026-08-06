@@ -111,7 +111,7 @@ function drawAtmosphere(px,py){
  const vg=ctx.createRadialGradient(W/2,H/2,H*0.38,W/2,H/2,H*0.85);
  vg.addColorStop(0,'rgba(0,0,0,0)');
  vg.addColorStop(0.62,'rgba(0,0,0,0.04)');
- vg.addColorStop(1,(bossAlive&&bossE.phase===2)?'rgba(46,5,2,0.30)':'rgba(0,0,0,0.26)');
+ vg.addColorStop(1,(bossAlive&&bossE.phase===2)?'rgba(46,5,2,0.22)':'rgba(0,0,0,0.11)');
  ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
 }
 
@@ -125,7 +125,8 @@ function drawAtmosphere(px,py){
 //        с оранжевого, чтобы тёплые эффекты не светились по тёплому.
 //  sat — сколько насыщенности оставить (100 = как есть).
 // Меняется здесь одним местом; _gtVar достаточно обнулить, чтобы перепечь.
-const GROUND_GRADE={mul:'#6f7d64',sat:38,flat:0};
+// v11.3 COMMERCIAL VISUAL CONTRAST & LIGHTING: свежая лесная гамма с высокой читаемостью врагов
+ const GROUND_GRADE={mul:'#a8b89e',sat:55,flat:0};
 function drawGround(){
  ctx.fillStyle=theme==='winter'?'#3a4a5a':(nightMode||theme==='night')?'#0a0a18':'#1a2410';
  ctx.fillRect(0,0,W,H);
@@ -192,8 +193,13 @@ function gemSprite(col,sc){
  c=document.createElement('canvas');c.width=S;c.height=S;
  const g=c.getContext('2d');
  g.translate(S/2,S/2);
- g.shadowColor=col;g.shadowBlur=10*sc;g.fillStyle=col;
- g.beginPath();g.moveTo(0,-R);g.lineTo(R*0.67,0);g.lineTo(0,R);g.lineTo(-R*0.67,0);g.closePath();g.fill();
+ // v8.7 VISUAL POLISH: грани кристалла опыта с белым бликом и внутренним свечением
+ g.shadowColor=col;g.shadowBlur=12*sc;g.fillStyle=col;
+ g.beginPath();g.moveTo(0,-R);g.lineTo(R*0.75,0);g.lineTo(0,R);g.lineTo(-R*0.75,0);g.closePath();g.fill();
+ g.shadowBlur=0;g.fillStyle='#ffffff';
+ g.beginPath();g.moveTo(0,-R*0.7);g.lineTo(R*0.35,0);g.lineTo(0,-R*0.2);g.lineTo(-R*0.35,0);g.closePath();g.fill();
+ g.strokeStyle='rgba(255,255,255,0.7)';g.lineWidth=1.2;
+ g.beginPath();g.moveTo(0,-R);g.lineTo(R*0.75,0);g.lineTo(0,R);g.lineTo(-R*0.75,0);g.closePath();g.stroke();
  _gemSpr[k]=c;
  return c;
 }

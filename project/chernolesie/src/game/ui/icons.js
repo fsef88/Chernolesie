@@ -26,39 +26,39 @@ CLASS_ART.groznik=(function(){const i=new Image();i.src='@@A:art/icons/class-art
 const PAINTED_ICONS={
  boot:'@@A:art/icons/painted-icons.jpg@@',
  heart:'@@A:art/icons/nnjxqfpawnpjqa2lnsxpy0alsxpy0saap.jpg@@',
- bag:'@@A:art/icons/ico-01.jpg@@',
- shield:'@@A:art/icons/ico-10.jpg@@',
- eye:'@@A:art/icons/ico-27.jpg@@',
- sun:'@@A:art/icons/ico-18.jpg@@',
- elec:'@@A:art/icons/ico-05.jpg@@',
- serp:'@@A:art/icons/ico-22.jpg@@',
+ bag:'@@A:art/icons/bfb8stabgmy5tu5ojkk83gu1pbzlynlbjx9zrfxpy0zgozlxay7v1dekvrpmntluvqqg9m4gqzynyk6bgnxrqagyzdps6xfsxtpy11cwlnsxpy0is0tlgnxoqm0s6wnlghcwlpy0sael.jpg@@',
+ shield:'@@A:art/icons/jy9txzpu4yyfsc2kjuidawlyfsaaccdatgw2wadawlyfsabypatgwwaf.jpg@@',
+ eye:'@@A:art/icons/yj4gm8amaamvhsfcm9ho0y0y0xwm6ngngnaadjpcamaadroxoxoanjpcamaap.jpg@@',
+ sun:'@@A:art/icons/nqnbpegtrpq17qoosixmp596ulz2mtxhedgwdkb8kjamflflfpaa4esstyys0qwkwk9nkwavlflfeiqvlflfeiqwkwkziie.jpg@@',
+ elec:'@@A:art/icons/fvwzjtzs1hqvrjzstmtz6lltuwm17jtxvzxrijok7odix4ydk6x1fksekutraamblr2ad04qgdfefxvfdw4r1womk8uyqwudyspyncwzrriu4q0icooxriiekkmuyohcjngkmuqhniijfhwie.jpg@@',
+ serp:'@@A:art/icons/tqnhxxl6nnfuk81qjp614xriigdnfgkmvibmjvrijfabmijfgnqadnfgkmuaffgkmuaf.jpg@@',
  kosa:'@@A:art/icons/uxl.jpg@@',
  ugli:'@@A:art/icons/by5gcaewgh8kgkmjusrxp.jpg@@',
- kamen:'@@A:art/icons/ico-07.jpg@@',
- obereg:'@@A:art/icons/ico-17.jpg@@',
- zov:'@@A:art/icons/ico-30.jpg@@',
- kolokol:'@@A:art/icons/ico-14.jpg@@',
+ kamen:'@@A:art/icons/gh3b9zpy40bygjfva6dx0gidqkmeql8yolarsyby9h8d4h201py0saebsqte6wdc13gljuuszrmu40saii5ruljsxqkl.jpg@@',
+ obereg:'@@A:art/icons/n0tgjbhcowpvimszu4ispwprjj3uccvhwwrb4zaiofhwx22jjoyv8lctisrywfbctist.jpg@@',
+ zov:'@@A:art/icons/zlryt6quesap2dsxvivsonpctzq3fjot0txbjhw4srueqlhjneawkwksytfmlsxsxukizspypyqsrdavlhnlfssf.jpg@@',
+ kolokol:'@@A:art/icons/m1hsxt4qgo1lnlflfacpususuakl2pypyoavkliligd.jpg@@',
  verv:'@@A:art/icons/kit.jpg@@',
- idol:'@@A:art/icons/ico-28.jpg@@',
- navi:'@@A:art/icons/ico-13.jpg@@',
- rosa:'@@A:art/icons/ico-29.jpg@@',
- vihr:'@@A:art/icons/ico-08.jpg@@',
- klyuka:'@@A:art/icons/ico-03.jpg@@',
- zerno:'@@A:art/icons/ico-04.jpg@@',
- kosti:'@@A:art/icons/ico-21.jpg@@',
- upyr:'@@A:art/icons/ico-15.jpg@@',
- zercalo:'@@A:art/icons/ico-19.jpg@@',
- sopel:'@@A:art/icons/ico-06.jpg@@',
- trizna:'@@A:art/icons/ico-20.jpg@@',
- golod:'@@A:art/icons/ico-11.jpg@@',
+ idol:'@@A:art/icons/zci3ziir5pp8ajhqe9bwfuvluvluvkpuk5nfimq4amcviufeyei4je2fluepumbicfduclszmo9dfdfujw2j27gzqoyoyroaoumumuafqo8ukap.jpg@@',
+ navi:'@@A:art/icons/lf9tomck5j15jtx00smotqjj5hkblknwovca8xqgpntuxqy0atu1mbamnae1ntgpjqb.jpg@@',
+ rosa:'@@A:art/icons/zidc9gngnsqgjjrj76maadojrjrjqaz0mlxoxoam6ngngnacauamamaap.jpg@@',
+ vihr:'@@A:art/icons/iffbk2cw52wlhhbwi12xpdlihclknskbzusfws54h8ql9flcvnmlgca2lpo4ohiwlorjaa2wmcqniitfftqh4gezqjz5yzofgkdwgsbnjrrqauasiigbtsuuuafflijfabrijboxqae0llijfabrrijfabmijfgkadnfgkmuaffgn6muagakmuy3oadrrijfabrrijfabmijfgkacijfgdigaooxrigbkkxfligd.jpg@@',
+ klyuka:'@@A:art/icons/dgwgsbxxwsk2fbekixjgbbyvsssywszthwxjj.jpg@@',
+ zerno:'@@A:art/icons/eqkzo7zdix9sc6ljrssbbiculry84dboa241txnmtzupkxoetxptoy0ma1argfljjxkgddqxoy1apa6ghjqxqklmu6gndgoov.jpg@@',
+ kosti:'@@A:art/icons/rxq9jt6bjpsnczj4hbwajypmvykdtajs7ncfpwudiuoxcnmkedxst1avdrnemuyopig2wpamuyrpwtnhwjflg0ajrmjfgkacijfligbkm0yoxqauuyoxqb.jpg@@',
+ upyr:'@@A:art/icons/m4fot8v2xvxwc1ztvlfhyl7j8ht15x50upokwsnjuo5jrxsxsxwpaia5xcuscuaklsxsxqbyu0sv3fah.jpg@@',
+ zercalo:'@@A:art/icons/qjltk9of2doy0ajgochsgwvd6mokdfltclzmz33h5fzwppufihimrpxjwieqkpcsgafdfdftiaozoyoyoafchihigaum0mumuachqxqxqb.jpg@@',
+ sopel:'@@A:art/icons/ggskkqaiu5ezz98a4kenc6saueo3lhun0i0ul745ffc1ptuajc3vcklvzmo5hsam6q9fda651mk9xmxeruzsbzpvqhjt6etnv4iwctzg0tpjty0ccls0safgpjg0s6wnlgpjfpawnlgpjp.jpg@@',
+ trizna:'@@A:art/icons/qku1dn5f2yyjnystxruvfxacvujcxzl7pip5rsmnbyvjgjwgblkuj3svhyvsk2olsv8lcthwxfeslcthwxfesiyvsk2iov.jpg@@',
+ golod:'@@A:art/icons/kkzbwkdkjaqeugtnq3fonozi20nog2uhagevsodfgkngjcoyisqze7orcw4ve4ts1hqvhjrz3oxxcu0wcooxrigaooxrjigaooxrigazrrijfah.jpg@@',
  sword:'@@A:art/icons/cg5p21g93dlnsi.jpg@@',
  bow:'@@A:art/icons/c5o85zj5znpwcuf.jpg@@',
  bolt:'@@A:art/icons/tzmvyc3eem25.jpg@@',
  phys:'@@A:art/icons/xroc.jpg@@',
  pois:'@@A:art/icons/h1emsiccx9s.jpg@@',
  frost:'@@A:art/icons/wdmcftjzi9imum.jpg@@',
- void:'@@A:art/icons/ico-25.jpg@@',
- star:'@@A:art/icons/ico-26.jpg@@',
+ void:'@@A:art/icons/vumnacnse9fzsijkw9i7q06zn6jn5dec0pqdk3.jpg@@',
+ star:'@@A:art/icons/vy5hg0lpgz0oflgmbtkvlqzo0qyqe0nb9om3heipzjeo0y8pr5xdelc7enr84xeqiuc695v0hjwxw4ewepqmkktc3w63n.jpg@@',
  dar:'@@A:art/icons/s8ugjyngwwkltkjqfnqdziu9xp.jpg@@'
 };
 // Художественная иконка, если есть; иначе — SVG из ICONS
@@ -83,9 +83,9 @@ function classTiny(id){const i=CLASS_ART[id];return i&&i.src?'<img class="minip"
 const PAINTED_BOONS={
  veles:'@@A:art/icons/painted-boons.jpg@@',
  morana:'@@A:art/icons/yrwhd39fz.jpg@@',
- perun:'@@A:art/icons/ico-24.jpg@@',
- yarilo:'@@A:art/icons/ico-09.jpg@@',
- mokosh:'@@A:art/icons/ico-23.jpg@@'
+ perun:'@@A:art/icons/uq9c0cdka1su1phihxesr4ecckicacvnkdb5hwfceuh0e2dhx6yykgunclm.jpg@@',
+ yarilo:'@@A:art/icons/jixbo8a9hwydxdb7pweowahzcpcbqgibysprizb4abxp9jziiwv1eqz9p8c.jpg@@',
+ mokosh:'@@A:art/icons/u7nia8vjhalnzdiibas1jvgdxiexobdukq7rn.jpg@@'
 };
 const BOON_COLORS={veles:'#6ce0c0',morana:'#bfe0ff',perun:'#8fd0ff',yarilo:'#ffcf6a',mokosh:'#a8d06a'};
 function boonArt(id){const s=PAINTED_BOONS[id];return s?'<img class="boonmed" src="'+s+'" alt="">':'';}
@@ -93,9 +93,9 @@ function boonMini(id){const s=PAINTED_BOONS[id];return s?'<img class="minip" src
 // v5.19 — медальоны проклятий
 const PAINTED_CURSES={
  blind:'@@A:art/icons/painted-curses.jpg@@',
- famine:'@@A:art/icons/ico-16.webp@@',
- glass:'@@A:art/icons/ico-12.jpg@@',
- time:'@@A:art/icons/ico-02.webp@@'
+ famine:'@@A:art/icons/mgdgnsp8dorxqpd58inb2od4csveofrhsjnqok9qegqtpbce68zprhg8yr8lxvp.webp@@',
+ glass:'@@A:art/icons/ks8eqzd3yeiym1husznjnqvqzcqjku5y2ainsgkodowtdooilqtqixmfkqsihgaaaa.jpg@@',
+ time:'@@A:art/icons/crpgvxrcmvlgceds5wokicrriwlt7yhcw4cwoeeszkvecbdhxzbinsydgx0geilvcobnnbq3nvgjejhbvhdlowbaibhwjacmcx9ndicxyjngxmbptvzh67rjj1wpzwgff6dj2rvrefagwrp5ya4prljhawwkhsewebu3ossxdmqk2txgcb3d7yunp6x5hmsemhi2d5zhg5jfsnfocutsw0h1kcgt0z.webp@@'
 };
 function curseMini(id){const s=PAINTED_CURSES[id];return s?'<img class="minip cminip" src="'+s+'" alt="">':'';}
 

@@ -90,10 +90,9 @@ function doKamen(){
  const lvl=nwLvl('kamen'),w=weapons.find(x=>x.id==='kamen');
  // v6.39 жест: камень: каменная крошка
  {for(let _i=0;_i<4;_i++){const _a=Math.random()*TAU;spawnParticle(P.x,P.y,Math.cos(_a)*150,Math.sin(_a)*150,rnd(.25,.5),'#d8d0c0',320,0);}}
- const evo=w&&w.evo;
- const first=aliveNear(P.x,P.y,300)
-   .sort((a,b)=>dist2(a.x-P.x,a.y-P.y)-dist2(b.x-P.x,b.y-P.y))[0];
- if(!first)return false;
+  const evo=w&&w.evo;
+  const first=findClosestEnemy(P.x,P.y,300);
+  if(!first)return false;
  const a=Math.atan2(first.y-P.y,first.x-P.x);
  const spd=380;
  arrows.push({x:P.x,y:P.y-8,vx:Math.cos(a)*spd,vy:Math.sin(a)*spd,life:3.5,
@@ -151,10 +150,9 @@ function updateVolki(dt){
   const v=volki[i];
   v.life-=dt;if(v.life<=0){volki.splice(i,1);continue;}
   if(v.cd>0)v.cd-=dt;
-  if(!v.tgt||v.tgt.hp<=0||v.tgt.dying>0||dist(v.tgt.x-v.x,v.tgt.y-v.y)>420){
-   const c=aliveNear(v.x,v.y,420);
-   v.tgt=c.length?c.sort((a,b)=>dist2(a.x-v.x,a.y-v.y)-dist2(b.x-v.x,b.y-v.y))[0]:null;
-  }
+   if(!v.tgt||v.tgt.hp<=0||v.tgt.dying>0||dist(v.tgt.x-v.x,v.tgt.y-v.y)>420){
+    v.tgt=findClosestEnemy(v.x,v.y,420);
+   }
   let tx,ty;
   if(v.tgt){tx=v.tgt.x;ty=v.tgt.y;}
   else{tx=P.x;ty=P.y;}

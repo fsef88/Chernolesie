@@ -230,7 +230,7 @@ if(z._bell){
    // v6.17: ОБЕРЕГ — расходящееся кольцо-волна
    ctx.globalCompositeOperation='lighter';ctx.globalAlpha=k*0.75;
    ctx.strokeStyle=z._evo?'#ffd27a':'#9fd8ff';ctx.lineWidth=z._evo?5:3;
-   ctx.shadowColor=z._evo?'#ffcf6a':'#8fd0ff';ctx.shadowBlur=18;
+   ctx.shadowColor=z._evo?'#ffcf6a':'#8fd0ff';ctx.shadowBlur=0;
    ctx.beginPath();ctx.arc(zx,zy,z.r*(1.25-k*0.25),0,7);ctx.stroke();
    ctx.globalAlpha=k*0.3;ctx.lineWidth=1.5;
    ctx.beginPath();ctx.arc(zx,zy,z.r*(1.05-k*0.15),0,7);ctx.stroke();
@@ -239,7 +239,7 @@ if(z._bell){
    const st=z._st||0;
    ctx.globalCompositeOperation='lighter';ctx.globalAlpha=k*(0.35+st*0.5);
    ctx.strokeStyle=z._evo?'#ffd0f0':'#e0d0b0';ctx.lineWidth=1.6+st*2;
-   ctx.shadowColor=z._evo?'#ff9ad0':'#ffe0a0';ctx.shadowBlur=8+st*14;
+   ctx.shadowColor=z._evo?'#ff9ad0':'#ffe0a0';ctx.shadowBlur=0;
    ctx.beginPath();ctx.arc(zx,zy,z.r,0,7);ctx.stroke();
    const spikes=6+Math.round(st*10);
    ctx.lineWidth=1.2+st;
@@ -253,14 +253,14 @@ if(z._bell){
   }else if(z._mirror){
    ctx.globalCompositeOperation='lighter';ctx.globalAlpha=k*0.8;
    ctx.strokeStyle=z._evo?'#ffe0ff':'#d8f0ff';ctx.lineWidth=3;
-   ctx.shadowColor='#a0d8ff';ctx.shadowBlur=20;
+   ctx.shadowColor='#a0d8ff';ctx.shadowBlur=0;
    ctx.beginPath();ctx.arc(zx,zy,z.r*(1.3-k*0.3),0,7);ctx.stroke();
    ctx.globalAlpha=k*0.35;ctx.lineWidth=8;
    ctx.beginPath();ctx.arc(zx,zy,z.r*(1.15-k*0.2),0,7);ctx.stroke();
   }else if(z._grave){
    ctx.globalCompositeOperation='lighter';ctx.globalAlpha=k*0.7;
    ctx.strokeStyle=z._evo?'#c9a0ff':'#9aa0b0';ctx.lineWidth=2;
-   ctx.shadowColor=z._evo?'#c9a0ff':'#8a90a0';ctx.shadowBlur=14;
+   ctx.shadowColor=z._evo?'#c9a0ff':'#8a90a0';ctx.shadowBlur=0;
    ctx.beginPath();ctx.arc(zx,zy,z.r*(0.6+(1-k)*0.5),0,7);ctx.stroke();
    ctx.globalAlpha=k*0.5;
    for(let q=0;q<5;q++){const an=q*1.2566+time*0.8;
@@ -282,7 +282,7 @@ if(z._bell){
    ctx.globalCompositeOperation='lighter';
    ctx.globalAlpha=0.3+0.5*Math.abs(Math.sin(time*(4+grow*16)));
    ctx.strokeStyle=z._evo?'#c9a0ff':'#9ad06a';ctx.lineWidth=2;
-   ctx.shadowColor=z._evo?'#c9a0ff':'#9ad06a';ctx.shadowBlur=14;
+   ctx.shadowColor=z._evo?'#c9a0ff':'#9ad06a';ctx.shadowBlur=0;
    ctx.beginPath();ctx.arc(zx,zy,z._r*(0.25+grow*0.75),0,7);ctx.stroke();
    ctx.globalAlpha=0.8;ctx.fillStyle=z._evo?'#c9a0ff':'#9ad06a';
    ctx.beginPath();ctx.arc(zx,zy,3.5,0,7);ctx.fill();
@@ -421,7 +421,10 @@ if(z._bell){
  // Решение — тот же приём, которым в v5.29 запекли тайлы земли (_gtVar): свечение
  // печём ОДИН раз на цвет в оффскрин-канвас, дальше за кадр только drawImage.
  // Вид не меняется: размытие то же, масштаб pop-анимации даёт scale самой картинки.
+ // v8.5: culling для кристаллов опыта (не рисуем за экраном)
  for(const g of ACTIVE.gems){
+  const _gx=g.x-cam.x,_gy=g.y-cam.y;
+  if(_gx<-70||_gy<-70||_gx>W+70||_gy>H+70)continue;
   const s=Math.min(1,(g.pop||0)*6),bob=Math.sin(time*4+g.x*0.05)*2;
   const sp=gemSprite(g.col,g.sc||1);
   const w=sp.width*s,h=sp.height*s;

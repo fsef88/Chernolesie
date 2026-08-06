@@ -74,11 +74,8 @@ function openChest(){
  ];
  let tries = 0;
  while(prizes.length<n && tries++ < 30){
-  const _r = seedRandom();
-  if(_r < 0.45){
-   const p = chestWeaponPrize();
-   if(p && !usedKinds.has('wlvl_'+p.title)){ usedKinds.add('wlvl_'+p.title); prizes.push(p); continue; }
-  }
+  const p = chestWeaponPrize();
+  if(p && !usedKinds.has('wlvl_'+p.title)){ usedKinds.add('wlvl_'+p.title); prizes.push(p); continue; }
   const avail = bonusPool.filter(b => !usedKinds.has(b.title));
   if(!avail.length) break;
   const b = avail[Math.floor(seedRandom()*avail.length)];
@@ -111,6 +108,28 @@ function sfxChestReveal(step, isEvo, total){
 }
 
 // Показ: призы проявляются по одному, помпа растёт с их числом.
+
+// v8.3 VS FANFARE: торжественные фанфары при открытии сундука как в Vampire Survivors
+function sfxChestFanfare(count, hasEvo){
+  if(!AC) return;
+  const k = det(1.0);
+  [523.25, 659.25, 783.99, 1046.50].forEach((f, idx)=>{
+    setTimeout(()=>{
+      layer('triangle', f*k, f*k*1.01, 0.45, 0.15, 0.01);
+      layer('sawtooth', f*0.5*k, f*0.5*k, 0.35, 0.08, 0.01);
+      layer('sine', f*2*k, f*2*k, 0.25, 0.05, 0.01);
+    }, idx*65);
+  });
+  if(hasEvo || count >= 3){
+    setTimeout(()=>{
+      [659.25, 783.99, 1046.50, 1318.51].forEach((f)=>{
+        layer('triangle', f*k, f*k, 0.55, 0.16, 0.01);
+        layer('sine', f*2*k, f*2*k, 0.35, 0.06, 0.01);
+      });
+    }, 380);
+  }
+}
+
 function showChest(prizes){
   paused=true;
   const ov=document.getElementById('chestov'),row=document.getElementById('chestrow');
@@ -133,6 +152,7 @@ function showChest(prizes){
   shake=Math.max(shake,prizes.length>=5?10:5);
   gemPop(P.x,P.y,'#ffcf6a',1.4);
   sfxAnomaly&&sfxAnomaly();
+  sfxChestFanfare(prizes.length, hasEvo);
   const _burst=(k,col)=>{for(let i=0;i<k;i++){const a=rnd(0,TAU),sp=rnd(70,260);
    spawnParticle(P.x,P.y,Math.cos(a)*sp,Math.sin(a)*sp-60,rnd(.5,1.0),col,160,0);}};
   _burst(prizes.length>=5?36:20,'#ffcf6a');
@@ -144,7 +164,8 @@ function showChest(prizes){
     const d=document.createElement('div');
     d.className='chitem'+(p.evo?' evo':'');
     d.style.animationDelay='0s';
-    d.innerHTML='<div class="chico" style="color:'+(p.evo?'#ffd77d':'#c9a04a')+'">'+(CHEST_SVG[p.t]||CHEST_SVG.gold)+'</div>'+
+    const _icId = (typeof cardIconId === 'function' ? cardIconId(p) : null) || 'gold';
+    d.innerHTML='<div class="chico" style="color:'+(p.evo?'#ffd77d':'#c9a04a')+'">'+((typeof iconPaint === 'function' && iconPaint(_icId)) || CHEST_SVG[p.t] || CHEST_SVG.gold)+'</div>'+
      '<div class="chtx"><div class="chtt">'+p.title+'</div><div class="chdd">'+p.desc+'</div></div>';
     row.appendChild(d);
     sfxChestReveal(i, p.evo, prizes.length);
@@ -156,7 +177,7 @@ function showChest(prizes){
   const btn=document.getElementById('btnChestTake');
   if(btn){btn.style.display='none';btn.onclick=closeChest;
    setTimeout(()=>{if(chestOpen())btn.style.display='';},280+prizes.length*420);}
-  setTimeout(()=>{if(chestOpen())closeChest();},total+2800);
+  // v8.3 VS CHEST: сундук не закрывается по таймеру — игрок любуется наградой сколько захочет
 }
 function chestOpen(){const ov=document.getElementById('chestov');return !!(ov&&ov.style.display==='flex');}
 function closeChest(){

@@ -159,9 +159,8 @@ function updateArrows(dt){
         _col:'#ffd27a',_stone:true});
       }
      }
-     const nx=aliveNear(a.x,a.y,190).filter(o=>(!a._hit||a._hit.indexOf(o)<0));
-     if(nx.length){
-      const t=nx.sort((p1,p2)=>dist2(p1.x-a.x,p1.y-a.y)-dist2(p2.x-a.x,p2.y-a.y))[0];
+     const t=findClosestEnemy(a.x,a.y,190,a._hit);
+     if(t){
       const ta=Math.atan2(t.y-a.y,t.x-a.x),sp2=Math.hypot(a.vx,a.vy)||300;
       a.vx=Math.cos(ta)*sp2;a.vy=Math.sin(ta)*sp2;a.dmg*=0.88;a.life=Math.max(a.life,0.8);
       break;

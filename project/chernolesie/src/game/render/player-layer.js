@@ -2,8 +2,8 @@ function drawCombatGroundVeil(px,py){
  // Чем плотнее бой, тем сильнее глушим детальный ковёр из корней.
  // Враги, гемы, эффекты и герой рисуются ПОСЛЕ этого слоя и остаются яркими.
  const pressure=Math.min(1,Math.max(0,(enemies&&enemies.length?enemies.length:0)/110));
- const base=(theme==='winter')?0.045:((nightMode||theme==='night')?0.035:0.075);
- const a=base+pressure*0.055;
+ const base=(theme==='winter')?0.03:((nightMode||theme==='night')?0.02:0.04);
+ const a=base+pressure*0.035;
  ctx.save();
  ctx.globalCompositeOperation='source-over';
  ctx.fillStyle='rgba(4,7,4,'+a.toFixed(3)+')';
@@ -116,7 +116,8 @@ function drawDmgNumbers(px,py){
  // damage numbers — с антиперекрытием (разброс веером)
  ctx.font='bold 13px system-ui';ctx.textAlign='center';
  // v6.61: крит — крупнее и «выпрыгивает»
- const _dmgRendered=[];for(const t of ACTIVE.dmgTexts){const k=Math.min(1,t.t*2);ctx.globalAlpha=k;ctx.fillStyle=t.color;const sx=t.x-cam.x,sy=t.y-cam.y;let ox=0;for(let _try=1;_try<=6;_try++){let _collides=false;for(const r of _dmgRendered){if(Math.abs(sy-r.y)<16&&Math.abs((sx+ox)-r.x)<16){_collides=true;break;}}if(!_collides)break;const _side=(_try%2===1)?1:-1;ox=_side*Math.ceil(_try/2)*16;}_dmgRendered.push({x:sx+ox,y:sy});if(t.crit){const _pop=1+0.6*Math.min(1,t.t*2);ctx.font='bold '+Math.round(22*_pop)+'px system-ui';ctx.strokeStyle='rgba(24,8,0,.7)';ctx.lineWidth=4;ctx.strokeText(t.v,sx+ox,sy-(1-k)*10);ctx.fillText(t.v,sx+ox,sy-(1-k)*10);}else{ctx.font='bold 13px system-ui';ctx.fillText(t.v,sx+ox,sy);} }ctx.globalAlpha=1;ctx.font='bold 13px system-ui';
+ // v8.9 COMMERCIAL ENGINE OPTIMIZATION: O(N) отсечение текста урона за экраном без O(N^2) перебора коллизий
+ let _dmgIdx=0;for(const t of ACTIVE.dmgTexts){const sx=t.x-cam.x,sy=t.y-cam.y;if(sx<-80||sy<-80||sx>W+80||sy>H+80)continue;const k=Math.min(1,t.t*2);ctx.globalAlpha=k;ctx.fillStyle=t.color;const ox=((_dmgIdx++%5)-2)*14;if(t.crit){const _pop=1+0.6*Math.min(1,t.t*2);ctx.font='bold '+Math.round(22*_pop)+'px system-ui';ctx.strokeStyle='rgba(20,8,0,0.9)';ctx.lineWidth=4.5;ctx.strokeText(t.v+'!',sx+ox,sy-(1-k)*10);ctx.fillText(t.v+'!',sx+ox,sy-(1-k)*10);}else{ctx.font='bold 14px system-ui';ctx.strokeStyle='rgba(10,14,8,0.85)';ctx.lineWidth=2.5;ctx.strokeText(t.v,sx+ox,sy);ctx.fillText(t.v,sx+ox,sy);} }ctx.globalAlpha=1;ctx.font='bold 13px system-ui';
  // спец-индикатор (показывается только через слот кнопки)
  // туман войны — облегчённый
  if(warpOn){

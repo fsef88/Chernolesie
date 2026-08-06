@@ -32,10 +32,10 @@ function updateEnemyMovement(e,dt,dx,dy,d,d2,DENSITY_R2){
     if(_ox*dx+_oy*dy<0){_near++;if(_near>=4)break;}
    }
   }
-  e.densitySlow=_near>=2?Math.max(0.55,1-(_near-1)*0.15):1;
+  e.densitySlow=1;
  }
  const isSpawning=e.spawnT>0;
- let spd=isSpawning?0:(e.spd*viewSpeedMul()*e.slow*(e.frozen>0?0.5:1)*(e.densitySlow||1));   // v6.13: враги масштабируются тем же множителем, погоня сохраняет пропорции
+ let spd=isSpawning?0:(e.spd*viewSpeedMul()*e.slow*(e.frozen>0?0.75:1)*(e.densitySlow||1));   // v6.13: враги масштабируются тем же множителем, погоня сохраняет пропорции
  // AI поведение по типам
  if(e.ai==='zigzag'){
   e.zigzagT-=dt;
@@ -154,7 +154,7 @@ function updateEnemyMovement(e,dt,dx,dy,d,d2,DENSITY_R2){
  // v6.17: было e.kx*=0.82 ЗА КАДР — на 120 Гц отталкивание гасло вдвое быстрее,
  // чем на 60, и на быстрых экранах враги слипались заметно сильнее. Привязываем
  // затухание ко времени: 0.82 за кадр при 60 Гц = коэффициент ~1/e за 0.05с.
- const _kd=Math.pow(0.82,dt*60);
+ const _kd=Math.pow(0.65,dt*60);
  e.kx*=_kd;e.ky*=_kd;e._skipMove=false;
  return isSpawning;
 }
@@ -165,6 +165,8 @@ function updateEnemyAuras(e,dt,thornR,thornR2,frostR,frostR2,dx,dy,d,d2){
  if(thornR>0&&d2<thornR2+e.r*e.r){
   let td=7*thorn.lvl*P.dmgMul*dt;
   if(P.synStormShield)td*=1.35;                                    // Грозовой оберег
+  if(P.synApocalypse)td*=1.25;
+  if(P.synEmberStorm)td*=1.25;
   if(P.synShatterFrost&&e.frozen>0)td*=1.40;                       // Хрупкий лёд: мёрзлые ломаются
   // v5.80: «Шипастая петля» (Evo-шипы) — флаг ставился, но не читался нигде.
   if(P.evoThornWeb){td*=1+0.25*P.evoThornWeb;e.slow=Math.min(e.slow,0.62);}
@@ -174,7 +176,7 @@ function updateEnemyAuras(e,dt,thornR,thornR2,frostR,frostR2,dx,dy,d,d2){
   else if(seedRandom()<0.05)e.poisoned=2;
  }
  if(frostR>0&&d2<frostR2+e.r*e.r){
-  e.slow=Math.min(e.slow,P.synDeathMist?0.32:0.45);                // Мёртвый туман: вязнут сильнее
+  e.slow=Math.min(e.slow,P.synDeathMist?0.50:0.70);                // Мёртвый туман: вязнут сильнее
   dealDamage(e,2.5*frost.lvl*P.dmgMul*dt);
   // v5.80: «Зимний плен» (Evo-стужа) — флаг ставился, но не читался нигде.
   if(P.evoFrostBind&&e.frozen>0)dealDamage(e,3*frost.lvl*P.dmgMul*dt*P.evoFrostBind);

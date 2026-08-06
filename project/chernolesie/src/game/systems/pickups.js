@@ -2,7 +2,7 @@ function updateParticles(dt){
  // Обратный обход: poolRelease делает swap-and-pop, for...of вперёд пропускал
  // бы элемент, вставленный на место удалённого (лагорили частицы на 1 кадр).
  for(let pi=ACTIVE.particles.length-1;pi>=0;pi--){const p=ACTIVE.particles[pi];p.life-=dt;p.vy+=(p.g||0)*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=0.9;if(p.life<=0)poolRelease(POOL.particles,p);}
- shake=Math.max(0,shake-dt*22);   // v6.17: затухание 14->22, толчок короче и суше
+ shake=Math.max(0,shake-dt*32);   // v6.17: затухание 14->22, толчок короче и суше
  // v6.42: хлопки подбора и сияние насыщения
  for(let i=gemPops.length-1;i>=0;i--){const q=gemPops[i];q.t-=dt;if(q.t<=0)gemPops.splice(i,1);}
  absorbGlow=Math.max(0,absorbGlow-dt*2.2);
@@ -177,7 +177,7 @@ function updateHud(dt){
  const camMaxY=Math.max(0,WORLD-H);
  // v5.7 Feel: exp-lerp камера (стабильна на 30/60 FPS) + лёгкий look-ahead.
  // Hard-follow дёргал картинку при смене WASD; спавн по-прежнему от cam.
- const look=28;
+ const look=0;
  const tx=clamp(P.x-W/2+(P.fx||0)*look,0,camMaxX);
  const ty=clamp(P.y-H/2+(P.fy||0)*look,0,camMaxY);
  // v6.1: камера догоняла цель ШАГАМИ ФИЗИКИ (60 раз в секунду), а рисовалась

@@ -75,8 +75,7 @@ function drawPermanentAuras(px, py){
      ctx.strokeStyle='rgba(143,208,255,0.65)';
      ctx.lineWidth=2.2;
      ctx.beginPath();ctx.arc(0,0,R,0,TAU);ctx.stroke();
-     ctx.setLineDash([8,12]);
-     ctx.strokeStyle='rgba(255,207,106,0.75)';
+     ctx.strokeStyle='rgba(255,207,106,0.85)';
      ctx.beginPath();ctx.arc(0,0,R+6,0,TAU);ctx.stroke();
     }
     ctx.restore();
@@ -148,14 +147,6 @@ function drawGlowLayer(){
   ctx.globalAlpha=Math.min(0.52,a*(0.26+0.30*w));
   const sp=glowSprite(f.color);
   ctx.drawImage(sp,f.x-cam.x-r,f.y-cam.y-r,r*2,r*2);
- }
- // частицы: каждая светит слабо, но их сотни — вместе дают зарево
- for(const p of ACTIVE.particles){
-  const al=Math.max(0,p.life/p.max);
-  if(al<0.15)continue;
-  const r=14*al*S;
-  ctx.globalAlpha=al*0.15;
-  ctx.drawImage(glowSprite(p.c),p.x-cam.x-r,p.y-cam.y-r,r*2,r*2);
  }
  // зоны — постоянный источник под ногами
  for(const z of zones){

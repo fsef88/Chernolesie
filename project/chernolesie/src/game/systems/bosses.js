@@ -55,7 +55,8 @@ function spawnBoss(){
  // v7.36: радиус выхода уменьшен с 0.85+200 до 0.62+120. При спавне почти в
  // километре и скорости 34 подход занимал те самые двадцать секунд, за которые
  // забег и заканчивался: бой сводился к тому, что босс шёл, доходил и падал.
- const a=srnd(0,TAU),rad=Math.max(W,H)*0.62+120;
+  const b=ETYPES.dragon||{};
+  const a=srnd(0,TAU),rad=Math.max(W,H)*0.62+120;
  // v6.74: удалён мёртвый блок minR (minR всегда < rad → условие недостижимо)
  let sx=cx+Math.cos(a)*rad,sy=cy+Math.sin(a)*rad;
  sx=clamp(sx,0,WORLD);sy=clamp(sy,0,WORLD);

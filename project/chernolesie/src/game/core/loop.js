@@ -12,37 +12,35 @@ let _drawDt=1/60;   // v6.16: реальное время последнего �
 // v6.17: сетка для разведения врагов. Ячейка 48px — чуть больше максимального
 // радиуса взаимодействия (r+r+6 у крупных типов), поэтому хватает 3x3 ячеек.
 const _SEP_CELL=48;
-const _sepGrid=new Map();
-// v7.8: ячейка заводилась на каждые посещённые 48px мира и НИКОГДА не удалялась —
-// ни между шагами, ни между забегами. Очистка перед заполнением обходит все ключи,
-// поэтому её стоимость росла линейно с пройденным путём и копилась через всю сессию.
-// Замер: 20 000 px пути = 10 252 ячейки, все пустые, 0.24 мс на обход, то есть
-// ~44 мс в секунду впустую на десктопе (60 кадров × 3 шага физики).
-// Теперь ячейка, оставшаяся пустой, выбрасывается из Map, а её массив уходит в пул:
-// размер сетки держится по числу занятых ячеек, а пересоздания массивов — которого
-// избегала правка v6.74 — по-прежнему нет.
-const _sepFree=[];
+// v9.0 COMMERCIAL ENGINE ARCHITECTURE (Flat O(1) Spatial Hash Grid):
+// Заменяем Map с битовыми XOR-хешами на плоский одномерный массив (O(1) без хеширования, коллизий и GC).
+const _SEP_N=Math.ceil(WORLD/_SEP_CELL)+2;
+const _sepGridArr=new Array(_SEP_N*_SEP_N);
+let _sepUsedCells=[];
 function _sepClear(){
- for(const ent of _sepGrid){
-  if(ent[1].length===0){_sepGrid.delete(ent[0]);if(_sepFree.length<512)_sepFree.push(ent[1]);}
-  else ent[1].length=0;
- }
+ for(let i=0;i<_sepUsedCells.length;i++){const a=_sepGridArr[_sepUsedCells[i]];if(a)a.length=0;}
+ _sepUsedCells.length=0;
 }
-// Собирает соседей из 9 ячеек вокруг точки в переиспользуемый буфер (без аллокаций в кадре).
 const _sepBuf=[];
 function _sepNear(x,y){
  _sepBuf.length=0;
- const cx=Math.floor(x/_SEP_CELL),cy=Math.floor(y/_SEP_CELL);
- for(let gx=cx-1;gx<=cx+1;gx++)for(let gy=cy-1;gy<=cy+1;gy++){
-  const cell=_sepGrid.get(gx*73856093^gy*19349663);
-  if(cell)for(let i=0;i<cell.length;i++)_sepBuf.push(cell[i]);
+ const cx=(x/_SEP_CELL)|0,cy=(y/_SEP_CELL)|0;
+ for(let gx=cx-1;gx<=cx+1;gx++){
+  if(gx<0||gx>=_SEP_N)continue;
+  for(let gy=cy-1;gy<=cy+1;gy++){
+   if(gy<0||gy>=_SEP_N)continue;
+   const cell=_sepGridArr[gy*_SEP_N+gx];
+   if(cell)for(let i=0;i<cell.length;i++)_sepBuf.push(cell[i]);
+  }
  }
  return _sepBuf;
 }
 function frame(now){
  if(!window.__yaGameRendered){window.__yaGameRendered=1;try{window.__yaReady&&window.__yaReady();}catch(e){}}   // Яндекс: Game Ready после первого кадра
  try{
-  const _rdt=(now-last)/1000;last=now;
+  // v7.37 ПЛАВНОСТЬ (V-Sync квантование): устраняем плавающий дрифт таймера rAF браузера
+  let _rdt=(now-last)/1000;last=now;
+  if(_rdt>0.0135&&_rdt<0.0205)_rdt=1/60;else if(_rdt>0.0075&&_rdt<0.0105)_rdt=1/120;else if(_rdt>0.0105&&_rdt<0.0125)_rdt=1/90;
   // v6.61: слоу-мо — таймер тикает по РЕАЛЬНОМУ времени, а dt мира умножается на SLOWMO_SCALE
   if(slowmo>0)slowmo-=_rdt;
   const d=_rdt*GAME_SPEED*(slowmo>0?SLOWMO_SCALE:1);
@@ -113,20 +111,24 @@ function frame(now){
    // через четыре — это и есть рывки при приличном среднем. Держим не более
    // одного кадра на 60 Гц; неровность уменьшается, потолок не режется.
    // Никакого адаптивного расширения шага: именно оно и загнало FPS в 16.
-   if(now-lastDraw<15.5){requestAnimationFrame(frame);return;}
-   lastDraw=now;
-  }else{
-   // Экран 60 Гц — не вмешиваемся вовсе (см. v5.29: кап 16.67 против vsync
-   // 16.67 сам по себе дробил кадры).
-   lastDraw=now;
-  }
-  // ИНТЕРПОЛЯЦИЯ: вычислить фактор интерполяции
-  // v5.79: interpFactor считался вторым, НЕЗАВИСИМЫМ аккумулятором (animAccumulator),
-  // который жил своей жизнью: при включённом FPS-капе кадр выходил через return ДО
-  // этого блока, и накопители расходились. Интерполяция подставляла долю, не имеющую
-  // отношения к реальному остатку шага физики, — вместо сглаживания получался дребезг.
-  // Правильная доля — это ровно то, что осталось в acc после цикла update().
-  interpFactor=Math.max(0,Math.min(1,acc/PHYSICS_DT));
+    if(now-lastDraw<13.5){requestAnimationFrame(frame);return;}
+    lastDraw=now;
+   }else{
+    // Экран 60 Гц — не вмешиваемся вовсе (см. v5.29: кап 16.67 против vsync
+    // 16.67 сам по себе дробил кадры).
+    lastDraw=now;
+   }
+   // ИНТЕРПОЛЯЦИЯ: вычислить фактор интерполяции
+   // v5.79: interpFactor считался вторым, НЕЗАВИСИМЫМ аккумулятором (animAccumulator),
+   // который жил своей жизнью: при включённом FPS-капе кадр выходил через return ДО
+   // этого блока, и накопители расходились. Интерполяция подставляла долю, не имеющую
+   // отношения к реальному остатку шага физики, — вместо сглаживания получался дребезг.
+   // Правильная доля — это ровно то, что осталось в acc после цикла update().
+   // v7.37 РОВНАЯ ИНТЕРПОЛЯЦИЯ БЕЗ ДРЕБЕЗГА:
+   // При шаге физики 60 Гц на экранах 60 Гц (или в кадре, где прошёл update(1/60)),
+   // рисуем актуальное состояние (interpFactor = 1.0).
+   // На промежуточных кадрах (120/90 Гц без update) интерполируем долю от прошлых координат.
+   interpFactor=(steps>0)?1.0:Math.max(0,Math.min(1,(acc+1/60)/PHYSICS_DT));
   if(__PROF_ON){PROF.draws++;pT('rtotal',1);}
   draw();
   if(__PROF_ON)pT('rtotal',0);
