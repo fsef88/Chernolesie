@@ -1,0 +1,74 @@
+/* ==================================================================
+   Титульный экран на широком экране.
+
+   Сцена — нарисованная плашка 768x1376, и рамки под кнопки режимов и
+   панель героя вшиты в саму картинку. Кадрировать её под ландшафт
+   нельзя: при background-size:cover расстояние между этими рамками
+   выходит 783 px при высоте вьюпорта 768 — обе одновременно не
+   помещаются ни при каком background-position.
+
+   Поэтому сцена показывается целиком: #titlescreen ужимается в
+   центральную колонку ровно того же соотношения, что и арт, а поля
+   закрывает размытая копия той же картинки. Все проценты раскладки из
+   82-title-final.css при этом попадают в свои нарисованные рамки без
+   единой правки — колонка отличается от телефона только масштабом.
+
+   Слои внутри колонки: ::before — размытый фон на весь вьюпорт (он же
+   прячет игровой HUD, который иначе виден по бокам от колонки),
+   ::after — сама сцена поверх него. Оба нужны отдельными псевдо-
+   элементами: собственный фон #titlescreen рисуется раньше вложенных
+   слоёв и был бы закрыт размытием.
+   ================================================================== */
+@media(min-width:761px){
+ #titlescreen{
+  left:calc(50% - 50vh*768/1376)!important;
+  right:auto!important;
+  width:calc(100vh*768/1376)!important;
+  background:#04101a none!important;
+  box-shadow:0 0 0 1px rgba(120,214,226,.22),0 0 64px rgba(0,0,0,.72)!important;
+ }
+ /* inset отрицательный: blur размывает и края самого слоя, у границы он
+    становится полупрозрачным. При inset:0 сквозь верхнюю кромку просвечивал
+    игровой HUD (#hud, z-index 20, первые 43 px экрана). Слой уводится за
+    вьюпорт, чтобы вся видимая часть осталась непрозрачной. */
+ #titlescreen::before{
+  content:'';display:block!important;position:fixed;inset:-80px;z-index:0;
+  background:#04101a url("@@A:ui/title-final-mobile.webp@@") center/cover no-repeat;
+  filter:blur(34px) brightness(.34) saturate(.72);
+ }
+ #titlescreen::after{
+  content:'';display:block!important;position:absolute;inset:0;z-index:1;
+  background:url("@@A:ui/title-final-mobile.webp@@") center/contain no-repeat;
+ }
+ /* Заголовок в 82 масштабируется от ширины вьюпорта, а не колонки:
+    на широком экране он упирался в 44px и обрезался. Здесь та же доля,
+    но от ширины колонки, которая задана высотой окна. */
+ .ts-title-lockup h1{font-size:clamp(28px,4.4vh,44px)!important}
+ /* Кнопки режимов раскладывались в столбец и вылезали из нарисованных
+    рамок: у #tsMode осталось flex-wrap:wrap из ранних слоёв, а базис
+    #tsMode .modebtn{flex:1 1 44%} перебивает .ts-run-modes .modebtn{flex:1}
+    из 82 по специфичности (id + класс против двух классов). На телефоне
+    44% умещались в строку, в узкой колонке — уже нет. */
+ #tsMode{flex-wrap:nowrap!important}
+ #tsMode .modebtn{flex:1 1 0!important;min-width:0!important}
+
+ /* Вся типографика в 82 задана в px под колонку телефона (~390 px) и на
+    широком экране не росла: при высоте 1080 колонка уже 603 px, а текст
+    оставался семипиксельным. Здесь те же доли, пересчитанные от ширины
+    колонки: 1 px при 390 px соответствует 0.1432vh. Исходные значения
+    оставлены нижней границей, чтобы в низком окне ничего не сплющилось. */
+ .ts-title-lockup #tsSub{font-size:max(9px,1.29vh)!important}
+ .ts-run-modes .modebtn{font-size:max(8px,1.12vh)!important}
+ .ts-run-modes .modebtn .mico{font-size:max(15px,2.15vh)}
+ .ts-run-modes .modebtn.sel::after{font-size:max(11px,1.57vh)}
+ .ts-hero-panel h2{font-size:max(12px,1.93vh)}
+ .ts-hero-role{font-size:max(7px,1vh)}
+ .ts-hearts{font-size:max(11px,1.57vh)}
+ .ts-hero-stats span{font-size:max(7px,1vh)}
+ .ts-hero-stats b{width:max(11px,1.57vh)}
+ .ts-class-deck::before{font-size:max(7px,1vh)}
+ .liveHero span{font-size:max(7px,1vh)}
+ .liveHero.current::before{font-size:max(10px,1.43vh)}
+ .liveHero.locked i{font-size:max(12px,1.72vh)}
+ #btnStartPoohd{font-size:max(20px,3.85vh)!important}
+}

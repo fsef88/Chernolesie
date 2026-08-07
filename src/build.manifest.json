@@ -620,6 +620,14 @@
    ]
   },
   {
+   "file": "styles/84-desktop-title.css",
+   "note": "титульный экран на широком экране",
+   "srcLines": [
+    1,
+    74
+   ]
+  },
+  {
    "lit": "</style>\n<!-- v5.38: Google Fonts удалены — шрифт Мономах встроен (@font-face выше) -->\n</head>\n<body>\n"
   },
   {
