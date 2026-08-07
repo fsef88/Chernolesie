@@ -166,9 +166,11 @@ function draw(){ // v6.16
  if(__DBG.props){drawProps();drawAnomalies();}   // v6.46: находки рисуются в мире, а не DOM-кружком
  if(__DBG.auras)drawPermanentAuras(px,py); // v7.5: ПОСТОЯННЫЕ АУРЫ ОРУЖИЯ НА ЗЕМЛЕ
  if(__DBG.enemies)drawEnemiesLayer();
+ calcFxLoad();   // нагрузка светового слоя: её же читает карман читаемости ниже
  if(__DBG.glow)drawGlowLayer();   // v6.50: свет ПОД эффектами — заливает сцену, как в VS
  if(__DBG.fx)drawFxLayer();
  drawCoins();   // v6.62: монеты
+ drawHeroPocket(px,py);   // гасим засвет вокруг героя, пока он ещё не нарисован
  drawPlayerLayer(px,py);
  if(__DBG.dmg)drawDmgNumbers(px,py);   // restore к save() тряски стоит ниже, в этом же файле
  // v5.97: парный ctx.restore() к save() выше лежал в САМОМ КОНЦЕ drawDmgNumbers,

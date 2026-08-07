@@ -18,6 +18,28 @@ function drawCombatGroundVeil(px,py){
  ctx.fillStyle=g;ctx.beginPath();ctx.arc(px,py-4,r,0,TAU);ctx.fill();
  ctx.restore();
 }
+function drawHeroPocket(px,py){
+ // Карман читаемости. Тёмная подложка под ногами (drawHeroFocusUnder) спасает
+ // от пёстрой земли, но не от засвета: сложение 'lighter' выбивает центр кадра
+ // в белое, и герой, хотя и рисуется поверх эффектов, перестаёт из него
+ // выделяться. Здесь свет гасится умножением ТОЛЬКО в круге вокруг героя —
+ // контраст возвращается, а кадр не заливается серым.
+ //
+ // Сила кармана привязана к нагрузке светового слоя: в спокойный момент его
+ // нет вовсе, иначе вокруг героя всегда висело бы тёмное пятно.
+ const k=(typeof fxLoad==='function')?fxLoad():0;
+ if(k<0.06)return;
+ const r=78*Math.max(1,Math.min(1.3,1/(ZOOM||1)*0.6));
+ const v=Math.round(255-96*k);   // при полной нагрузке центр гасится до 0.62
+ const g=ctx.createRadialGradient(px,py,r*0.2,px,py,r);
+ g.addColorStop(0,'rgb('+v+','+v+','+v+')');
+ g.addColorStop(1,'rgb(255,255,255)');
+ ctx.save();
+ ctx.globalCompositeOperation='multiply';
+ ctx.fillStyle=g;
+ ctx.beginPath();ctx.arc(px,py,r,0,TAU);ctx.fill();
+ ctx.restore();
+}
 function drawHeroFocusUnder(px,py,heroY){
  const ready=typeof specialCharge!=='undefined'&&specialCharge>=1;
  const low=P.hp/Math.max(1,P.maxhp)<0.30;
