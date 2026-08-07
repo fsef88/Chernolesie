@@ -1,5 +1,0 @@
-/* v16 — сцена меняется вместе с классом; убираем навязчивую кодовую рамку
-   поверх уже нарисованных карточек. */
-@media(max-width:760px){
- .ts-class-deck .classcard.sel{outline:0!important;box-shadow:none!important}.ts-class-deck .classcard.sel::after{display:none!important}
-}

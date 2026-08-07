@@ -17,9 +17,9 @@ function showTitleScreen(){
    groznik:['УРОН: ВЫСОКИЙ','ЗАЩИТА: СРЕДНЯЯ','ГРОЗА: ВЫСОКАЯ']
   };
   const titleScenes={
-   warrior:'@@A:ui/title-final-mobile.png@@',
-   druid:'@@A:ui/title-scene-druid.png@@',
-   shaman:'@@A:ui/title-scene-shaman.png@@'
+   warrior:'@@A:ui/title-final-mobile.webp@@',
+   druid:'@@A:ui/title-scene-druid.webp@@',
+   shaman:'@@A:ui/title-scene-shaman.webp@@'
   };
   const renderHeroPassport=(c)=>{
    // У каждого доступного пути свой нарисованный главный экран: выбор меняет

@@ -1,6 +1,0 @@
-/* v19 — выбор класса показывается отдельными живыми портретами; стрелки уже
-   встроены в иллюстрацию, поэтому второй DOM-набор не рисуем. */
-@media(max-width:760px){
- .deck-arrow{display:none!important}.deck-pages{display:none!important}
- .ts-class-deck .classcard .classportrait{display:block!important;width:78%!important;height:auto!important;aspect-ratio:1!important;object-fit:cover!important;object-position:center!important;border-radius:50%!important;margin:8% auto 0!important;background:#07131a!important;filter:saturate(.94) contrast(1.06)!important}.ts-class-deck .classcard h3{display:block!important;position:static!important;opacity:1!important;margin:5px 2px 0!important;font-size:7px!important;line-height:1!important;text-align:center!important;color:#d9f3f5!important;text-shadow:0 1px 2px #000!important}.ts-class-deck .classcard.sel .classportrait{box-shadow:0 0 0 1px #aafaff,0 0 10px rgba(78,226,238,.75)!important}.ts-class-deck .classcard p,.ts-class-deck .classcard .arch,.ts-class-deck .classcard .lockreq,.ts-class-deck .classcard .lockprog,.ts-class-deck .classcard .lockbar,.ts-class-deck .classcard .lockseal{display:none!important}
-}
