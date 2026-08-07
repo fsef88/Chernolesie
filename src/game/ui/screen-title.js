@@ -16,8 +16,11 @@ function showTitleScreen(){
    ognevik:['УРОН: ВЫСОКИЙ','ЗАЩИТА: НИЗКАЯ','ОБЛАСТЬ: ВЫСОКАЯ'],
    groznik:['УРОН: ВЫСОКИЙ','ЗАЩИТА: СРЕДНЯЯ','ГРОЗА: ВЫСОКАЯ']
   };
+  // Воина здесь нет намеренно: его сцена и есть значение по умолчанию в CSS,
+  // так что для него переменная просто снимается. Иначе та же картинка
+  // инлайнилась бы в сборку лишний раз — каждое вхождение токена
+  // разворачивается в отдельную копию base64.
   const titleScenes={
-   warrior:'@@A:ui/title-final-mobile.webp@@',
    druid:'@@A:ui/title-scene-druid.webp@@',
    shaman:'@@A:ui/title-scene-shaman.webp@@',
    archer:'@@A:ui/title-scene-archer.webp@@',
@@ -25,12 +28,18 @@ function showTitleScreen(){
    ognevik:'@@A:ui/title-scene-ognevik.webp@@',
    groznik:'@@A:ui/title-scene-groznik.webp@@'
   };
+  // Сцена ставится переменной, а не background-image: на широком экране
+  // картинку рисует #titlescreen::after, до которого инлайновый стиль не
+  // достаёт. Переменная наследуется в псевдоэлемент, поэтому одна и та же
+  // строчка работает и на телефоне, и на десктопе.
+  const applyScene=(id)=>{
+   if(titleScenes[id])ts.style.setProperty('--ts-scene','url("'+titleScenes[id]+'")');
+   else ts.style.removeProperty('--ts-scene');
+  };
   const renderHeroPassport=(c)=>{
    // У каждого доступного пути свой нарисованный главный экран: выбор меняет
    // не только цифры справа, но и героя на самой сцене.
-   if(titleScenes[c.id]&&window.matchMedia&&window.matchMedia('(max-width:760px)').matches){
-    ts.style.setProperty('background-image','url("'+titleScenes[c.id]+'")','important');
-   }
+   applyScene(c.id);
    const featured=document.getElementById('tsFeaturedHero');
    const featuredArt=CLASS_ART[c.id]&&CLASS_ART[c.id].src;
    if(featured)featured.innerHTML=featuredArt?'<img src="'+featuredArt+'" alt="">':'';
@@ -141,9 +150,7 @@ function showTitleScreen(){
     if(tile)selectTitleClass(c,tile);
    }else{
     // Закрытый путь тоже получает свой арт-превью, но не становится игровым классом.
-    if(titleScenes[c.id]&&window.matchMedia&&window.matchMedia('(max-width:760px)').matches){
-     ts.style.setProperty('background-image','url("'+titleScenes[c.id]+'")','important');
-    }
+    applyScene(c.id);
     const name=document.getElementById('tsHeroName');
     const arch=document.getElementById('tsHeroArch');
     const desc=document.getElementById('tsHeroDesc');

@@ -38,7 +38,7 @@
  }
  #titlescreen::after{
   content:'';display:block!important;position:absolute;inset:0;z-index:1;
-  background:url("@@A:ui/title-final-mobile.webp@@") center/contain no-repeat;
+  background:var(--ts-scene,url("@@A:ui/title-final-mobile.webp@@")) center/contain no-repeat;
  }
  /* Заголовок в 82 масштабируется от ширины вьюпорта, а не колонки:
     на широком экране он упирался в 44px и обрезался. Здесь та же доля,
