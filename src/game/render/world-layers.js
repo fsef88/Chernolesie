@@ -131,7 +131,13 @@ function drawAtmosphere(px,py){
  // в любом поле пропускает соответствующий проход. Прежний множитель
  // '#a8b89e' вдобавок ГРЕЛ картинку (синий канал у него самый низкий),
  // хотя комментарии ниже обещают обратное.
- const GROUND_GRADE={mul:null,sat:null,flat:0};
+ // spots — запечённые пятна мха и света. Они рисовались радиальным градиентом
+ // ВНУТРИ тайла и обрезались его границей: на пёстрой фотографической текстуре
+ // это читалось как мох, а на ровной процедурной — как прямоугольные блоки
+ // разной яркости, потому что четыре варианта дают четыре средние яркости.
+ // Новому тайлу они не нужны: своя крупная неоднородность в нём уже есть,
+ // и она периодична, то есть стыкуется без шва.
+ const GROUND_GRADE={mul:null,sat:null,flat:0,spots:false};
 function drawGround(){
  ctx.fillStyle=theme==='winter'?'#3a4a5a':(nightMode||theme==='night')?'#0a0a18':'#1a2410';
  ctx.fillRect(0,0,W,H);
@@ -172,7 +178,7 @@ function drawGround(){
     g2.fillStyle='hsl(0,'+GROUND_GRADE.sat+'%,50%)';g2.fillRect(0,0,_ts,_ts);
    }
    g2.globalCompositeOperation='source-over';
-   for(let si=0;si<2;si++){const h2=(Math.imul(_hs[v]+si*777777,2654435761))>>>0;
+   for(let si=0;si<(GROUND_GRADE.spots?2:0);si++){const h2=(Math.imul(_hs[v]+si*777777,2654435761))>>>0;
     const pr=250+(h2&127),dk=(h2>>9)&3;
     const pxx=(((h2>>11)&1023)/1023)*_ts,pyy=(((h2>>21)&1023)/1023)*_ts;
     const pg2=g2.createRadialGradient(pxx,pyy,pr*0.15,pxx,pyy,pr);
@@ -186,7 +192,7 @@ function drawGround(){
  for(let _cy=_cy0;_cy<=_cy1;_cy++)for(let _cx=_cx0;_cx<=_cx1;_cx++){
   const sx=_cx*_ts-cam.x,sy=_cy*_ts-cam.y;
   const gh=((_cx*73856093)^(_cy*19349663))>>>0;
-  ctx.drawImage(_gtVar[(gh>>>2)&3],sx,sy,_ts,_ts);
+  ctx.drawImage(_gtVar[GROUND_GRADE.spots?((gh>>>2)&3):0],sx,sy,_ts,_ts);
  }}
 }
 // v5.99: кэш запечённого свечения кристаллов, ключ — цвет. Цветов около восьми
