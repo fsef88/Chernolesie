@@ -431,7 +431,13 @@
   "ui/title-scene-druid.webp": "image/webp",
   "ui/title-scene-shaman.webp": "image/webp",
   "art/sprites/dragon-frames.webp": "image/webp",
-  "art/sprites/grlbjsaaaaaaa.webp": "image/webp"
+  "art/sprites/grlbjsaaaaaaa.webp": "image/webp",
+  "ui/avatar-warrior-menu.webp": "image/webp",
+  "ui/avatar-druid-menu.webp": "image/webp",
+  "ui/avatar-shaman-menu.webp": "image/webp",
+  "ui/avatar-rogue-menu.webp": "image/webp",
+  "ui/avatar-archer-menu.webp": "image/webp",
+  "ui/avatar-ognevik-menu.webp": "image/webp"
  },
  "parts": [
   {
@@ -603,6 +609,14 @@
    "srcLines": [
     1,
     200
+   ]
+  },
+  {
+   "file": "styles/83-avatar-art.css",
+   "note": "портреты нижней колоды вне игрового JS",
+   "srcLines": [
+    1,
+    11
    ]
   },
   {

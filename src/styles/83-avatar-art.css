@@ -1,0 +1,10 @@
+/* Портреты нижней колоды вынесены из игрового JS в CSS: интерфейс не
+   задерживает запуск из-за больших data-URI в скрипте. Колода видна и на
+   узком, и на широком экране, поэтому медиазапроса здесь нет.
+   Грозник пока без своего аватара и берёт портрет из CLASS_ART. */
+.liveHero[data-hero="warrior"] img{content:url("@@A:ui/avatar-warrior-menu.webp@@")}
+.liveHero[data-hero="druid"] img{content:url("@@A:ui/avatar-druid-menu.webp@@")}
+.liveHero[data-hero="shaman"] img{content:url("@@A:ui/avatar-shaman-menu.webp@@")}
+.liveHero[data-hero="rogue"] img{content:url("@@A:ui/avatar-rogue-menu.webp@@")}
+.liveHero[data-hero="archer"] img{content:url("@@A:ui/avatar-archer-menu.webp@@")}
+.liveHero[data-hero="ognevik"] img{content:url("@@A:ui/avatar-ognevik-menu.webp@@")}
