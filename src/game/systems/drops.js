@@ -102,29 +102,47 @@ function killDrops(e){
  // ❄️ ЭФФЕКТ РАСКАЛЫВАНИЯ ЛЬДА (ICE SHATTER)
  // ==========================================
  if(e.frozen>0){
-  const _iceCount=e.boss?20:e.mini?14:e.elite?10:6;
-  for(let i=0;i<_iceCount;i++){
-   const a=i/_iceCount*TAU+Math.random()*0.2, sp=rnd(100,240);
-   const p=spawnParticle(e.x,e.y-e.r*0.5,Math.cos(a)*sp,Math.sin(a)*sp,rnd(.4,.85),i%2?'#bfe0ff':'#e0f0ff',150,0);
-   if(p)p.ice=1;
+  // Раскалывание срабатывает на КАЖДОЙ смерти замороженного врага, а знахарка
+  // морозит всё поле: на плотной волне это десятки цепей за кадр, каждая со
+  // своим звуком, залпом частиц, записью в лог и вызовом hitEnemy по всем
+  // соседям. Отсюда рывок на каждом ударе. Урон цепи сохраняем полностью —
+  // ограничиваем только то, что его сопровождает.
+  const _icNow=Math.floor(performance.now()/16);
+  if(window._iceF!==_icNow){window._iceF=_icNow;window._iceFrame=0;}
+  const _icBudget=(window._iceFrame=(window._iceFrame||0)+1)<=3;
+  if(_icBudget){
+   const _iceCount=Math.max(3,Math.round((e.boss?20:e.mini?14:e.elite?10:6)*(typeof partMul!=='undefined'?partMul:1)));
+   for(let i=0;i<_iceCount;i++){
+    const a=i/_iceCount*TAU+Math.random()*0.2, sp=rnd(100,240);
+    const p=spawnParticle(e.x,e.y-e.r*0.5,Math.cos(a)*sp,Math.sin(a)*sp,rnd(.4,.85),i%2?'#bfe0ff':'#e0f0ff',150,0);
+    if(p)p.ice=1;
+   }
+   spawnFlash(e.x,e.y-e.r*0.5,0.6,'#bfe0ff');
   }
-  if(AC){
-   try{
-    tone(1500,0.12,'sine',0.05,2200);
-    setTimeout(()=>{try{tone(1900,0.10,'sine',0.03,1100)}catch(err){}},35);
-   }catch(err){}
+  // Звук — событие, а не фон: пара узлов Web Audio на каждый скол складывалась
+  // в сотню в секунду. Отложенный подзвон убран вместе с его setTimeout.
+  if(AC&&typeof tone==='function'){
+   const _ms=Date.now();
+   if(_ms-(window._iceSndMs||0)>110){window._iceSndMs=_ms;
+    try{tone(1500,0.12,'sine',0.05,2200);}catch(err){}}
   }
   const _shatterDmg=(10+(e.maxhp||e.hp||5)*0.12)*P.dmgMul;
   const _shatterR=e.r+80;
+  // Потолок на длину цепи: без него удар по толпе разворачивался в
+  // квадратичный обход, а разницы в ощущении между восемью задетыми и
+  // тридцатью нет.
   const _victims=aliveNear(e.x,e.y,_shatterR);
+  let _vn=0;
   for(const v of _victims){
    if(v===e)continue;
+   if(++_vn>8)break;
    hitEnemy(v,_shatterDmg,'frost',false);
    v.slow=Math.min(v.slow||1,0.65);
    v.frozen=Math.max(v.frozen||0,0.6);
   }
-  spawnFlash(e.x,e.y-e.r*0.5,0.6,'#bfe0ff');
-  log('❄ Раскалывание льда!','frost');
+  // Строка лога — запись в DOM. На волне их было по десятку в кадр.
+  if(Date.now()-(window._iceLogMs||0)>1500){window._iceLogMs=Date.now();
+   log('❄ Раскалывание льда!','frost');}
  }
 
  // ==========================================

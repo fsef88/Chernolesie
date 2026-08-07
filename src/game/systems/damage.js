@@ -25,6 +25,13 @@ function hitEnemy(e,dmg,tag,crit){
  // Теперь вся реакция масштабируется от ДОЛИ снятого здоровья (_wt: 0..1).
  // Камеры это не касается вообще — трогаем только цель удара.
  const _wt=Math.max(0,Math.min(1,dmg/Math.max(1,e.maxhp||e.hp||1)));
+ // Бюджеты кадра. Тик считается ОДИН раз в начале удара: раньше сброс жил
+ // внутри блока частиц, то есть ниже spawnFlash, и вспышка успевала
+ // потратиться до того, как счётчик обнулится.
+ if(typeof window._hitFrameParts==='undefined')window._hitFrameParts=0;
+ {const _nowF=Math.floor(performance.now()/16);
+  if(window._lastHitF!==_nowF){window._lastHitF=_nowF;
+   window._hitFrameParts=0;window._hitFrameDmg=0;window._hitFrameFlash=0;}}
  e.flash=0.18+0.30*_wt; // v7.1 сочные вспышки                 // вспышка держится дольше на тяжёлом ударе
  e.hit=0.16+0.34*_wt;                   // сквош-растяжка глубже (см. _ehurt в спрайте)
  // ЛОКАЛЬНЫЙ хитстоп: замирает САМ ВРАГ на 0..90мс, мир идёт как шёл. Именно эта
@@ -49,15 +56,19 @@ function hitEnemy(e,dmg,tag,crit){
  // В Vampire Survivors каждое оружие узнаётся по цвету удара, поэтому берём
  // палитру от tag — она уже есть в игре и совпадает с иконками карточек.
  const FX=(TAG_FX[tag]||TAG_FX.phys);
- spawnFlash(e.x,e.y-e.r*0.6,0.2+0.8*_wt,FX.f);
+ // Вспышка — единственная реакция удара, у которой бюджета не было, хотя она
+ // самая дорогая: каждая кладёт в световой слой крупный аддитивный drawImage.
+ // На ауре стужи знахарки удар приходит по десяткам врагов за тик, и кадр
+ // захлёбывался. Тяжёлые удары пропускаем вперёд, мелочь режем.
+ if((window._hitFrameFlash=window._hitFrameFlash||0)<10||_wt>0.5){
+  window._hitFrameFlash++;
+  spawnFlash(e.x,e.y-e.r*0.6,0.2+0.8*_wt,FX.f);
+ }
  // v6.18d: искры летели РАДИАЛЬНО в случайные стороны — одинаково на любой удар,
  // и глаз не считывал, откуда прилетело. Теперь конус вдоль вектора удара:
  // разлёт узкий (±0.7 рад), скорость и количество растут с весом. Это тот же
  // приём, что и отдача, но читается быстрее — искры видно раньше, чем смещение.
  { // v7.2: бюджет частиц на кадр для устранения просадки FPS при массовых АоЕ-ударах
-  if(typeof window._hitFrameParts==='undefined')window._hitFrameParts=0;
-  const _nowF=Math.floor(performance.now()/16);
-  if(window._lastHitF!==_nowF){window._lastHitF=_nowF;window._hitFrameParts=0;window._hitFrameDmg=0;}
   if(window._hitFrameParts<14){
    const _ha=Math.atan2(dy,dx);
    const _n=Math.min(4,Math.floor((3+6*_wt)*partMul));
