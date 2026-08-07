@@ -187,6 +187,17 @@ function draw(){ // v6.16
  drawAtmosphere(px,py);
  // v6.22: вспышка косьбы — свет по краям экрана, центр чистый,
  // чтобы не перекрывать героя в момент, когда игрок на него смотрит
+ // Полноэкранная вспышка (flashScreen). Была DOM-элементом с CSS-градиентом,
+ // который пересобирался на каждый вызов и растеризовался процессором —
+ // см. комментарий у flashScreen в audio/ambient-music.js.
+ if(_scrFlash.t>0){
+  _scrFlash.t-=_drawDt;
+  const k=Math.max(0,_scrFlash.t/(_scrFlash.max||0.12));
+  const g=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*0.30,W/2,H/2,Math.max(W,H)*0.64);
+  g.addColorStop(0,'rgba(0,0,0,0)');
+  g.addColorStop(1,_flashCss(_scrFlash.c,_scrFlash.a*k));
+  ctx.save();ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.restore();
+ }
  if(mkFlash>0){
   const g=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*0.18,W/2,H/2,Math.max(W,H)*0.72);
   g.addColorStop(0,'rgba(255,190,110,0)');

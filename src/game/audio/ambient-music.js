@@ -156,11 +156,36 @@ function tickMusic(){
 }
 
 let _flashTimeout=null,_weaponsKey='';
+// Состояние полноэкранной вспышки. Рисует её холст (см. draw() в
+// render/compose.js), а не DOM.
+//
+// Раньше здесь на #hitFlash собиралась НОВАЯ строка radial-gradient при каждом
+// вызове. Полноэкранный CSS-градиент растеризуется ПРОЦЕССОРОМ в текстуру
+// размером с окно, и новая строка не даёт переиспользовать растр: на 2560x1440
+// это несколько миллионов пикселей заново, в главном потоке. Расход не виден ни
+// в хронометре (он меряет только запись команд в JS), ни по загрузке видеокарты
+// — растеризация CSS до неё не доходит. А зовётся вспышка на порогах серии,
+// сундуках и смерти особых врагов, то есть ровно там, где ловился рывок.
+//
+// На холсте тот же градиент стоит микросекунды: холст и так перерисовывается.
+const _scrFlash={c:'#ffffff',a:0,t:0,max:0.12};
 function flashScreen(color,alpha){
- const f=document.getElementById('hitFlash');
- f.style.background=`radial-gradient(ellipse at center,transparent 50%,${color}${Math.round(alpha*255).toString(16).padStart(2,'0')} 100%)`;
- f.style.opacity='1';
- if(_flashTimeout)clearTimeout(_flashTimeout);
- _flashTimeout=setTimeout(()=>{f.style.opacity='0';_flashTimeout=null;},120);
+ _scrFlash.c=color||'#ffffff';
+ _scrFlash.a=(alpha==null?0.4:alpha);
+ _scrFlash.max=0.12;_scrFlash.t=0.12;
+}
+// Цвета зовут в двух видах: '#ffcf6a' и незакрытый 'rgba(255,220,90,'.
+// Приводим оба к готовой строке с нужной прозрачностью.
+function _flashCss(c,a){
+ a=Math.max(0,Math.min(1,a));
+ if(c.charAt(0)==='#'){
+  const h=c.length===4
+   ? [parseInt(c[1]+c[1],16),parseInt(c[2]+c[2],16),parseInt(c[3]+c[3],16)]
+   : [parseInt(c.substr(1,2),16),parseInt(c.substr(3,2),16),parseInt(c.substr(5,2),16)];
+  return 'rgba('+h[0]+','+h[1]+','+h[2]+','+a.toFixed(3)+')';
+ }
+ const last=c.charAt(c.length-1);
+ if(last===','||last==='(')return c+a.toFixed(3)+')';
+ return c;
 }
 

@@ -77,10 +77,23 @@ if(specialCharge<specialMax){const add=dt*0.017*(P.sealChargeMul||1);specialChar
    UI.spechud.style.setProperty('--spec-c', si.color);
    if(ready)UI.spechud.classList.add('ready');else UI.spechud.classList.remove('ready');
    if(UI.speclabel)UI.speclabel.textContent=ready?('ГОТОВО'+(banked>1?' ×'+banked:'')+' · '+si.name):('ПЕЧАТЬ · '+si.name);
-   if(UI.specicon){UI.specicon.style.color=si.color;UI.specicon.style.borderColor=si.color;UI.specicon.innerHTML=si.svg||ICONS.get(si.iconId);}
+   // Кэш по значению: syncHud зовётся каждый кадр, а innerHTML — это разбор
+   // HTML и перерасчёт стилей. При 136 кадрах в секунду разметка иконки
+   // пересобиралась 136 раз, хотя меняется она несколько раз за забег.
+   // Расход не виден в хронометре: тот меряет запись команд холста, а не
+   // работу браузера со стилями.
+   if(UI.specicon){
+    const _si=si.color+'|'+(si.iconId||'')+'|'+(si.svg?1:0);
+    if(__HUDW.icon!==_si){__HUDW.icon=_si;
+     UI.specicon.style.color=si.color;UI.specicon.style.borderColor=si.color;
+     UI.specicon.innerHTML=si.svg||ICONS.get(si.iconId);}
+   }
    if(UI.specfill){
     const _spw=Math.round(pct*100);if(__HUDW.sp!==_spw){__HUDW.sp=_spw;UI.specfill.style.width=_spw+'%';}
-    UI.specfill.style.background=ready?('linear-gradient(90deg,'+si.color+','+(si.accent||'#fff')+')'):('linear-gradient(90deg,#4a3a18,'+si.color+')');
+    // Та же история: новая строка градиента заставляет браузер растеризовать
+    // полоску заново. Меняется она только при смене Печати или её готовности.
+    const _sg=ready?('linear-gradient(90deg,'+si.color+','+(si.accent||'#fff')+')'):('linear-gradient(90deg,#4a3a18,'+si.color+')');
+    if(__HUDW.spg!==_sg){__HUDW.spg=_sg;UI.specfill.style.background=_sg;}
    }
   }
   if(ready && !window._sealReadyTold){
