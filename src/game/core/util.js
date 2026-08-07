@@ -64,8 +64,30 @@ function prune(arr,keep){let w=0;for(let i=0;i<arr.length;i++){const v=arr[i];if
 const LS={
  get(k,d){try{const v=localStorage.getItem(k);return v===null?d:v;}catch(e){return d;}},
  set(k,v){try{localStorage.setItem(k,v);return true;}catch(e){return false;}},
- num(k,d){const v=+LS.get(k,d);return isFinite(v)?v:d;}
+ num(k,d){const v=+LS.get(k,d);return isFinite(v)?v:d;},
+ // setLater — запись вне кадра. localStorage.setItem синхронный и на холодном
+ // профиле умеет блокировать поток на десятки миллисекунд. Внутри забега это
+ // происходило на порогах достижений и на первой встрече с врагом, то есть
+ // ровно там, где идёт серия убийств — рывок ловился рукой, но не попадал в
+ // счётчик панели, потому что тот обнуляется каждые полсекунды.
+ // Записи по одному ключу схлопываются: пишется последнее значение.
+ _pend:null,
+ setLater(k,v){
+  if(!LS._pend){
+   LS._pend=Object.create(null);
+   const flush=()=>{const q=LS._pend;LS._pend=null;
+    if(q)for(const key in q)LS.set(key,q[key]);};
+   if(typeof requestIdleCallback==='function')requestIdleCallback(flush,{timeout:1200});
+   else setTimeout(flush,0);
+  }
+  LS._pend[k]=v;
+ }
 };
+// Незаписанное нельзя терять при закрытии вкладки.
+try{addEventListener('visibilitychange',()=>{
+ if(document.visibilityState==='hidden'&&LS._pend){
+  const q=LS._pend;LS._pend=null;for(const key in q)LS.set(key,q[key]);}
+});}catch(e){}
 // v5.88: комментарий обещал, что старые сейвы «будут мигрированы (или сброшены)
 // при следующем чтении». Миграции в коде НЕТ, и константа нигде не читается —
 // это ловушка для будущего себя. Текст приведён к правде: механизм миграции

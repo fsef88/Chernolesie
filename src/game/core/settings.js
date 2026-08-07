@@ -115,12 +115,35 @@ setInterval(()=>{
            ' touch '+touchMove.x.toFixed(2)+','+touchMove.y.toFixed(2)+' act '+(touchMove.active?1:0)+'\n'+
            ' move  '+JDBG.mx+','+JDBG.my+'  spd '+JDBG.spd+'  zoom '+ZOOM+'\n';
  const rows=['FPS '+String(PROF.fps).padStart(3)+'  rAF '+String(PROF.raf).padStart(3)+'  экран '+(__vsPeriod?Math.round(1000/__vsPeriod):0)+'Гц',
-            'jank '+PROF.jank+'  maxgap '+PROF.gapMax.toFixed(1)+'ms'];
+            'jank '+PROF.jank+'/'+(PROF.jankAll||0)+'  maxgap '+PROF.gapMax.toFixed(1)+'  пик5с '+(PROF.gapHold||0).toFixed(1)+'ms'+((PROF.gapHold||0)>25?'  <<< РЫВОК':'')];
  for(const k of ['upd','ground','world','atmos','hud','mini','rtotal']){
   const ms=(PROF.acc[k]||0)/(k==='upd'?nfF:nfD);
   rows.push(k.padEnd(6)+' '+ms.toFixed(2)+'ms'+(ms>8?'  <<<':''));
  }
- __profEl.textContent=rows.join('\n')+'\n'+_jd;   // v6.14: строки ввода
+ // Диагностика «мир стоит, а кадры идут». FPS и jank меряют только цикл; если
+ // они в норме, а картинка замирает, значит остановлено игровое ВРЕМЯ или сами
+ // враги. Эти четыре числа разводят все варианты сразу.
+ let _fz=0,_st=0,_mv=0,_en=0;
+ try{
+  for(const e of enemies){
+   if(e.dead||e.dying>0)continue;
+   _en++;
+   if(e.frozen>0)_fz++;
+   if((e.slow||1)<0.95)_st++;
+   if(Math.abs(e.x-(e._prevX!=null?e._prevX:e.x))>0.02||Math.abs(e.y-(e._prevY!=null?e._prevY:e.y))>0.02)_mv++;
+  }
+ }catch(_e){}
+ const pc=(n)=>_en?Math.round(n/_en*100)+'%':'-';
+ const _wd=' мир   evoPause '+(typeof evoPause!=='undefined'?evoPause.toFixed(2):'?')+
+           '  slowmo '+(typeof slowmo!=='undefined'?slowmo.toFixed(2):'?')+'\n'+
+           ' враги '+_en+'  идут '+pc(_mv)+'  мёрзлых '+pc(_fz)+'  вязнут '+pc(_st)+'\n';
+ __profEl.textContent=rows.join('\n')+'\n'+_wd+_jd;   // v6.14: строки ввода
+ // Пик держится 5 секунд, а не гаснет каждые полсекунды: рывки редкие, и
+ // при обнулении на каждом тике снимок панели их почти никогда не заставал.
+ PROF.jankAll=(PROF.jankAll||0)+PROF.jank;
+ if(PROF.gapMax>(PROF.gapHold||0))
+  {PROF.gapHold=PROF.gapMax;PROF.gapHoldT=10;}
+ else if((PROF.gapHoldT=(PROF.gapHoldT||0)-1)<=0)PROF.gapHold=0;
  PROF.frames=0;PROF.draws=0;PROF.acc={};PROF.jank=0;PROF.gapMax=0;
 },500);
 // v6.4: переключатель хронометра прямо в настройках. Раньше он включался только

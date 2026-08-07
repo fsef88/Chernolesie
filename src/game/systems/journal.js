@@ -6,7 +6,7 @@ function journalFind(kind,id,name){
  JOURNAL[kind]=JOURNAL[kind]||{};
  if(JOURNAL[kind][id])return false;
  JOURNAL[kind][id]=name||id;
- LS.set('cl_journal',JSON.stringify(JOURNAL));
+ LS.setLater('cl_journal',JSON.stringify(JOURNAL));   // вне кадра: см. LS.setLater
  return true;
 }
 function journalHas(kind,id){return !!(JOURNAL[kind]&&JOURNAL[kind][id]);}
