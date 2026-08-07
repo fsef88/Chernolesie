@@ -18,6 +18,10 @@
    ::after — сама сцена поверх него. Оба нужны отдельными псевдо-
    элементами: собственный фон #titlescreen рисуется раньше вложенных
    слоёв и был бы закрыт размытием.
+
+   Оба берут картинку из --ts-scene, которую ставит screen-title.js, —
+   без своего запасного url. Поэтому поля размываются по текущему герою,
+   а сама картинка инлайнится в сборку на одно вхождение меньше.
    ================================================================== */
 @media(min-width:761px){
  #titlescreen{
@@ -33,12 +37,12 @@
     вьюпорт, чтобы вся видимая часть осталась непрозрачной. */
  #titlescreen::before{
   content:'';display:block!important;position:fixed;inset:-80px;z-index:0;
-  background:#04101a url("@@A:ui/title-final-mobile.webp@@") center/cover no-repeat;
+  background:#04101a var(--ts-scene) center/cover no-repeat;
   filter:blur(34px) brightness(.34) saturate(.72);
  }
  #titlescreen::after{
   content:'';display:block!important;position:absolute;inset:0;z-index:1;
-  background:var(--ts-scene,url("@@A:ui/title-final-mobile.webp@@")) center/contain no-repeat;
+  background:var(--ts-scene) center/contain no-repeat;
  }
  /* Заголовок в 82 масштабируется от ширины вьюпорта, а не колонки:
     на широком экране он упирался в 44px и обрезался. Здесь та же доля,
