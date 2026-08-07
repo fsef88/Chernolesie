@@ -10,9 +10,13 @@ function drawCombatGroundVeil(px,py){
  ctx.fillRect(0,0,W,H);
  // Тёплое пятно около героя оставляет ориентир движения на приглушённой земле.
  const r=(120+70*pressure)*Math.max(1,Math.min(1.25,1/(ZOOM||1)*0.55));
+ // v8.12: пятно было тёплым и вчетверо плотнее. На прежней пёстрой земле оно
+ // терялось, на ровной холодной стало читаться как гало вокруг героя — и
+ // вдобавок тёплое пятно на холодном поле. Оставляем едва заметный холодный
+ // подсвет: герой и без него отделён тёмной подложкой и тенью.
  const g=ctx.createRadialGradient(px,py-4,8,px,py-4,r);
- g.addColorStop(0,'rgba(255,204,105,0.105)');
- g.addColorStop(0.48,'rgba(190,126,58,0.045)');
+ g.addColorStop(0,'rgba(150,196,220,0.030)');
+ g.addColorStop(0.48,'rgba(110,150,180,0.014)');
  g.addColorStop(1,'rgba(0,0,0,0)');
  ctx.globalCompositeOperation='lighter';
  ctx.fillStyle=g;ctx.beginPath();ctx.arc(px,py-4,r,0,TAU);ctx.fill();
@@ -30,7 +34,10 @@ function drawHeroPocket(px,py){
  const k=(typeof fxLoad==='function')?fxLoad():0;
  if(k<0.06)return;
  const r=78*Math.max(1,Math.min(1.3,1/(ZOOM||1)*0.6));
- const v=Math.round(255-96*k);   // при полной нагрузке центр гасится до 0.62
+ // v8.12: было 96 — на пёстрой земле незаметно, на ровной читалось тёмным
+ // диском. Засвет теперь и так ограничен потолком светового слоя, кармана
+ // хватает вдвое слабее.
+ const v=Math.round(255-46*k);
  const g=ctx.createRadialGradient(px,py,r*0.2,px,py,r);
  g.addColorStop(0,'rgb('+v+','+v+','+v+')');
  g.addColorStop(1,'rgb(255,255,255)');
