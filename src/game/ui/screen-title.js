@@ -19,7 +19,8 @@ function showTitleScreen(){
   const titleScenes={
    warrior:'@@A:ui/title-final-mobile.webp@@',
    druid:'@@A:ui/title-scene-druid.webp@@',
-   shaman:'@@A:ui/title-scene-shaman.webp@@'
+   shaman:'@@A:ui/title-scene-shaman.webp@@',
+   archer:'@@A:ui/title-scene-archer.webp@@'
   };
   const renderHeroPassport=(c)=>{
    // У каждого доступного пути свой нарисованный главный экран: выбор меняет
