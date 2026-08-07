@@ -2,8 +2,8 @@
 //  КЛАССЫ (архетипы с уникальной историей)
 // ============================================================
 const CLASSES=[
- {id:'warrior',name:'Кровавый Воин',icon:'⚔',arch:'Клинок и ярость',desc:'+28% HP, меч чаще, вампиризм с убийств. Q: Кровавый круг + щит 2.5с.',passive:()=>{P.maxhp*=1.28;P.hp=P.maxhp;P.swordRate=1.22;P.lifesteal=0.35;},startWeapon:'sword'},
- {id:'druid',name:'Знахарка Чернолесья',icon:'❄',arch:'Травы, оберег и стужа',desc:'+15% HP, аура стужи (контроль). Q: Морозный обет.',passive:()=>{P.maxhp*=1.15;P.hp=P.maxhp;frost.on=true;P.frostR=1.0;P.dmgMul*=0.88;},startWeapon:'sword'},
+ {id:'warrior',name:'Кровавый Воин',icon:'⚔',arch:'Клинок и ярость',desc:'+28% HP, меч чаще, вампиризм с убийств. Q: Кровавый круг + щит 2.5с.',passive:()=>{P.maxhp*=1.34;P.hp=P.maxhp;P.swordRate=1.30;},startWeapon:'sword'},
+ {id:'druid',name:'Знахарка Чернолесья',icon:'❄',arch:'Травы, оберег и стужа',desc:'+15% HP, аура стужи (контроль). Q: Морозный обет.',passive:()=>{P.hp=P.maxhp;frost.on=true;P.frostR=0.42;P.dmgMul*=0.94;},startWeapon:'sword'},
  {id:'shaman',name:'Волхв-Громовик',icon:'⚡',arch:'Гром и руны',desc:'Старт с цепной молнией, реген, +20% область, молнии бьют по 2 целям. Q: Гнев Перуна.',passive:()=>{
   hasBolt=true;
   P.regen=(P.regen||0)+0.45;
