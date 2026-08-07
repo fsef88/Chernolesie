@@ -20,7 +20,10 @@ function showTitleScreen(){
    warrior:'@@A:ui/title-final-mobile.webp@@',
    druid:'@@A:ui/title-scene-druid.webp@@',
    shaman:'@@A:ui/title-scene-shaman.webp@@',
-   archer:'@@A:ui/title-scene-archer.webp@@'
+   archer:'@@A:ui/title-scene-archer.webp@@',
+   rogue:'@@A:ui/title-scene-rogue.webp@@',
+   ognevik:'@@A:ui/title-scene-ognevik.webp@@',
+   groznik:'@@A:ui/title-scene-groznik.webp@@'
   };
   const renderHeroPassport=(c)=>{
    // У каждого доступного пути свой нарисованный главный экран: выбор меняет

@@ -439,7 +439,10 @@
   "ui/avatar-archer-menu.webp": "image/webp",
   "ui/avatar-ognevik-menu.webp": "image/webp",
   "ui/avatar-groznik-menu.webp": "image/webp",
-  "ui/title-scene-archer.webp": "image/webp"
+  "ui/title-scene-archer.webp": "image/webp",
+  "ui/title-scene-rogue.webp": "image/webp",
+  "ui/title-scene-ognevik.webp": "image/webp",
+  "ui/title-scene-groznik.webp": "image/webp"
  },
  "parts": [
   {
