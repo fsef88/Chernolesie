@@ -126,7 +126,12 @@ function drawAtmosphere(px,py){
 //  sat — сколько насыщенности оставить (100 = как есть).
 // Меняется здесь одним местом; _gtVar достаточно обнулить, чтобы перепечь.
 // v11.3 COMMERCIAL VISUAL CONTRAST & LIGHTING: свежая лесная гамма с высокой читаемостью врагов
- const GROUND_GRADE={mul:'#a8b89e',sat:55,flat:0};
+ // Тайл земли рисуется процедурно (tools/gen-ground.py) уже в нужном тоне:
+ // холодный, тёмный, низкочастотный. Поэтому пост-грейдинг выключен — null
+ // в любом поле пропускает соответствующий проход. Прежний множитель
+ // '#a8b89e' вдобавок ГРЕЛ картинку (синий канал у него самый низкий),
+ // хотя комментарии ниже обещают обратное.
+ const GROUND_GRADE={mul:null,sat:null,flat:0};
 function drawGround(){
  ctx.fillStyle=theme==='winter'?'#3a4a5a':(nightMode||theme==='night')?'#0a0a18':'#1a2410';
  ctx.fillRect(0,0,W,H);
@@ -158,10 +163,14 @@ function drawGround(){
     g2.globalCompositeOperation='source-over';
     g2.fillStyle='rgba(26,30,24,'+GROUND_GRADE.flat+')';g2.fillRect(0,0,_ts,_ts);
    }
-   g2.globalCompositeOperation='multiply';
-   g2.fillStyle=GROUND_GRADE.mul;g2.fillRect(0,0,_ts,_ts);
-   g2.globalCompositeOperation='saturation';
-   g2.fillStyle='hsl(0,'+GROUND_GRADE.sat+'%,50%)';g2.fillRect(0,0,_ts,_ts);
+   if(GROUND_GRADE.mul){
+    g2.globalCompositeOperation='multiply';
+    g2.fillStyle=GROUND_GRADE.mul;g2.fillRect(0,0,_ts,_ts);
+   }
+   if(GROUND_GRADE.sat!=null){
+    g2.globalCompositeOperation='saturation';
+    g2.fillStyle='hsl(0,'+GROUND_GRADE.sat+'%,50%)';g2.fillRect(0,0,_ts,_ts);
+   }
    g2.globalCompositeOperation='source-over';
    for(let si=0;si<2;si++){const h2=(Math.imul(_hs[v]+si*777777,2654435761))>>>0;
     const pr=250+(h2&127),dk=(h2>>9)&3;

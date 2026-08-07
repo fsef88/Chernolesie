@@ -313,7 +313,6 @@
   "art/world/d8jghlsbhoduaaaaasuvork5cyii.png": "image/png",
   "art/world/gcj9pafpl9hzgaaaabjru5erkjggg.png": "image/png",
   "art/world/bzt6us0nacb2aaaaaelftksuqmcc.png": "image/png",
-  "art/world/or8ekkyu2begaaaaasuvork5cyii.jpg": "image/jpeg",
   "art/util/math.jpg": "image/jpeg",
   "art/art-registry/chest-art.webp": "image/webp",
   "art/art-registry/aura-art-idol.webp": "image/webp",
@@ -442,7 +441,8 @@
   "ui/title-scene-archer.webp": "image/webp",
   "ui/title-scene-rogue.webp": "image/webp",
   "ui/title-scene-ognevik.webp": "image/webp",
-  "ui/title-scene-groznik.webp": "image/webp"
+  "ui/title-scene-groznik.webp": "image/webp",
+  "art/world/ground-winter.webp": "image/webp"
  },
  "parts": [
   {
