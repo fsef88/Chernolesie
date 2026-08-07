@@ -155,11 +155,16 @@ function showTitleScreen(){
   const renderLiveDeck=()=>{
    if(!liveDeck)return;
    liveDeck.innerHTML='';
+   // Метка выбора остаётся на том пути, которым игрок реально пойдёт в бой.
+   // Центр колоды — это только просмотр: на закрытом пути он подсвечивает
+   // карточку, но выбранным классом её не делает, иначе экран обещал бы
+   // героя, которого «В БОЙ» всё равно не запустит.
+   const selId=currentClass||(CLASSES[0]&&CLASSES[0].id);
    [-1,0,1].forEach(offset=>{
     const i=(liveIndex+offset+CLASSES.length)%CLASSES.length;
     const c=CLASSES[i],open_=classUnlocked(c.id);
     const b=document.createElement('button');
-    b.type='button';b.className='liveHero'+(offset===0?' current':'')+(open_?'':' locked');
+    b.type='button';b.className='liveHero'+(c.id===selId?' current':'')+(offset===0?' focus':'')+(open_?'':' locked');
     b.dataset.hero=c.id;
     const source=CLASS_ART[c.id]&&CLASS_ART[c.id].src;
     const art=source?`<img src="${source}" alt="">`:'';
