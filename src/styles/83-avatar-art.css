@@ -1,5 +1,0 @@
-/* Портреты колоды вынесены из игрового JS в CSS: интерфейс не задерживает
-   запуск из-за больших data-URI в скрипте. */
-@media(max-width:760px){
- .liveHero[data-hero="warrior"] img{content:url("@@A:ui/avatar-warrior-menu.png@@")}.liveHero[data-hero="druid"] img{content:url("@@A:ui/avatar-druid-menu.png@@")}.liveHero[data-hero="shaman"] img{content:url("@@A:ui/avatar-shaman-menu.png@@")}.liveHero[data-hero="rogue"] img{content:url("@@A:ui/avatar-rogue-menu.png@@")}.liveHero[data-hero="archer"] img{content:url("@@A:ui/avatar-archer-menu.png@@")}.liveHero[data-hero="ognevik"] img{content:url("@@A:ui/avatar-ognevik-menu.png@@")}.liveHero[data-hero="groznik"] img{content:url("@@A:ui/avatar-groznik-menu.png@@")}
-}

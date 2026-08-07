@@ -430,13 +430,8 @@
   "ui/title-final-mobile.webp": "image/webp",
   "ui/title-scene-druid.webp": "image/webp",
   "ui/title-scene-shaman.webp": "image/webp",
-  "ui/avatar-warrior-menu.png": "image/png",
-  "ui/avatar-druid-menu.png": "image/png",
-  "ui/avatar-shaman-menu.png": "image/png",
-  "ui/avatar-rogue-menu.png": "image/png",
-  "ui/avatar-archer-menu.png": "image/png",
-  "ui/avatar-ognevik-menu.png": "image/png",
-  "ui/avatar-groznik-menu.png": "image/png"
+  "art/sprites/dragon-frames.webp": "image/webp",
+  "art/sprites/grlbjsaaaaaaa.webp": "image/webp"
  },
  "parts": [
   {
@@ -608,14 +603,6 @@
    "srcLines": [
     1,
     200
-   ]
-  },
-  {
-   "file": "styles/83-avatar-art.css",
-   "note": "v25 аватары нижней колоды вне игрового JS",
-   "srcLines": [
-    1,
-    20
    ]
   },
   {
