@@ -1,18 +1,47 @@
-<!-- v5.34: ТИТУЛЬНЫЙ ЭКРАН ВЫБОРА ГЕРОЯ (аудит C1) -->
+<!-- Иллюстративная UI-пластина нарисована отдельным asset; DOM только накладывает живые данные и интерактив. -->
 <div id="titlescreen">
-  <div id="tsGlyph"><img src="@@A:art/30-title.html/tsglyph.webp@@" alt="" style="width:84px;height:84px;display:block;margin:0 auto;filter:drop-shadow(0 0 18px rgba(120,200,120,.45))"></div>
-  <h1>ЧЁРНОЛЕСЬЕ</h1>
-  <div id="tsSub">Защитник Заставы — выбери свой путь</div>
-  <div id="tsMode" role="group" aria-label="Длительность забега"></div>
-  <div id="tsCorr" role="group" aria-label="Ступень Порчи"></div>
-  <div id="tsRow"></div>
-  <div id="tsFooter"><button class="big" id="btnStartPoohd" type="button">⚔ В бой</button></div>
-  <!-- v7.36 ОТЛАДКА: вход прямо к Горынычу, чтобы настройка боя не стоила получаса
-       живой игры. Кнопка временная — снять перед отправкой в Яндекс вместе с
-       devBossRush() в systems/bosses.js. -->
-  <div id="devBossRushWrap" style="text-align:center;margin-top:6px;display:none"><button id="btnBossRush" type="button" style="font-size:11px;padding:5px 12px;opacity:.55;background:#241a10;color:#c9a04a;border:1px solid #6a5a34;border-radius:6px">⚙ сразу к Горынычу</button></div>
+  <div id="tsFeaturedHero" aria-hidden="true"></div>
+  <div class="ts-title-lockup">
+    <img id="tsGlyph" src="@@A:art/30-title.html/tsglyph.webp@@" alt="">
+    <h1>ЧЁРНОЛЕСЬЕ</h1>
+    <div id="tsSub">Защитник Заставы</div>
+  </div>
+
+  <aside class="ts-sidebar" aria-label="Меню заставы">
+    <div class="ts-seal-copy"><b>ПЕЧАТЬ ЗАСТАВЫ</b><span><i></i><i></i><i></i><i></i><i></i></span><em>3 / 7</em></div>
+    <button type="button" data-title-action="achievements">ДОСТИЖЕНИЯ</button>
+    <button type="button" data-title-action="journal">ЛЕТОПИСЬ</button>
+    <button type="button" data-title-action="stats">СТАТИСТИКА</button>
+    <button type="button" data-title-action="tree">ДРЕВО СИЛЫ</button>
+  </aside>
+
+  <section class="ts-run-modes" aria-label="Выбор длительности похода">
+    <div id="tsMode" role="group" aria-label="Длительность забега"></div>
+  </section>
+
+  <section class="ts-hero-panel" aria-label="Сведения о выбранном герое">
+    <div class="ts-panel-rule"></div>
+    <h2 id="tsHeroName">КРОВАВЫЙ ВОИН</h2>
+    <p class="ts-hero-role" id="tsHeroArch">КЛИНОК И ЯРОСТЬ</p>
+    <div class="ts-hearts" aria-label="Живучесть">♥ ♥ ♥ ♥ ♥</div>
+    <div class="ts-hero-stats" id="tsHeroStats"></div>
+    <div class="ts-hero-trait"><b>ОСОБЕННОСТЬ</b><p id="tsHeroDesc"></p></div>
+    <div id="tsCorr" role="group" aria-label="Ступень Порчи"></div>
+  </section>
+
+  <section class="ts-class-deck" aria-label="Выбор защитника">
+    <button class="deck-arrow prev" id="tsDeckPrev" type="button" aria-label="Предыдущие герои">‹</button>
+    <div id="tsRow"></div>
+    <div id="tsLiveDeck" aria-label="Живая колода героев"></div>
+    <button class="deck-arrow next" id="tsDeckNext" type="button" aria-label="Следующие герои">›</button>
+    <div class="deck-pages" id="tsDeckPages" aria-hidden="true"></div>
+  </section>
+
+  <footer id="tsFooter">
+    <button class="big" id="btnStartPoohd" type="button">⚔ <span>В БОЙ</span></button>
+  </footer>
+  <div id="devBossRushWrap" style="display:none"><button id="btnBossRush" type="button">⚙ сразу к Горынычу</button></div>
 </div>
-<!-- #wakeup удалён (#9): был мёртвым — никогда показывался. Заменён авто-паузой на visibilitychange -->
 <div id="classUnlockToast"><div class="u1">ОТКРЫТ НОВЫЙ ПУТЬ</div><div class="u2" id="cutName"></div></div>
 <div id="hitFlash"></div>
 <div id="lowHpVignette"></div>

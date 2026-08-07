@@ -119,7 +119,9 @@ function evolveWeapon(w){
  P.dmgMul = (P.dmgMul||1) * 1.10;
  flashScreen('#ffd77d', 0.65);
  vibe(100);
- for(const e of enemies){
+ // FIX v7.38: используем spatial hash вместо перебора всех врагов — O(1) вместо O(n)
+ const nearPlayer = enemiesNear(P.x, P.y, 600);
+ for(const e of nearPlayer){
    if(e.alive && e.hp > 0 && !e.boss){
      hitEnemy(e, (P.maxhp||100) * 1.5, 'evo', true);
    }

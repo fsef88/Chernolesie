@@ -37,7 +37,9 @@ function stopFury(){
 const SURGES=[
  {n:60,  t:'ЧЁРНЫЙ ПОЛДЕНЬ', s:'чаща замерла', c:'#b478ff', f:function(){
    // Замирают ВРАГИ, а не мир: игрок продолжает двигаться и рубить неподвижных.
-   for(const e of enemies){if(e.hp>0&&!e.boss)e.frozen=Math.max(e.frozen||0,1.4);}
+   // FIX v7.38: используем spatial hash вместо перебора всех врагов — O(1) вместо O(n)
+   const nearPlayer = enemiesNear(P.x, P.y, 500);
+   for(const e of nearPlayer){if(e.hp>0&&!e.boss)e.frozen=Math.max(e.frozen||0,1.4);}
    flashScreen('#b478ff',0.5);
  }},
  {n:160, t:'ЯРОСТЬ ЗАСТАВЫ',s:'+30% урона на 6 секунд',c:'#ff8a3c',f:function(){
@@ -53,9 +55,10 @@ const SURGES=[
    // Радиус срезан с 560 до 420: на пороге 900 это всё ещё мощно, но уже не
    // «полэкрана даром» — раньше эта ступень наступала на второй минуте.
    let n=0;
-   for(const e of enemies){
+   // FIX v7.38: используем spatial hash вместо перебора всех врагов — O(1) вместо O(n)
+   const nearPlayer = enemiesNear(P.x, P.y, 420);
+   for(const e of nearPlayer){
     if(e.hp<=0||e.dying>0||e.boss||e.mini)continue;
-    if(dist2(e.x-P.x,e.y-P.y)>420*420)continue;
     hitEnemy(e,e.hp+1,'void',true);n++;
    }
    flashScreen('#ffd77d',0.7);log('☠ Жатва Нави: обращено в прах — '+n,'gold');

@@ -424,11 +424,6 @@
   "art/icons/ic_69c2fc12.jpg": "image/jpeg",
   "art/icons/ic_a2d4330c.jpg": "image/jpeg",
   "art/icons/s8ugjyngwwkltkjqfnqdziu9xp.jpg": "image/jpeg",
-  "art/icons/painted-boons.jpg": "image/jpeg",
-  "art/icons/yrwhd39fz.jpg": "image/jpeg",
-  "art/icons/ic_33eec2a3.jpg": "image/jpeg",
-  "art/icons/ic_30b33ad0.jpg": "image/jpeg",
-  "art/icons/ic_25364297.jpg": "image/jpeg",
   "art/icons/painted-curses.jpg": "image/jpeg",
   "art/icons/ic_4b135bbd.webp": "image/webp",
   "art/icons/ic_722bfb58.jpg": "image/jpeg",
@@ -443,7 +438,33 @@
   "art/fx-layer/-bakedchainspr.png": "image/png",
   "art/fx-layer/-bakeddrainspr.png": "image/png",
   "art/fx-layer/-bakedidolspr.png": "image/png",
-  "art/fx-layer/-bakedlaserspr.png": "image/png"
+  "art/fx-layer/-bakedlaserspr.png": "image/png",
+  "art/boon-bg.webp": "image/webp",
+  "art/icons/painted-boons.webp": "image/webp",
+  "art/icons/yrwhd39fz.webp": "image/webp",
+  "art/icons/ic_33eec2a3.webp": "image/webp",
+  "art/icons/ic_30b33ad0.webp": "image/webp",
+  "art/icons/ic_25364297.webp": "image/webp",
+  "ui/title-hero.png": "image/png",
+  "ui/title-menu-plate.png": "image/png",
+  "ui/title-menu-mobile-plate.png": "image/png",
+  "ui/title-cold-desktop.png": "image/png",
+  "ui/title-cold-mobile.png": "image/png",
+  "ui/title-final-mobile.png": "image/png",
+  "ui/title-scene-warrior.png": "image/png",
+  "ui/title-scene-druid.png": "image/png",
+  "ui/title-scene-shaman.png": "image/png",
+  "ui/avatar-warrior-menu.png": "image/png",
+  "ui/avatar-druid-menu.png": "image/png",
+  "ui/avatar-shaman-menu.png": "image/png",
+  "ui/avatar-rogue-menu.png": "image/png",
+  "ui/avatar-archer-menu.png": "image/png",
+  "ui/avatar-ognevik-menu.png": "image/png",
+  "ui/avatar-groznik-menu.png": "image/png",
+  "ui/title-scene-rogue.png": "image/png",
+  "ui/title-scene-archer.png": "image/png",
+  "ui/title-scene-ognevik.png": "image/png",
+  "ui/title-scene-groznik.png": "image/png"
  },
  "parts": [
   {
@@ -587,50 +608,42 @@
   },
   {
    "file": "styles/60-touch-rework.css",
-   "note": "v6.27 переработка тач-интерфейса по канону жанра",
+   "note": "тач UI",
    "srcLines": [
-    1215,
-    1392
-   ]
-  },
-  {
-   "file": "styles/61-title-cta.css",
-   "note": "v6.29 фикс кнопки «В бой»",
-   "srcLines": [
-    1393,
-    1439
-   ]
-  },
-  {
-   "file": "styles/62-bottom-action-bar.css",
-   "note": "v6.30 нижняя панель главного действия",
-   "srcLines": [
-    1440,
-    1517
-   ]
-  },
-  {
-   "file": "styles/63-ios-start-fix.css",
-   "note": "v6.52 фикс стартовой кнопки на iOS",
-   "srcLines": [
-    1518,
-    1550
+    1,
+    1
    ]
   },
   {
    "file": "styles/64-mobile-hud-cleanup.css",
-   "note": "v6.56 чистка мобильного HUD + раннее давление",
+   "note": "мобильный HUD",
    "srcLines": [
-    1551,
-    1645
+    1,
+    1
    ]
   },
   {
    "file": "styles/65-levelup-list.css",
-   "note": "v7.32 окно уровня: список во всю ширину",
+   "note": "окно уровня",
    "srcLines": [
-    1646,
-    1820
+    1,
+    1
+   ]
+  },
+  {
+   "file": "styles/82-title-final.css",
+   "note": "финальная единая раскладка главного экрана и живой колоды",
+   "srcLines": [
+    1,
+    200
+   ]
+  },
+  {
+   "file": "styles/83-avatar-art.css",
+   "note": "v25 аватары нижней колоды вне игрового JS",
+   "srcLines": [
+    1,
+    20
    ]
   },
   {
@@ -693,14 +706,6 @@
    "srcLines": [
     2037,
     2051
-   ]
-  },
-  {
-   "file": "game/data/hero-warrior-v674.orphan.js",
-   "note": "НЕ ИСПОЛНЯЕТСЯ: в оригинале лежит между </script> и <script>. См. docs/known-issues.md",
-   "srcLines": [
-    2052,
-    2074
    ]
   },
   {

@@ -30,50 +30,70 @@ function maybeShowClassSelect(){
 // ============================================================
 //  ВЫБОР БОЖЕСТВА — показывается в забеге на ~1:30
 // ============================================================
+// v7.39: выбор божества — полноразмерный режим с пятью большими медальонами
+// и навигацией ←/→, 1-5, Enter. Старые .booncard/.boonrow использовались в мини-режиме;
+// теперь разметка другая, логика вынесена в эту функцию.
 let boonShown=false;
+let _boonIdx=0;
 function maybeShowBoonSelect(){
  if(boonShown||currentBoon)return;
  boonShown=true;
  paused=true;
  sfxFlip();
  const row=document.getElementById('boonrow');row.innerHTML='';
- BOONS.forEach(b=>{
+ _boonIdx=0;
+ const setActive=i=>{
+  _boonIdx=((i%BOONS.length)+BOONS.length)%BOONS.length;
+  row.querySelectorAll('.booncard-full').forEach((el,idx)=>el.classList.toggle('active',idx===_boonIdx));
+ };
+ const pick=i=>{
+  const b=BOONS[_boonIdx];
+  currentBoon=b.id;
+  document.getElementById('boondisp').innerHTML=`<span class="boon-badge">${boonMini(b.id)}${b.name}</span>`;
+  document.getElementById('boonov').style.display='none';
+  b.apply();
+  // проклятие (40%, кроме друида)
+  if(seedRandom()<0.4&&currentClass!=='druid'){
+   const c=CURSES[Math.floor(seedRandom()*CURSES.length)];
+   currentCurse=c.id;
+   bossT=c.id==='time'?Math.max(60,Math.round(BOSS_TIME*0.85)):BOSS_TIME;
+   miniIdx=0;
+   if(c.id==='glass'){P.dmgMul*=2;P.maxhp*=0.4;P.hp=Math.min(P.maxhp,P.hp);}
+   const cIcon=document.createElement('div');
+   cIcon.className='curse-icon';cIcon.id='curseBadge';
+   const timeCut=BOSS_TIME-Math.max(60,Math.round(BOSS_TIME*0.85));
+   const desc=c.id==='blind'?'Без карты':c.id==='famine'?'Золото ×0.5':c.id==='glass'?'Урон×2 HP×0.4':('Босс на '+fmt(timeCut)+' раньше');
+   cIcon.innerHTML=`${curseMini(c.id)}${c.name}<span class="desc">${desc}</span>`;
+   document.body.appendChild(cIcon);
+  }
+  paused=false;
+  resumeAudio();
+  log(`${b.icon} ${b.name} благословляет тебя!`, 'gold');
+  // Снимем временный слушатель клавиатуры (если он был)
+  document.removeEventListener('keydown',_boonKeys);
+ };
+ const _boonKeys=function(e){
+  // не реагируем, если открыт другой оверлей (например, пауза)
+  const ov=document.getElementById('boonov');
+  if(!ov||ov.style.display==='none')return;
+  if(e.key==='ArrowRight'||e.key==='d'||e.key==='в'||e.key==='В'){setActive(_boonIdx+1);e.preventDefault();}
+  else if(e.key==='ArrowLeft'||e.key==='a'||e.key==='ф'||e.key==='Ф'){setActive(_boonIdx-1);e.preventDefault();}
+  else if(e.key==='Enter'||e.key===' '){pick();e.preventDefault();}
+  else if(/^[1-5]$/.test(e.key)){setActive(parseInt(e.key,10)-1);e.preventDefault();}
+ };
+ BOONS.forEach((b,i)=>{
   const d=document.createElement('div');
-  d.className='booncard';
-  d.style.setProperty('--class-color',BOON_COLORS[b.id]||'#c9a04a');
-  d.innerHTML=`${boonArt(b.id)}<h3 style="text-align:center">${b.name}</h3><p>${b.desc}</p><span class="fxRunes"></span><span class="fxEdge"></span><span class="fxDust"></span>`;
-  d.onclick=()=>{
-   currentBoon=b.id;
-   document.getElementById('boondisp').innerHTML=`<span class="boon-badge">${boonMini(b.id)}${b.name}</span>`;
-   document.getElementById('boonov').style.display='none';
-   b.apply();
-   // проклятие (40%, кроме друида)
-   if(seedRandom()<0.4&&currentClass!=='druid'){
-    const c=CURSES[Math.floor(seedRandom()*CURSES.length)];
-    currentCurse=c.id;
-    // v5.84: минус 60 с от 1680 — это 3.5%, проклятие перестало ощущаться
-    // (при старом трёхминутном забеге те же 60 с были −33%). Делаем долей.
-    bossT=c.id==='time'?Math.max(60,Math.round(BOSS_TIME*0.85)):BOSS_TIME;
-    miniIdx=0;
-    if(c.id==='glass'){P.dmgMul*=2;P.maxhp*=0.4;P.hp=Math.min(P.maxhp,P.hp);}
-    const cIcon=document.createElement('div');
-    cIcon.className='curse-icon';cIcon.id='curseBadge';
-    // v5.93: у проклятия «Время» ДВА описания в разных местах — в CURSES и здесь,
-    // на экранной плашке. В v5.84 эффект стал долей от длины забега, в CURSES
-    // текст поправлен в v5.86, а плашка так и осталась «Босс -1мин».
-    // Считаем от той же формулы, что применена выше, чтобы больше не разъезжалось.
-    const timeCut=BOSS_TIME-Math.max(60,Math.round(BOSS_TIME*0.85));
-    const desc=c.id==='blind'?'Без карты':c.id==='famine'?'Золото ×0.5':c.id==='glass'?'Урон×2 HP×0.4':('Босс на '+fmt(timeCut)+' раньше');
-    cIcon.innerHTML=`${curseMini(c.id)}${c.name}<span class="desc">${desc}</span>`;
-    document.body.appendChild(cIcon);
-   }
-   paused=false;
-   resumeAudio();
-   log(`${b.icon} ${b.name} благословляет тебя!`, 'gold');
-  };
+  d.className='booncard-full';
+  const col=BOON_COLORS[b.id]||'#c9a04a';
+  d.style.setProperty('--boon-glow',col);
+  d.innerHTML=`<img class="boonmed-full" src="${PAINTED_BOONS[b.id]}" alt="${b.name}"><div class="boon-name-full">${b.name}</div>`;
+  d.onclick=()=>{setActive(i);pick();};
+  d.onmouseenter=()=>setActive(i);
   row.appendChild(d);
  });
+ document.addEventListener('keydown',_boonKeys);
  document.getElementById('boonov').style.display='flex';
+ setActive(0);
 }
 
 

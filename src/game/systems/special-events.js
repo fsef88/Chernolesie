@@ -31,7 +31,9 @@ function updateSpecialEvents(dt){
  if(specialE.t>0)return;
  specialE.t=70+srnd(0,25);
  // Не больше одного спец-врага на экране одновременно
- for(const en of enemies){if(en.alive&&en.hp>0&&(en.courier||en.beacon||en.shaman))return;}
+ // FIX v7.38: используем spatial hash вместо перебора всех врагов — O(1) вместо O(n)
+ const nearCam = enemiesNear(cam.x+W/2, cam.y+H/2, Math.max(W,H)*0.6);
+ for(const en of nearCam){if(en.alive&&en.hp>0&&(en.courier||en.beacon||en.shaman))return;}
  const pool=['courier'];
  if(time>=180)pool.push('beacon');
  if(time>=320)pool.push('shaman');
@@ -40,7 +42,9 @@ function updateSpecialEvents(dt){
  else if(kind==='beacon')spawnBeacon();
  else spawnShaman();
  // Маяк: каждые ~2.4с призывает 3-5 врагов вокруг себя (пока жив)
- for(const en of enemies){
+ // FIX v7.38: используем spatial hash вместо перебора всех врагов — O(1) вместо O(n)
+ const nearBeacons = enemiesNear(cam.x+W/2, cam.y+H/2, Math.max(W,H)*0.7);
+ for(const en of nearBeacons){
   if(!(en.beacon&&en.alive&&en.hp>0))continue;
   en.sumT=(en.sumT||0)-dt;
   if(en.sumT<=0){

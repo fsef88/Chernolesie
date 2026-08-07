@@ -1,0 +1,6 @@
+/* v20 — нижняя колода является частью нарисованной сцены. DOM оставляет
+   только прозрачные hit-зоны для выбора, без второго визуального слоя. */
+@media(max-width:760px){
+ .ts-class-deck .classcard .classportrait,.ts-class-deck .classcard h3,.ts-class-deck .classcard .lockseal{display:none!important}
+ .ts-class-deck .classcard.sel{outline:0!important;box-shadow:none!important}
+}

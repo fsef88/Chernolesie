@@ -17,10 +17,12 @@ function updateProjectiles(dt){
  // = 60 раз/сек на 1 врага = 360 частик/сек. На 10 врагов = 3600 частиц/сек → freeze.
  if(hasOrbit){
   orbAngle+=dt*3;
+  // FIX v7.38: используем spatial hash для орбиты — O(1) вместо O(n)
+  const nearPlayer = enemiesNear(P.x, P.y, 90); // 70 + e.r(max~20)
   for(let i=0;i<orbCount;i++){
    const a=orbAngle+i*(TAU/orbCount);
    const ox=P.x+Math.cos(a)*70,oy=P.y+Math.sin(a)*70;
-   for(const e of enemies){
+   for(const e of nearPlayer){
     if(dist(e.x-ox,e.y-oy)<e.r+10){
      // Чистый урон без частиц (множитель 15 вместо 60*0.25=15 — то же значение)
      dealDamage(e,5.2*P.dmgMul*(P.shadowOrbMul||1)*dt*12);
@@ -28,7 +30,7 @@ function updateProjectiles(dt){
      e.orbT=(e.orbT||0)-dt;
      if(e.orbT<=0){
       spawnFlash(e.x,e.y-e.r*0.6,0,'#b478ff');
-      spawnDmgText(e.x+rnd(-12,12),e.y-e.r,Math.round(8*P.dmgMul*15),'void');
+      spawnDmgText(e.x+rnd(-12,12),e.y-e.y,Math.round(8*P.dmgMul*15),'void');
       e.orbT=0.4;
      }
     }
@@ -58,14 +60,16 @@ function updatePoison(dt){
    zones.push({x:e.x,y:e.y,r:(48+12*poison.lvl)*(1+0.18*_pc),t:_pt,max:_pt,dmg:6*poison.lvl*P.dmgMul*(1+0.25*_pc)});
   }
  }
- for(const z of zones){z.t-=dt;
+ for(let zi=0;zi<zones.length;zi++){const z=zones[zi];z.t-=dt;
   if(z.dmg<=0)continue;   // v6.17: кольцо оберега урон уже нанесло, это только визуал
   // v6.34: у Набата (_bell) есть СВОЙ удар раз в 0.5 с полным уроном (ниже).
   // Постоянный тик зоны применялся к нему тоже — оружие било двумя каналами
   // и не реагировало на баланс урона (замер: 509 убийств против медианы 64).
   // Пропускаем только постоянный тик; собственный удар набата остаётся.
+  // FIX v7.38: используем spatial hash вместо перебора всех врагов — O(1) вместо O(n)
+  const zoneEnemies = enemiesNear(z.x, z.y, z.r);
   if(!z._bell)
-  for(const e of enemies){if(e.hp<=0||e.dying>0)continue;
+  for(const e of zoneEnemies){if(e.hp<=0||e.dying>0)continue;
    if(dist(e.x-z.x,e.y-z.y)<z.r+e.r){dealDamage(e,z.dmg*dt);
     if(z._fire&&z._evo&&seedRandom()<0.04)e.poisoned=Math.max(e.poisoned||0,1.2);}}
    // v6.19c: рост Выжженного пути ВНЕ цикла врагов — иначе след не рос,
@@ -91,13 +95,13 @@ function updatePoison(dt){
  // в updateProjectiles() — то есть ДО того, как у зоны уменьшится t,
  // а созревшую зону тот же кадр удалял prune ниже. Взрыв не случался
  // ни разу за забег: замер показал 9 созревших зон и 0 урона.
+ }
  tickSeeds();
  prune(zones,z=>z.t>0); // #12: in-place — без нового массива каждый кадр
  // очистка собранных аномалий. Раньше splice в tryClaimAnomaly ломал
  // for...of итератор, и соседние аномалии пропускались. Теперь они остаются в массиве
  // с флагом claimed=true, и здесь мы массово удаляем их в одном проходе.
  prune(anomalies,a=>!a.claimed); // #12: in-place
-}
 // ============================================================
 //  v5.69 тело цикла врагов вынесено из updateEnemies (было 284 строки
 //  в одном for). Внешние радиусы передаются параметрами, чтобы не

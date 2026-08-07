@@ -80,12 +80,13 @@ function iconPaint(ic){
 // Мини-портрет класса для HUD-чипа и экрана итогов
 function classTiny(id){const i=CLASS_ART[id];return i&&i.src?'<img class="minip" src="'+i.src+'" alt="">':'';}
 // v5.17 — медальоны божеств
+// v7.39: переход на webp с прозрачным фоном (белые квадраты на тёмном фоне при jpg)
 const PAINTED_BOONS={
- veles:'@@A:art/icons/painted-boons.jpg@@',
- morana:'@@A:art/icons/yrwhd39fz.jpg@@',
- perun:'@@A:art/icons/ic_33eec2a3.jpg@@',
- yarilo:'@@A:art/icons/ic_30b33ad0.jpg@@',
- mokosh:'@@A:art/icons/ic_25364297.jpg@@'
+ veles:'@@A:art/icons/painted-boons.webp@@',
+ morana:'@@A:art/icons/yrwhd39fz.webp@@',
+ perun:'@@A:art/icons/ic_33eec2a3.webp@@',
+ yarilo:'@@A:art/icons/ic_30b33ad0.webp@@',
+ mokosh:'@@A:art/icons/ic_25364297.webp@@'
 };
 const BOON_COLORS={veles:'#6ce0c0',morana:'#bfe0ff',perun:'#8fd0ff',yarilo:'#ffcf6a',mokosh:'#a8d06a'};
 function boonArt(id){const s=PAINTED_BOONS[id];return s?'<img class="boonmed" src="'+s+'" alt="">':'';}

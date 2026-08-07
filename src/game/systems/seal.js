@@ -149,7 +149,9 @@ function useSpecial(){
   const R=430,hw=64;
   const ex=P.x+Math.cos(base)*R,ey=P.y+Math.sin(base)*R;
   const dx=ex-P.x,dy=ey-P.y,dd=dx*dx+dy*dy;
-  for(const e of enemies){
+  // FIX v7.38: используем spatial hash вместо перебора всех врагов — O(1) вместо O(n)
+  const nearLine = enemiesNear(P.x, P.y, R);
+  for(const e of nearLine){
    if(!e.alive||e.hp<=0)continue;
    const t=clamp(((e.x-P.x)*dx+(e.y-P.y)*dy)/dd,0,1);
    const px=P.x+dx*t,py=P.y+dy*t;

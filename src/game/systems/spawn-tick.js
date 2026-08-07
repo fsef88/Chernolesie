@@ -12,10 +12,11 @@ function updateSpawning(dt){
   // (при 3 тиках × 15 врагов = 45 лишних итераций/кадр). Новые враги всегда
   // спавнятся ЗА nearR (dist >= max(W,H)/2+100) — счётчик в цикле не меняется.
   const nearR=Math.max(W,H)*0.4;
-  const nearR2=nearR*nearR;
+  // FIX v7.38: используем spatial hash вместо перебора всех врагов — O(1) вместо O(n)
+  const nearEnemies = enemiesNear(P.x, P.y, nearR);
   let nearCount=0;
-  for(const e of enemies){
-   if(e.hp>0&&!(e.dying>0)&&dist2(e.x-P.x,e.y-P.y)<nearR2)nearCount++;
+  for(const e of nearEnemies){
+   if(e.hp>0&&!(e.dying>0))nearCount++;
   }
   const _cap=enemyCap(time),_near=nearCap(time);   // v5.64: капы растут со временем
   while(spawnTimer<=0){

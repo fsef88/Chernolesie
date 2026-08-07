@@ -1,0 +1,6 @@
+/* v15 — точная посадка текста в нарисованные слоты и надёжный touch-выбор. */
+@media(max-width:760px){
+ .ts-title-lockup{display:flex!important;align-items:center!important;text-align:center!important}.ts-title-lockup #tsSub{display:block!important;width:100%!important;text-align:center!important;white-space:nowrap!important;font-size:9px!important;letter-spacing:.16em!important}
+ .ts-run-modes{display:block!important}.ts-run-modes #tsMode{height:100%!important;align-items:stretch!important}.ts-run-modes .modebtn{height:100%!important;min-height:0!important;box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:5% 2%!important;text-align:center!important;overflow:hidden!important}.ts-run-modes .modebtn .mico{display:block!important;flex:0 0 auto!important;margin:0 0 3px!important}.ts-run-modes .modebtn small{display:none!important}.ts-run-modes .modebtn{font-size:clamp(8px,2.1vw,10px)!important;line-height:1.05!important;white-space:normal!important}
+ .ts-class-deck,.ts-class-deck #tsRow{touch-action:manipulation!important}.ts-class-deck .classcard{min-height:0!important}.ts-class-deck .classcard.sel{outline:2px solid #c4ffff!important;outline-offset:-2px!important}
+}

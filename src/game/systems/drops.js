@@ -49,7 +49,9 @@ function killDrops(e){
   log('🔥 Шаман пал — орда в ярости!','warn');
   shake=Math.max(shake,6);
   let _raged=0;
-  for(const en of enemies){
+  // FIX v7.38: используем spatial hash вместо перебора всех врагов — O(1) вместо O(n)
+  const nearShaman = enemiesNear(e.x, e.y, 300);
+  for(const en of nearShaman){
    if(!en.alive||en.hp<=0||en===e)continue;
    if(dist2(en.x-e.x,en.y-e.y)<300*300){
     en.spd=(en.spd||90)*1.35;en.dmgMod=(en.dmgMod||1)*1.3;en.rageT=6;_raged++;
