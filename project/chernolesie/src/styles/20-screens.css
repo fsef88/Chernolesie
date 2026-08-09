@@ -120,18 +120,22 @@ button.big:hover,button.big:active{background:linear-gradient(180deg,#ffe8a0,#c9
 #chestov .ch-art-wrap{
  width:200px;height:200px;margin:2px 0 6px;position:relative;display:flex;align-items:center;justify-content:center;
  animation:chArtBounce .65s cubic-bezier(.18,1.6,.4,1);z-index:10}
+/* v7.42 СУНДУК БЫЛ ОБРЕЗАН КРУГОМ И ЗАЛИТ ЖЁЛТЫМ.
+   Маска radial-gradient(black 55%, transparent 92%) резала картинку по кругу:
+   ларец занимает почти весь кадр, и его боковины растворялись — на экране
+   оставалась круглая нашлёпка вместо сундука. Маска тут не нужна вовсе,
+   у арта своя чистая альфа (320x320 RGBA, 51% непрозрачных пикселей).
+   Свечений поверх было четыре: два drop-shadow, гало ::before и лучи .chrays.
+   Вместе они выбивали золото ларца в белое — отсюда «неправильные цвета».
+   Оставлено одно мягкое свечение и тень под предметом. */
 #chestov .ch-art-wrap img{
  width:100%;height:100%;object-fit:contain;
- -webkit-mask-image:radial-gradient(circle at 50% 50%, black 55%, transparent 92%);
- mask-image:radial-gradient(circle at 50% 50%, black 55%, transparent 92%);
- filter:drop-shadow(0 0 32px rgba(255,200,80,.9)) drop-shadow(0 10px 22px rgba(0,0,0,.95));
+ filter:drop-shadow(0 0 18px rgba(255,190,70,.45)) drop-shadow(0 10px 20px rgba(0,0,0,.9));
  animation:chArtFloat 3.5s ease-in-out infinite alternate}
 #chestov .ch-art-wrap::before{
- content:'';position:absolute;width:180px;height:180px;border-radius:50%;
- border:1px dashed rgba(255,207,106,.35);
- background:radial-gradient(circle,rgba(255,180,50,.25) 0%,transparent 70%);
- animation:chHaloSpin 18s linear infinite;z-index:-1;
- box-shadow:0 0 35px rgba(255,180,50,.35)}
+ content:'';position:absolute;width:200px;height:200px;border-radius:50%;
+ background:radial-gradient(circle,rgba(255,180,50,.16) 0%,transparent 68%);
+ animation:chHaloSpin 18s linear infinite;z-index:-1}
 @keyframes chHaloSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes chArtBounce{0%{opacity:0;transform:scale(.3) translateY(40px)}70%{opacity:1;transform:scale(1.12) translateY(-6px)}100%{opacity:1;transform:scale(1) translateY(0)}}
 @keyframes chArtFloat{0%{transform:translateY(0) scale(1)}100%{transform:translateY(-5px) scale(1.03)}}
@@ -167,6 +171,12 @@ button.big:hover,button.big:active{background:linear-gradient(180deg,#ffe8a0,#c9
  box-shadow:0 0 16px rgba(255,207,106,.22)}
 #chestov .chico svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:2.5;
  stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 8px currentColor)}
+/* v7.42: живописная иконка приходила из iconPaint() тегом <img class="pk">, а
+   правило под неё было написано только для .upgradeIcon и .wicon. Здесь его не
+   было, картинка рисовалась в СВОЙ натуральный размер и заливала всю строку
+   награды золотой звездой шириной в треть окна. */
+#chestov .chico{position:relative;overflow:hidden}
+#chestov .chico img.pk{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}
 #chestov .chtx{display:flex;flex-direction:column;gap:3px;text-align:left;min-width:0}
 #chestov .chtt{font-size:15px;color:#fff2d0;font-weight:700;letter-spacing:.5px}
 #chestov .chdd{font-size:12px;color:#d0c6a8;line-height:1.3}

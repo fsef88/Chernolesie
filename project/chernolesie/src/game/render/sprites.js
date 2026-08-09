@@ -131,6 +131,10 @@ function updateEnemyAnimMeta(e) {
 //  и без корзин кэш рос бы на каждое дробное значение.
 //  Хранится копия прямо на самой картинке (img._sc), поэтому живёт ровно
 //  столько же, сколько кадр, и чистить отдельно нечего.
+// Потолок соотношения кадра: шире этого — вписываем по ширине, а не по высоте.
+// 1.8 выбрано по атласу: у боевых и ходовых кадров соотношение не выше 1.73
+// (Леший f_11), а у кадров гибели начинается с 2.38 — порог их разделяет.
+const SPR_MAX_ASPECT=1.8;
 let _scN=0;                       // сколько копий уже заведено
 const _SC_MAX=160;                // потолок: дальше рисуем из исходника
 function _fitSpr(img,h){
@@ -240,6 +244,24 @@ function drawSprite(fr,x,y,h,flip,t,st){   // v6.10: st — состояние �
   }
  }
  const w=h*img.naturalWidth/img.naturalHeight;
+ // v7.42 ГИБЕЛЬ РАЗДУВАЛА ВРАГА НА ПОЛЭКРАНА.
+ //
+ //  Все кадры в атласе одной высоты (112 px), а ширина у каждого своя, и спрайт
+ //  подгонялся ПО ВЫСОТЕ: w=h*nw/nh. Пока враг стоит, это верно — он выше, чем
+ //  шире. Но кадры гибели нарисованы ЛЕЖА: Русалка f_14 это 576x112, соотношение
+ //  5.14. При росте 80 мировых px её труп растягивался на 411 px — при ширине
+ //  экрана телефона в 563 мировых px это 73% экрана, и таких куч на волне десяток.
+ //
+ //  Замер по атласу: у кадров 13-16 ширина в 2.4-5.1 раза больше, чем у ходьбы
+ //  (Русалка 5.14, Упырь 4.54, Богник 4.21, Леший 3.32).
+ //
+ //  Лечится не заменой арта, а потолком соотношения: кадр шире потолка
+ //  вписывается по ШИРИНЕ, высота уменьшается пропорционально. Пропорции самого
+ //  рисунка при этом не трогаются, и низ остаётся на прежнем месте — тело не
+ //  всплывает над землёй.
+ const _asp=img.naturalWidth/img.naturalHeight;
+ const _hFit=_asp>SPR_MAX_ASPECT?h*SPR_MAX_ASPECT/_asp:h;
+ const _yBase=h*0.18;   // где была нижняя кромка при отрисовке по высоте
   // v7.37: покачивание спрайта по реальному времени отрисовки для гладкой анимации
   const _time=performance.now()*0.001;
  const _spd=st?(Math.abs(st._evx||0)+Math.abs(st._evy||0)):0;
@@ -259,21 +281,26 @@ function drawSprite(fr,x,y,h,flip,t,st){   // v6.10: st — состояние �
  // фильтрованных уменьшений крупной текстуры за кадр.
  // Побочно уходит и мерцание: спрайт больше не пересэмплируется заново каждый
  // кадр под чуть иной дробный размер, а всегда берётся из готовой копии.
- const _a=_fitSpr(img,h), _wa=_a.width, _ha=_a.height;
+ const _a=_fitSpr(img,_hFit), _wa=_a.width, _ha=_a.height;
  if(_bl>0&&_imgB){
-  const _b=_fitSpr(_imgB,h);
-  ctx.globalAlpha=1-_bl;ctx.drawImage(_a,-_wa/2,-_ha*0.82,_wa,_ha);
-  ctx.globalAlpha=_bl;ctx.drawImage(_b,-_b.width/2,-_b.height*0.82,_b.width,_b.height);
+  const _aspB=_imgB.naturalWidth/_imgB.naturalHeight;
+  const _b=_fitSpr(_imgB,_aspB>SPR_MAX_ASPECT?h*SPR_MAX_ASPECT/_aspB:h);
+  ctx.globalAlpha=1-_bl;ctx.drawImage(_a,-_wa/2,_yBase-_ha,_wa,_ha);
+  ctx.globalAlpha=_bl;ctx.drawImage(_b,-_b.width/2,_yBase-_b.height,_b.width,_b.height);
   ctx.globalAlpha=1;
- } else ctx.drawImage(_a,-_wa/2,-_ha*0.82,_wa,_ha);
+ } else ctx.drawImage(_a,-_wa/2,_yBase-_ha,_wa,_ha);
  // v8.4: source-atop убран для сохранения 60 FPS (вспышка удара через аппаратный lighter)
  ctx.restore();return true;
 }
 // Рисует один конкретный кадр (для незацикленных анимаций Древня)
 function drawFrameImg(im,x,y,h,flip){
  if(!im||!im.complete||im.broken||!im.naturalWidth||!im.naturalHeight)return false;
- const w=h*im.naturalWidth/im.naturalHeight;
- ctx.save();ctx.translate(x,y);if(flip)ctx.scale(-1,1);ctx.drawImage(im,-w/2,-h*0.82,w,h);ctx.restore();return true;
+ // Тот же потолок, что в drawSprite: кадры гибели Древня и Стрыги нарисованы
+ // лежа и по высоте раздувались бы вширь.
+ const asp=im.naturalWidth/im.naturalHeight;
+ const dh=asp>SPR_MAX_ASPECT?h*SPR_MAX_ASPECT/asp:h;
+ const w=dh*asp;
+ ctx.save();ctx.translate(x,y);if(flip)ctx.scale(-1,1);ctx.drawImage(im,-w/2,h*0.18-dh,w,dh);ctx.restore();return true;
 }
 // «Звери» (Древень, Стрыга): выбор кадра по состоянию — смерть (проигрывается
 // один раз, затушевка в конце) → атака (по прогрессу atkT) → цикл ходьбы.
