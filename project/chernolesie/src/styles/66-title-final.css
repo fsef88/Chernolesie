@@ -1,0 +1,155 @@
+/* ==================================================================
+   Финальный титульный экран mobile. Один источник раскладки: этот файл.
+   Старые экспериментальные стили титульника не подключаются к сборке.
+   ================================================================== */
+#titlescreen{position:fixed;inset:0;z-index:60;display:block;overflow:hidden;padding:0;background:#06131d var(--ts-scene,url("@@A:art/screen-title/scene-warrior.webp@@")) center/cover no-repeat!important;color:#e7f7f9;text-align:left}#titlescreen::before,#titlescreen::after,#tsFeaturedHero{display:none!important}
+.ts-title-lockup{position:absolute;z-index:4;top:4.8%;left:14%;width:72%;height:auto;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;pointer-events:none}.ts-title-lockup h1{margin:0!important;max-width:96%;overflow:hidden;color:#e9fbfc;font:clamp(22px,min(7.9vw,3.35vh),52px)/1 'Monomakh',Georgia,serif!important;letter-spacing:.075em;text-shadow:0 2px 2px #061018,0 0 12px rgba(102,230,239,.42)}.ts-title-lockup #tsSub{display:block;margin:4px 0 0!important;color:#bcdde1;font:9px Georgia,serif!important;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap}.ts-title-lockup #tsGlyph{display:none!important}.ts-title-lockup #tsMetaGold{position:absolute;top:calc(100% + 2px);left:0;right:0;margin:0!important;font-size:max(10px,1.15vh);letter-spacing:.08em}
+.ts-sidebar{
+  position:absolute!important;
+  z-index:25!important;
+  top:20.8%!important;
+  left:62.7%!important;
+  width:34.1%!important;
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:5px!important;
+  pointer-events:auto!important;
+  box-sizing:border-box!important;
+}
+.ts-sidebar .ts-nav-btn{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:4px!important;
+  padding:8px 3px!important;
+  font-family:'Monomakh',Georgia,serif!important;
+  font-size:clamp(9px,2vw,12px)!important;
+  font-weight:700!important;
+  letter-spacing:0.06em!important;
+  color:#dff6f8!important;
+  text-shadow:0 1px 3px rgba(0,0,0,.9),0 0 6px rgba(121,232,237,.35)!important;
+  background:linear-gradient(180deg,rgba(10,34,50,.88),rgba(4,16,26,.95))!important;
+  border:1px solid rgba(121,232,237,.38)!important;
+  border-radius:6px!important;
+  box-shadow:inset 0 0 10px rgba(121,232,237,.08),0 3px 10px rgba(0,0,0,.65)!important;
+  cursor:pointer!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  touch-action:manipulation!important;
+  -webkit-tap-highlight-color:transparent!important;
+  transition:all .14s ease!important;
+}
+.ts-sidebar .ts-nav-btn:hover{
+  border-color:rgba(121,232,237,.7)!important;
+  box-shadow:inset 0 0 14px rgba(121,232,237,.2),0 0 12px rgba(121,232,237,.3)!important;
+  color:#ffffff!important;
+  transform:translateY(-1px)!important;
+}
+.ts-sidebar .ts-nav-btn:active{
+  transform:scale(0.96)!important;
+  filter:brightness(1.15)!important;
+}
+.ts-sidebar .nav-ico{
+  font-size:11px!important;
+  line-height:1!important;
+}
+.ts-sidebar .ts-seal-copy{display:none!important}.ts-run-modes{position:absolute;z-index:5;top:10.5%;left:62.4%;width:34.5%;height:8.8%}.ts-run-modes #tsMode{display:flex!important;gap:6%;width:100%;height:100%;margin:0!important}.ts-run-modes .modebtn{position:relative;flex:1;min-width:0;min-height:0!important;margin:0;padding:6% 3%!important;display:flex!important;flex-direction:column;align-items:center;justify-content:center;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#e4f5f7;font:clamp(8px,2vw,10px)/1.05 'Monomakh',Georgia,serif!important;text-align:center;text-shadow:0 1px 2px #000;overflow:hidden}.ts-run-modes .modebtn .mico{font-size:15px;line-height:1;color:#79e8ed;margin:0 0 4px}.ts-run-modes .modebtn small{display:none!important}.ts-run-modes .modebtn.sel::after{content:'✓';position:absolute;top:8%;right:10%;color:#c2ffff;font-size:11px}.ts-run-modes .modebtn.sel{color:#fff;text-shadow:0 0 9px rgba(117,232,237,.85)}
+.ts-hero-panel{position:absolute;z-index:5;top:42.5%;left:62.7%;width:34.1%;height:22.5%;box-sizing:border-box;padding:3.7% 2.5% 1%;overflow:hidden;background:transparent!important}.ts-hero-panel h2{min-height:2.1em;margin:0 0 5px;color:#edf9fa;font:clamp(12px,3.45vw,18px)/1.02 'Monomakh',Georgia,serif;letter-spacing:.02em;word-break:keep-all;overflow-wrap:normal;hyphens:none}.ts-hero-role{margin:0 0 7px;color:#a9d6dc;font:7px Georgia,serif;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ts-hearts{margin:0 0 7px;color:#e07060;font-size:11px;letter-spacing:1px;white-space:nowrap}.ts-hero-stats{display:flex;flex-direction:column;gap:5px;padding:7px 0 0;border-top:1px solid rgba(129,203,210,.25);min-height:34px;box-sizing:content-box}.ts-hero-stats span{font-size:7px;line-height:1.15;color:#d5ecee;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ts-hero-stats b{display:inline-block;width:11px;color:#78e2ea}#tsCorr{display:none!important}.ts-hero-trait{display:none}.ts-hero-panel.locked .ts-hero-trait{display:block!important}.ts-hero-trait b{display:none}.ts-hero-trait p{margin:6px 0 0;font-size:max(7px,1vh);color:#c9dde1;letter-spacing:.05em;text-transform:uppercase}
+/* Карточки: полностью собственная живущая колода, без старого #tsRow. */
+.ts-class-deck{position:absolute!important;z-index:20!important;top:75.2%!important;left:11%!important;width:78%!important;height:15.2%!important;box-sizing:border-box!important;padding:8px!important;overflow:hidden!important;background:#06141e!important;border:1px solid rgba(113,224,235,.56)!important;border-radius:7px!important;box-shadow:0 10px 28px rgba(0,0,0,.52),inset 0 1px rgba(211,255,255,.1)!important}.ts-class-deck::before{content:'ПУТИ ЗАСТАВЫ';position:absolute;z-index:2;top:2px;left:0;right:0;color:#7bdce5;text-align:center;font:7px Georgia,serif;letter-spacing:.15em}.ts-arrow-hit{position:absolute;z-index:27;top:77.4%;height:10.8%;width:7%;border:1px solid rgba(121,232,237,.45);border-radius:8px;background:linear-gradient(180deg,rgba(10,34,50,.85),rgba(4,16,26,.92));box-shadow:0 3px 12px rgba(0,0,0,.6),inset 0 0 10px rgba(121,232,237,.08);color:#bfeff5;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;font:700 max(20px,2.8vh)/1 Georgia,serif;text-shadow:0 0 8px rgba(94,231,238,.6);transition:transform .12s ease,filter .12s ease}.ts-arrow-hit.prev{left:2%}.ts-arrow-hit.next{right:2%}.ts-arrow-hit.prev::before{content:'\2039'}.ts-arrow-hit.next::before{content:'\203A'}.ts-arrow-hit:active{transform:scale(.94);filter:brightness(1.35)}.ts-class-deck #tsRow,.ts-class-deck .deck-arrow,.ts-class-deck .deck-pages{display:none!important}#tsLiveDeck{position:relative;z-index:3;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;height:100%;padding-top:max(12px,1.6vh);box-sizing:border-box;touch-action:pan-y;user-select:none}.liveHero{position:relative;display:block;min-width:0;overflow:hidden;padding:0;border:1px solid rgba(118,198,210,.42);border-radius:5px;background:#0b222c;color:#e6f8f7;cursor:pointer}.liveHero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;border:0;border-radius:0;margin:0;filter:saturate(.96) contrast(1.06)}.liveHero::after{content:'';position:absolute;z-index:1;left:0;right:0;bottom:0;height:31%;background:linear-gradient(transparent,rgba(2,10,15,.96))}.liveHero span{position:absolute;z-index:2;left:3px;right:3px;bottom:4px;color:#e5f6f7;font:7px/1.05 'Monomakh',Georgia,serif;text-align:center;text-shadow:0 1px 2px #000}.liveHero.current{border-color:#b3ffff;box-shadow:0 0 15px rgba(79,232,243,.95),inset 0 0 12px rgba(120,244,247,.25);transform:translateY(-2px)}.liveHero.current::before{content:'◆';position:absolute;z-index:4;left:0;right:0;top:1px;color:#c8ffff;font-size:10px;text-align:center;text-shadow:0 0 8px #5ee7ee}.liveHero.focus:not(.current){border-color:rgba(196,240,248,.8);box-shadow:0 0 9px rgba(120,205,218,.4);transform:translateY(-2px)}
+.liveHero.locked{filter:grayscale(1) brightness(.48)}
+.liveHero.locked.focus{filter:grayscale(1) brightness(.66)}.liveHero.locked i{position:absolute;z-index:5;top:5px;right:5px;font-style:normal;font-size:12px}
+#tsFooter{position:absolute;z-index:25;top:92.4%;left:23%;width:54%;height:6.2%;margin:0!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important}#tsFooter::before{display:none!important}#btnStartPoohd{width:100%;height:100%;margin:0!important;padding:0!important;min-width:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#efffff;font:clamp(20px,6.9vw,30px)/1 'Monomakh',Georgia,serif!important;letter-spacing:.055em;text-shadow:0 0 9px rgba(105,239,247,.85),0 2px 2px #061014;cursor:pointer}#btnStartPoohd:hover{filter:brightness(1.2);transform:scale(1.02)}
+/* Портреты нижней колоды вынесены из игрового JS в CSS: интерфейс не
+   задерживает запуск из-за больших data-URI в скрипте. Колода видна и на
+   узком, и на широком экране, поэтому медиазапроса здесь нет.
+   Все семь путей закрыты своим артом. */
+.liveHero[data-hero="warrior"] img{content:url("@@A:ui/deck-warrior.webp@@")}
+.liveHero[data-hero="druid"] img{content:url("@@A:ui/deck-druid.webp@@")}
+.liveHero[data-hero="shaman"] img{content:url("@@A:ui/deck-shaman.webp@@")}
+.liveHero[data-hero="rogue"] img{content:url("@@A:ui/deck-rogue.webp@@")}
+.liveHero[data-hero="archer"] img{content:url("@@A:ui/deck-archer.webp@@")}
+.liveHero[data-hero="ognevik"] img{content:url("@@A:ui/deck-ognevik.webp@@")}
+.liveHero[data-hero="groznik"] img{content:url("@@A:ui/deck-groznik.webp@@")}
+/* ==================================================================
+   Титульный экран на широком экране.
+
+   Сцена — нарисованная плашка 768x1376, и рамки под кнопки режимов и
+   панель героя вшиты в саму картинку. Кадрировать её под ландшафт
+   нельзя: при background-size:cover расстояние между этими рамками
+   выходит 783 px при высоте вьюпорта 768 — обе одновременно не
+   помещаются ни при каком background-position.
+
+   Поэтому сцена показывается целиком: #titlescreen ужимается в
+   центральную колонку ровно того же соотношения, что и арт, а поля
+   закрывает размытая копия той же картинки. Все проценты раскладки из
+   82-title-final.css при этом попадают в свои нарисованные рамки без
+   единой правки — колонка отличается от телефона только масштабом.
+
+   Слои внутри колонки: ::before — размытый фон на весь вьюпорт (он же
+   прячет игровой HUD, который иначе виден по бокам от колонки),
+   ::after — сама сцена поверх него. Оба нужны отдельными псевдо-
+   элементами: собственный фон #titlescreen рисуется раньше вложенных
+   слоёв и был бы закрыт размытием.
+
+   Оба берут картинку из --ts-scene, которую ставит screen-title.js, —
+   без своего запасного url. Поэтому поля размываются по текущему герою,
+   а сама картинка инлайнится в сборку на одно вхождение меньше.
+   ================================================================== */
+@media(min-width:761px){
+ #titlescreen{
+  left:calc(50% - 50vh*768/1376)!important;
+  right:auto!important;
+  width:calc(100vh*768/1376)!important;
+  background:#04101a none!important;
+  box-shadow:0 0 0 1px rgba(120,214,226,.22),0 0 64px rgba(0,0,0,.72)!important;
+ }
+ /* inset отрицательный: blur размывает и края самого слоя, у границы он
+    становится полупрозрачным. При inset:0 сквозь верхнюю кромку просвечивал
+    игровой HUD (#hud, z-index 20, первые 43 px экрана). Слой уводится за
+    вьюпорт, чтобы вся видимая часть осталась непрозрачной. */
+ #titlescreen::before{
+  content:'';display:block!important;position:fixed;inset:-80px;z-index:0;
+  background:#04101a var(--ts-scene) center/cover no-repeat;
+  filter:blur(34px) brightness(.34) saturate(.72);
+ }
+ #titlescreen::after{
+  content:'';display:block!important;position:absolute;inset:0;z-index:1;
+  background:var(--ts-scene) center/contain no-repeat;
+ }
+ /* Заголовок в 82 масштабируется от ширины вьюпорта, а не колонки:
+    на широком экране он упирался в 44px и обрезался. Здесь та же доля,
+    но от ширины колонки, которая задана высотой окна. */
+ .ts-title-lockup h1{font-size:max(24px,3.35vh)!important}
+ /* Кнопки режимов раскладывались в столбец и вылезали из нарисованных
+    рамок: у #tsMode осталось flex-wrap:wrap из ранних слоёв, а базис
+    #tsMode .modebtn{flex:1 1 44%} перебивает .ts-run-modes .modebtn{flex:1}
+    из 82 по специфичности (id + класс против двух классов). На телефоне
+    44% умещались в строку, в узкой колонке — уже нет. */
+ #tsMode{flex-wrap:nowrap!important}
+ #tsMode .modebtn{flex:1 1 0!important;min-width:0!important}
+
+ /* Вся типографика в 82 задана в px под колонку телефона (~390 px) и на
+    широком экране не росла: при высоте 1080 колонка уже 603 px, а текст
+    оставался семипиксельным. Здесь те же доли, пересчитанные от ширины
+    колонки: 1 px при 390 px соответствует 0.1432vh. Исходные значения
+    оставлены нижней границей, чтобы в низком окне ничего не сплющилось. */
+ .ts-title-lockup #tsSub{font-size:max(9px,1.29vh)!important}
+ .ts-run-modes .modebtn{font-size:max(8px,1.12vh)!important}
+ .ts-run-modes .modebtn .mico{font-size:max(15px,2.15vh)}
+ .ts-run-modes .modebtn.sel::after{font-size:max(11px,1.57vh)}
+ .ts-hero-panel h2{font-size:max(12px,1.93vh)}
+ .ts-hero-role{font-size:max(7px,1vh)}
+ .ts-hearts{font-size:max(11px,1.57vh)}
+ .ts-hero-stats span{font-size:max(7px,1vh)}
+ .ts-hero-stats{min-height:calc(3.5vh + 10px)}
+ .ts-hero-stats b{width:max(11px,1.57vh)}
+ .ts-class-deck::before{font-size:max(7px,1vh)}
+ .liveHero span{font-size:max(7px,1vh)}
+ .liveHero.current::before{font-size:max(10px,1.43vh)}
+ .liveHero.locked i{font-size:max(12px,1.72vh)}
+ #btnStartPoohd{font-size:max(20px,3.85vh)!important}
+}
+
+
+

@@ -71,6 +71,12 @@ const BOSS_LESHIY_ART   = (function(){const i=new Image(); i.src='@@A:art/art-re
 // v7.31: 4 Новых 8-кадровых AI-Атласа Анимации (Змей Горыныч, Волк-Вожак, Леший-Владыка, Призрачный Волк Велеса)
 const BOSS_HRANITEL_SHEET = (function(){const i=new Image(); i.src='@@A:art/art-registry/boss-hranitel-sheet.webp@@'; return i;})();
 const BOSS_VOLK_SHEET     = (function(){const i=new Image(); i.src='@@A:art/art-registry/boss-volk-sheet.webp@@'; return i;})();
+
+const BOSS_DREVEN_SHEET = (function(){const i=new Image(); i.src='@@A:art/art-registry/boss-dreven-sheet.webp@@'; return i;})();
+const BOSS_KOSCHEI_SHEET = (function(){const i=new Image(); i.src='@@A:art/art-registry/boss-koschei-sheet.webp@@'; return i;})();
+const BOSS_SORCERER_SHEET = (function(){const i=new Image(); i.src='@@A:art/art-registry/boss-sorcerer-sheet.webp@@'; return i;})();
+const BOSS_BABAYAGA_SHEET = (function(){const i=new Image(); i.src='@@A:art/art-registry/boss-babayaga-sheet.webp@@'; return i;})();
+
 const BOSS_LESHIY_SHEET   = (function(){const i=new Image(); i.src='@@A:art/art-registry/boss-leshiy-sheet.webp@@'; return i;})();
 const WOLF_SPIRIT_SHEET   = (function(){const i=new Image(); i.src='@@A:art/art-registry/wolf-spirit-sheet.webp@@'; return i;})();
 // v7.11: 8-КАДРОВЫЙ АТЛАС МАГИЧЕСКОГО ВЗРЫВА (с хромакея Magenta #FF00FF в 100% прозрачный альфа-канал)
@@ -89,6 +95,9 @@ const activeExplosions=[];
 const SLASH_SMOKE_SHEET  = (function(){const i=new Image(); i.src='@@A:art/art-registry/slash-smoke-sheet.webp@@'; return i;})();
 const IMPACT_BURST_SHEET = (function(){const i=new Image(); i.src='@@A:art/art-registry/impact-burst-sheet.webp@@'; return i;})();
 const DUST_PLUME_SHEET   = (function(){const i=new Image(); i.src='@@A:art/art-registry/dust-plume-sheet.webp@@'; return i;})();
+
+// Фон экрана выбора божества — тёмный славянский лес с виньеткой.
+const BOON_BG_ART=(function(){const i=new Image();i.src='@@A:ui/boon-backdrop.webp@@';return i;})();
 
 // v7.35: листы, нарисованные под зоны оружия по заданиям из docs/art-briefs.md.
 // Мятный клин — взмах Косы Моры, рваный саван — Навий хвост.

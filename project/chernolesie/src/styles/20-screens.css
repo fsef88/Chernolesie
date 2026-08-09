@@ -24,9 +24,9 @@
 
 /* Классы и божества — общий стиль */
 /* Pause overlay animation */
-#pauseov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(6,8,5,.96);flex-direction:column;gap:12px;z-index:50;padding:20px;overflow-y:auto;animation:pauseFadeIn 0.2s ease-out}
+#pauseov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(6,8,5,.96);flex-direction:column;gap:12px;z-index:100;padding:20px;overflow-y:auto;animation:pauseFadeIn 0.2s ease-out}
 @keyframes pauseFadeIn{0%{opacity:0}100%{opacity:1}}
-#boonov,#classov,#achov,#statsov,#treeov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(6,8,5,.96);flex-direction:column;gap:12px;z-index:50;padding:20px;overflow-y:auto}
+#boonov,#classov,#achov,#statsov,#treeov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(6,8,5,.96);flex-direction:column;gap:12px;z-index:100;padding:20px;overflow-y:auto}
 /* v6.65: РАМКА ПАНЕЛЕЙ. 9-slice через border-image: центр прозрачный,
    свой фон панели виден, орнамент по краям. Рамка — дерево+золото. */
 .pframe{
@@ -45,6 +45,20 @@
 .booncard,.classcard{background:linear-gradient(#1c2417,#161e10);border:2px solid #c9a04a;border-radius:10px;padding:12px;cursor:pointer;transition:.12s;touch-action:manipulation;box-shadow:0 4px 12px rgba(0,0,0,.4);position:relative;animation:cardEntry .35s ease-out both}
 .booncard:nth-child(2),.classcard:nth-child(2){animation-delay:0.06s}.booncard:nth-child(3),.classcard:nth-child(3){animation-delay:0.12s}.booncard:nth-child(4),.classcard:nth-child(4){animation-delay:0.18s}.booncard:nth-child(5),.classcard:nth-child(5){animation-delay:0.24s}
 .booncard{width:170px;min-height:140px}
+/* v7.39: полноразмерный режим выбора божества — пять больших медальонов в ряд */
+#boonov.boonov-full{background:transparent;overflow:hidden}
+#boonov.boonov-full::before{content:"";position:absolute;inset:0;background:url('@@A:ui/boon-backdrop.webp@@') center/cover no-repeat;z-index:-1;filter:saturate(.85) brightness(.7)}
+#boonov.boonov-full::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 55%,rgba(7,9,10,0) 0%,rgba(7,9,10,.55) 60%,rgba(7,9,10,.92) 100%);pointer-events:none;z-index:-1}
+.boonov-full .section-ornament{width:60%;max-width:520px;margin:8px auto}
+.boonov-full h2{font-size:26px;letter-spacing:1px}
+.boonrow-full{display:flex;gap:24px;justify-content:center;align-items:center;flex-wrap:nowrap;padding:8px 0 4px;width:100%}
+.booncard-full{position:relative;width:150px;height:170px;cursor:pointer;transition:transform .22s cubic-bezier(.2,.8,.2,1),filter .22s ease,opacity .22s ease;filter:grayscale(.5) brightness(.55) drop-shadow(0 4px 10px rgba(0,0,0,.5));opacity:.72;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+.booncard-full img.boonmed-full{width:130px;height:130px;object-fit:contain;display:block;pointer-events:none;margin-bottom:8px}
+.booncard-full .boon-name-full{color:#f5e8c8;font-size:16px;letter-spacing:.5px;text-shadow:0 0 8px #000,0 2px 0 #000;line-height:1}
+.booncard-full.active{transform:translateY(-16px) scale(1.28);filter:grayscale(0) brightness(1.15) drop-shadow(0 0 28px var(--boon-glow,rgba(255,210,140,.55)));opacity:1;z-index:4}
+.booncard-full.active .boon-name-full{color:var(--boon-glow,var(--gold-bright,#f1d089))}
+.boon-hint{margin-top:14px;color:#9a8e72;font-size:11px;letter-spacing:.5px;text-align:center;text-shadow:0 0 6px #000}
+.boon-hint kbd{background:rgba(216,180,106,.15);border:1px solid rgba(216,180,106,.35);border-radius:4px;padding:1px 6px;color:#f1d089;font-family:inherit;font-size:10px;margin:0 2px}
 .classcard{width:160px;text-align:center}
 .booncard:hover,.booncard:active,.classcard:hover,.classcard:active{transform:translateY(-3px);border-color:#ffcf6a;box-shadow:0 8px 20px rgba(255,207,106,.3)}
 .booncard h3,.classcard h3{color:#ffcf6a;font-size:14px;margin:0 0 5px}
@@ -206,7 +220,7 @@ button.big:hover,button.big:active{background:linear-gradient(180deg,#ffe8a0,#c9
  60%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:scale(1)}}
 /* v6.18: журнал находок */
 #jourov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;
- background:rgba(6,8,5,.96);z-index:55;padding:20px;overflow-y:auto;text-align:center}
+ background:rgba(6,8,5,.96);z-index:100;padding:20px;overflow-y:auto;text-align:center}
 #jourov h2{color:#ffcf6a;margin:0 0 8px}
 .jgrid{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:min(880px,96vw);
  max-height:min(60vh,520px);overflow-y:auto;margin-bottom:10px}

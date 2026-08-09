@@ -86,7 +86,8 @@ function updatePickups(dt){
   const _magR=magnetT>0?1e9:(magnetSoftT>0?(P.pickup*3.5)*(P.pickup*3.5):P.pickup*P.pickup); // v7.1 шире радиус подбора
   if(gd2<_magR){ // v5.47: магнит сечи
    const gd=Math.sqrt(gd2)||1;
-   g.ms=(g.ms||(magnetT>0?900:(magnetSoftT>0?550:240)))+1800*dt;const _mg=magnetT>0?3.0:(magnetSoftT>0?2.0:1.2); // v7.1 быстрее притягиваниеg.x+=gdx/gd*g.ms*dt*_mg;g.y+=gdy/gd*g.ms*dt*_mg; // v5.47
+   g.ms=(g.ms||(magnetT>0?900:(magnetSoftT>0?550:240)))+1800*dt;const _mg=magnetT>0?3.0:(magnetSoftT>0?2.0:1.2);
+    g.x+=gdx/gd*g.ms*dt*_mg;g.y+=gdy/gd*g.ms*dt*_mg;
    // v6.42: хвост кометы у притянутого кристалла. Копим прошлые позиции в самом
    // объекте гема (кольцевой буфер на 4 точки) — рисуем полосу в drawFxLayer.
    // Без него полёт читался как телепорт: гем прыгает 700+ ед/с, на 60 fps это

@@ -13,7 +13,7 @@ function initAudio(){if(AC||!audioOk)return;try{AC=new (window.AudioContext||win
 function resumeAudio(){initAudio();if(AC&&AC.state==='suspended')AC.resume();if(!musicOn&&AC){musicOn=true;tickMusic();}startAmbient();}
 addEventListener('keydown',resumeAudio);addEventListener('pointerdown',resumeAudio);addEventListener('touchstart',resumeAudio);
 
-function tone(freq,dur,type,vol,slideTo,target){if(!AC)return;try{const o=AC.createOscillator(),g=AC.createGain();o.type=type||'square';o.frequency.setValueAtTime(freq,AC.currentTime);if(slideTo)o.frequency.exponentialRampToValueAtTime(Math.max(20,slideTo),AC.currentTime+dur);g.gain.setValueAtTime(vol||0.2,AC.currentTime);g.gain.exponentialRampToValueAtTime(0.0008,AC.currentTime+dur);if(target)target.connect(g);else g.connect(master);o.connect(g);o.start();o.stop(AC.currentTime+dur+0.02);}catch(e){swallow('audio.tone',e);}}
+function tone(freq,dur,type,vol,slideTo,target){if(!AC)return;try{const o=AC.createOscillator(),g=AC.createGain();o.type=type||'square';o.frequency.setValueAtTime(freq,AC.currentTime);if(slideTo)o.frequency.exponentialRampToValueAtTime(Math.max(20,slideTo),AC.currentTime+dur);g.gain.setValueAtTime(vol||0.2,AC.currentTime);g.gain.exponentialRampToValueAtTime(0.0008,AC.currentTime+dur);if(target)target.connect(g);else g.connect(master);o.connect(g);o.onended=()=>{try{o.disconnect();g.disconnect();}catch(e){}};o.start();o.stop(AC.currentTime+dur+0.02);}catch(e){swallow('audio.tone',e);}}
 // (#16) белый шум генерировался НА КАЖДЫЙ вызов (Float32Array в
 // 44K сэмплов при каждом ударе/подборе/смерти). Один общий 1-сек буфер
 // переиспользуется всеми источниками — n.stop(dur) отрезает нужный хвост.
@@ -21,7 +21,7 @@ let _noiseBuf=null;
 function noise(dur,vol,ff,target){if(!AC)return;try{if(!_noiseBuf){const b=AC.createBuffer(1,AC.sampleRate,AC.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;_noiseBuf=b;}const n=AC.createBufferSource();n.buffer=_noiseBuf;const f=AC.createBiquadFilter();f.type='bandpass';f.frequency.value=ff||1200;const g=AC.createGain();g.gain.setValueAtTime(vol||0.2,AC.currentTime);g.gain.exponentialRampToValueAtTime(0.0008,AC.currentTime+dur);if(target)target.connect(g);else g.connect(master);n.connect(f);f.connect(g);n.start();n.stop(AC.currentTime+dur+0.02);}catch(e){swallow('audio.noise',e);}}
 // v5.18: «переворот пергамента» — шорох бумаги + лёгкий поступью тон
 function sfxFlip(){if(!AC)return;try{noise(0.13,0.09,1200);tone(560,0.05,'triangle',0.040,760);setTimeout(()=>{try{tone(340,0.05,'triangle',0.028,520)}catch(e){swallow('sfx.flip',e);}},55);}catch(e){swallow('sfx.flip.echo',e);}}
-function sfxCrit(){if(typeof vibe==='function')vibe(12);const k=det(0.5);
+function sfxCrit(){const k=det(0.5);
  nlayer(0.05,0.18,2800*k,1.4,0.001);
  layer('triangle',740*k,1480*k,0.10,0.10,0.003);
  layer('sine',130*k,70,0.14,0.26,0.002,_busLow||audioBus());}

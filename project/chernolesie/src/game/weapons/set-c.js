@@ -286,7 +286,7 @@ function tickWeaponState(dt){
  {const _kw=weapons.find(x=>x.id==='kosa');
   if(_kw&&_kw.evo){
    const R=86*wArea('kosa');const dmg=(10+5*nwLvl('kosa'))*wDmg('kosa');
-   for(const e of enemiesNear(P.x,P.y,1e9)){if(!e._kosaPull||e.hp<=0||e.dying>0)continue;
+   for(const e of enemies){if(!e._kosaPull||e.hp<=0||e.dying>0)continue;
     const dx=P.x-e.x,dy=P.y-e.y,d=Math.hypot(dx,dy)||1;
     if(d>14){e.x+=dx/d*Math.min(d,300)*dt;e.y+=dy/d*Math.min(d,300)*dt;e.kx+=dx/d*120;e.ky+=dy/d*120;}
     if(d<R)e._kosaHit=(e._kosaHit||0)+dt;

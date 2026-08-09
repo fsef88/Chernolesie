@@ -10,12 +10,41 @@ function drawCombatGroundVeil(px,py){
  ctx.fillRect(0,0,W,H);
  // Тёплое пятно около героя оставляет ориентир движения на приглушённой земле.
  const r=(120+70*pressure)*Math.max(1,Math.min(1.25,1/(ZOOM||1)*0.55));
+ // v8.12: пятно было тёплым и вчетверо плотнее. На прежней пёстрой земле оно
+ // терялось, на ровной холодной стало читаться как гало вокруг героя — и
+ // вдобавок тёплое пятно на холодном поле. Оставляем едва заметный холодный
+ // подсвет: герой и без него отделён тёмной подложкой и тенью.
  const g=ctx.createRadialGradient(px,py-4,8,px,py-4,r);
- g.addColorStop(0,'rgba(255,204,105,0.105)');
- g.addColorStop(0.48,'rgba(190,126,58,0.045)');
+ g.addColorStop(0,'rgba(150,196,220,0.030)');
+ g.addColorStop(0.48,'rgba(110,150,180,0.014)');
  g.addColorStop(1,'rgba(0,0,0,0)');
  ctx.globalCompositeOperation='lighter';
  ctx.fillStyle=g;ctx.beginPath();ctx.arc(px,py-4,r,0,TAU);ctx.fill();
+ ctx.restore();
+}
+function drawHeroPocket(px,py){
+ // Карман читаемости. Тёмная подложка под ногами (drawHeroFocusUnder) спасает
+ // от пёстрой земли, но не от засвета: сложение 'lighter' выбивает центр кадра
+ // в белое, и герой, хотя и рисуется поверх эффектов, перестаёт из него
+ // выделяться. Здесь свет гасится умножением ТОЛЬКО в круге вокруг героя —
+ // контраст возвращается, а кадр не заливается серым.
+ //
+ // Сила кармана привязана к нагрузке светового слоя: в спокойный момент его
+ // нет вовсе, иначе вокруг героя всегда висело бы тёмное пятно.
+ const k=(typeof fxLoad==='function')?fxLoad():0;
+ if(k<0.06)return;
+ const r=78*Math.max(1,Math.min(1.3,1/(ZOOM||1)*0.6));
+ // v8.12: было 96 — на пёстрой земле незаметно, на ровной читалось тёмным
+ // диском. Засвет теперь и так ограничен потолком светового слоя, кармана
+ // хватает вдвое слабее.
+ const v=Math.round(255-46*k);
+ const g=ctx.createRadialGradient(px,py,r*0.2,px,py,r);
+ g.addColorStop(0,'rgb('+v+','+v+','+v+')');
+ g.addColorStop(1,'rgb(255,255,255)');
+ ctx.save();
+ ctx.globalCompositeOperation='multiply';
+ ctx.fillStyle=g;
+ ctx.beginPath();ctx.arc(px,py,r,0,TAU);ctx.fill();
  ctx.restore();
 }
 function drawHeroFocusUnder(px,py,heroY){
@@ -85,10 +114,11 @@ if(P.levelFx>0){const k=Math.min(1,P.levelFx/0.3);const cv=CLASS_VISUALS[P.level
  ctx.globalAlpha=0.18+0.3*k;const g=ctx.createRadialGradient(px,py-4,4,px,py-4,54);g.addColorStop(0,col);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(px,py-4,54,0,7);ctx.fill();ctx.restore();}
 }
 function drawCoins(){
- // v7.25: 100% Арт-ориентированная отрисовка падающих монет (Славянская Гривна COIN_DROP_ART) без примитивов из кода
- for(const c of coinDrops){
-  const k=Math.min(1,c.t*3);
-  const sx=c.x-cam.x,sy=c.y-cam.y;
+  // v7.25: 100% Арт-ориентированная отрисовка падающих монет (Славянская Гривна COIN_DROP_ART) без примитивов из кода
+  for(const c of coinDrops){
+   const sx=c.x-cam.x,sy=c.y-cam.y;
+   if(sx<-40||sy<-40||sx>W+40||sy>H+40)continue;
+   const k=Math.min(1,c.t*3);
   const bob=Math.sin((c.max-c.t)*20+c.x)*2;
   ctx.save();
   ctx.translate(sx,sy+bob);

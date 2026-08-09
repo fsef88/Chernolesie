@@ -134,8 +134,8 @@ function renderEvoHud(){
 // 0.4с, края темнеют, имя крупно. Ни в обычном бою, ни при убийстве — только тут.
 let evoPause=0,_evoTmr=null,_evoInnerTmr=null;
 function evoFanfare(name,desc){
- evoPause=0.4;
- if(typeof flashScreen==='function')flashScreen('#ffd77d',0.5);
+ evoPause=0;
+ if(typeof flashScreen==='function')flashScreen('#ffd77d',0.35);
  if(typeof sfxEvo==='function')sfxEvo();
  // v6.38 ЭВОЛЮЦИЯ — КУЛЬМИНАЦИЯ ЗАБЕГА. Раньше был только экранный
  // засвет и плашка: событие, ради которого игрок собирал билд 10 минут,

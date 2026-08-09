@@ -34,10 +34,9 @@ function flushMultiKill(dt){
  if(mkN<=0)return;
  if(mkN>=6){
   const cx=mkX/mkN,cy=mkY/mkN;
-  shake=Math.max(shake,Math.min(9,2.5+mkN*0.16));
-  mkFlash=Math.max(mkFlash,Math.min(0.6,0.16+mkN*0.014));
+  shake=Math.max(shake,Math.min(3.5,1.5+mkN*0.08));
+  mkFlash=Math.max(mkFlash,Math.min(0.35,0.12+mkN*0.010));
   sfxMultiKill(mkN);
-  vibe(mkN>=18?45:22);
   // v7.38: evoPause (стоп-кадр) и slowmoHit убраны с мульти-киллов. В плотной толпе
   // пороги 14 и 20 срабатывают несколько раз в секунду, вызывая визуальное замирание
   // экрана на 0.1-0.5 секунды («сильные лаги тормоза»).

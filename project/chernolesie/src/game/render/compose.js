@@ -1,6 +1,6 @@
 function syncHud(){
- // HUD sync — кэшированные ссылки
- UI.timeEl.textContent=fmt(time);
+ const _fmtT = fmt(time);
+ if(UI._lastTime !== _fmtT){ UI._lastTime = _fmtT; UI.timeEl.textContent = _fmtT; }
  // v7.36 ГЛАВНАЯ ПРИЧИНА ПРОСАДКИ НА ТЕЛЕФОНЕ.
  //
  //  Здесь стоял innerHTML БЕЗ КЭША, и внутри — classTiny(), то есть тег <img>
@@ -37,9 +37,9 @@ function syncHud(){
   else if(omen.id==='seed'){ctx.globalAlpha=0.20+0.07*Math.sin(time*4);ctx.fillStyle='#6a5218';const bw=64;if(omen.side===0)ctx.fillRect(W-bw,0,bw,H);else if(omen.side===1)ctx.fillRect(0,H-bw,W,bw);else if(omen.side===2)ctx.fillRect(0,0,bw,H);else ctx.fillRect(0,0,W,bw);ctx.globalAlpha=0.85;ctx.fillStyle='#e8cf8a';ctx.font='bold 12px Georgia,serif';ctx.textAlign='center';ctx.fillText('ВОЛНА · '+Math.ceil(omen.t)+'с',W/2,oy);}
   else{ctx.globalAlpha=0.05+0.03*Math.sin(time*5);ctx.fillStyle='#25c9a0';ctx.fillRect(0,0,W,H);ctx.globalAlpha=0.8;ctx.fillStyle='#8affda';ctx.font='bold 12px Georgia,serif';ctx.textAlign='center';ctx.fillText('ЩЕДРАЯ РОЩА · '+Math.ceil(omen.t)+'с',W/2,oy);}
   ctx.restore();}
- UI.lvlEl.textContent=level;
- UI.killsEl.textContent=kills;
- UI.goldEl.textContent=gold;
+ if(UI._lvl !== level){ UI._lvl = level; UI.lvlEl.textContent = level; }
+ if(UI._kills !== kills){ UI._kills = kills; UI.killsEl.textContent = kills; }
+ if(UI._gold !== gold){ UI._gold = gold; UI.goldEl.textContent = gold; }
  const _hpw=Math.round(Math.max(0,P.hp/P.maxhp*100));if(__HUDW.hp!==_hpw){__HUDW.hp=_hpw;UI.hp.style.width=_hpw+'%';}
  if(P.hp/P.maxhp<0.3)UI.hp.classList.add('hp-low');else UI.hp.classList.remove('hp-low');
  if(UI.hpNum)UI.hpNum.textContent=Math.max(0,Math.round(P.hp));
@@ -121,8 +121,9 @@ function camFollow(dt){
  //  и менялся рывками по 0.64 пикселя. Отсюда «дёргано» при честных кадрах —
  //  двигается вся картина сразу, и глаз ловит именно неравномерность шага.
   const _q=(DPR||1)*(ZOOM||1)*(zoomPunch||1);
-  cam.x=Math.round(cam.x*_q)/_q;
-  cam.y=Math.round(cam.y*_q)/_q;
+  // v11.6: Плавное непрерывное субпиксельное следование камеры без дискретных скачков округления
+  cam.x=clamp(camTarget.x,0,camTarget.maxX);
+  cam.y=clamp(camTarget.y,0,camTarget.maxY);
 }
 function draw(){ // v6.16
  if(__PROF_ON)pT('ground',1);
@@ -143,6 +144,9 @@ function draw(){ // v6.16
   camTarget.maxX=_camMaxX;camTarget.maxY=_camMaxY;
   camFollow(_drawDt);
   const _sh=shake, _st=frameStart/1000;
+  // FIX(аудит): _q объявлена локально в camFollow() и в draw() была не видна —
+  // при любой тряске (shake>0.05) draw() бросал ReferenceError и кадр не рисовался.
+  const _q=(DPR||1)*(ZOOM||1)*(zoomPunch||1);
   ctx.save();
   if(zoomPunch!==1){ctx.translate(W/2,H/2);ctx.scale(zoomPunch,zoomPunch);ctx.translate(-W/2,-H/2);}
   if(_sh > 0.05){
@@ -166,9 +170,11 @@ function draw(){ // v6.16
  if(__DBG.props){drawProps();drawAnomalies();}   // v6.46: находки рисуются в мире, а не DOM-кружком
  if(__DBG.auras)drawPermanentAuras(px,py); // v7.5: ПОСТОЯННЫЕ АУРЫ ОРУЖИЯ НА ЗЕМЛЕ
  if(__DBG.enemies)drawEnemiesLayer();
+ calcFxLoad();   // нагрузка светового слоя: её же читает карман читаемости ниже
  if(__DBG.glow)drawGlowLayer();   // v6.50: свет ПОД эффектами — заливает сцену, как в VS
  if(__DBG.fx)drawFxLayer();
  drawCoins();   // v6.62: монеты
+ drawHeroPocket(px,py);   // гасим засвет вокруг героя, пока он ещё не нарисован
  drawPlayerLayer(px,py);
  if(__DBG.dmg)drawDmgNumbers(px,py);   // restore к save() тряски стоит ниже, в этом же файле
  // v5.97: парный ctx.restore() к save() выше лежал в САМОМ КОНЦЕ drawDmgNumbers,
@@ -194,6 +200,22 @@ function draw(){ // v6.16
   ctx.fillStyle=g;
   ctx.fillRect(0,0,W,H);
   ctx.restore();
+ }
+ // v7.41: полноэкранная вспышка событий — рисуем на холсте (было DOM-градиентом).
+ // Центр прозрачен до 50%, цвет на краях — тот же vignette, что и раньше.
+ if(_flashT>0){
+  _flashT-=Math.min(0.05,_drawDt);
+  const fa=_flashA*Math.max(0,_flashT/_flashDur);
+  if(fa>0.002){
+   const g=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*0.5,W/2,H/2,Math.max(W,H)*0.72);
+   g.addColorStop(0,flashColorToRGBA(_flashColor,0));
+   g.addColorStop(0.5,flashColorToRGBA(_flashColor,0));
+   g.addColorStop(1,flashColorToRGBA(_flashColor,fa));
+   ctx.save();
+   ctx.fillStyle=g;
+   ctx.fillRect(0,0,W,H);
+   ctx.restore();
+  }
  }
  if(__PROF_ON){pT('atmos',0);pT('hud',1);}
  syncHud();

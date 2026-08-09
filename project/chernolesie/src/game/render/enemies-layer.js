@@ -110,17 +110,61 @@ function drawEnemiesLayer(){
      ctx.drawImage(BOSS_HRANITEL_SHEET, col*sw, row*sh, sw, sh, x - drawW*0.55, y + e.r*0.3 - drawH*0.85, drawW*1.1, drawH*1.1);
      ctx.restore();
     }
-   } else if(e.elite && e.type === 'volkolak' && typeof BOSS_VOLK_SHEET !== 'undefined' && BOSS_VOLK_SHEET.complete && BOSS_VOLK_SHEET.naturalWidth){
-    const drawW = e.drawH * 1.4, drawH = e.drawH * 1.4;
+   } else if((e.mini && e.type === 'baba_yaga') && typeof BOSS_DREVEN_SHEET !== 'undefined' && BOSS_DREVEN_SHEET.complete && BOSS_DREVEN_SHEET.naturalWidth){
+    // ДРЕВЕНЬ / ЛЕСНОЙ ИСПОЛИН (4x4 Атлас 768x512)
+    const dsw = Math.floor(BOSS_DREVEN_SHEET.naturalWidth / 4), dsh = Math.floor(BOSS_DREVEN_SHEET.naturalHeight / 4);
+    let dfIdx = 0;
+    if(e.dying > 0) dfIdx = 12 + Math.min(3, Math.floor((1 - Math.max(0, e.dying / (e.dieMax||1.25))) * 4));
+    else if(e.atkT > 0) dfIdx = 4 + Math.min(3, Math.floor((1 - Math.max(0, e.atkT / (e.atkDur||0.85))) * 4));
+    else if(e.slamT <= 0.6 || e.phase === 2) dfIdx = 8 + (Math.floor(time * 6) % 4);
+    else dfIdx = Math.floor(time * 5) % 4;
+    const dcol = dfIdx % 4, drow = Math.floor(dfIdx / 4);
+    const drawW = e.drawH * 1.5, drawH = e.drawH * 1.5;
     ctx.save();
-    if(flip){ ctx.translate(x, y + e.r*0.3); ctx.scale(-1, 1); ctx.drawImage(BOSS_VOLK_SHEET, col*sw, row*sh, sw, sh, -drawW/2, -drawH*0.85, drawW, drawH); }
-    else { ctx.drawImage(BOSS_VOLK_SHEET, col*sw, row*sh, sw, sh, x - drawW/2, y + e.r*0.3 - drawH*0.85, drawW, drawH); }
+    if(flip){ ctx.translate(x, y + e.r*0.3); ctx.scale(-1, 1); ctx.drawImage(BOSS_DREVEN_SHEET, dcol*dsw, drow*dsh, dsw, dsh, -drawW/2, -drawH*0.85, drawW, drawH); }
+    else { ctx.drawImage(BOSS_DREVEN_SHEET, dcol*dsw, drow*dsh, dsw, dsh, x - drawW/2, y + e.r*0.3 - drawH*0.85, drawW, drawH); }
     ctx.restore();
-   } else if((e.elite || e.mini) && e.type === 'leshiy' && typeof BOSS_LESHIY_SHEET !== 'undefined' && BOSS_LESHIY_SHEET.complete && BOSS_LESHIY_SHEET.naturalWidth){
+   } else if((e.miniKind === 'warlord' || (e.elite && e.type === 'upyr')) && typeof BOSS_KOSCHEI_SHEET !== 'undefined' && BOSS_KOSCHEI_SHEET.complete && BOSS_KOSCHEI_SHEET.naturalWidth){
+    // КОЩЕЙ БЕССМЕРТНЫЙ / КОСТЯНОЙ ЦАРЬ (4x4 Атлас 768x512)
+    const ksw = Math.floor(BOSS_KOSCHEI_SHEET.naturalWidth / 4), ksh = Math.floor(BOSS_KOSCHEI_SHEET.naturalHeight / 4);
+    let kfIdx = 0;
+    if(e.dying > 0) kfIdx = 12 + Math.min(3, Math.floor((1 - Math.max(0, e.dying / (e.dieMax||1.25))) * 4));
+    else if(e.howlT > 0 && e.howlT < 1.5) kfIdx = 8 + (Math.floor(time * 7) % 4);
+    else if(e.slamT <= 0.6 || e.phase === 2) dfIdx = 4 + (Math.floor(time * 6) % 4);
+    else kfIdx = Math.floor(time * 5) % 4;
+    const kcol = kfIdx % 4, krow = Math.floor(kfIdx / 4);
     const drawW = e.drawH * 1.45, drawH = e.drawH * 1.45;
     ctx.save();
-    if(flip){ ctx.translate(x, y + e.r*0.3); ctx.scale(-1, 1); ctx.drawImage(BOSS_LESHIY_SHEET, col*sw, row*sh, sw, sh, -drawW/2, -drawH*0.85, drawW, drawH); }
-    else { ctx.drawImage(BOSS_LESHIY_SHEET, col*sw, row*sh, sw, sh, x - drawW/2, y + e.r*0.3 - drawH*0.85, drawW, drawH); }
+    if(flip){ ctx.translate(x, y + e.r*0.3); ctx.scale(-1, 1); ctx.drawImage(BOSS_KOSCHEI_SHEET, kcol*ksw, krow*ksh, ksw, ksh, -drawW/2, -drawH*0.85, drawW, drawH); }
+    else { ctx.drawImage(BOSS_KOSCHEI_SHEET, kcol*ksw, krow*ksh, ksw, ksh, x - drawW/2, y + e.r*0.3 - drawH*0.85, drawW, drawH); }
+    ctx.restore();
+   } else if((e.mini && e.type === 'naviya') && typeof BOSS_SORCERER_SHEET !== 'undefined' && BOSS_SORCERER_SHEET.complete && BOSS_SORCERER_SHEET.naturalWidth){
+    // ЧЕРНОКНИЖНИК / НАВИЙ ВЛАДЫКА (4x4 Атлас 768x512)
+    const ssw = Math.floor(BOSS_SORCERER_SHEET.naturalWidth / 4), ssh = Math.floor(BOSS_SORCERER_SHEET.naturalHeight / 4);
+    let sfIdx = 0;
+    if(e.dying > 0) sfIdx = 12 + Math.min(3, Math.floor((1 - Math.max(0, e.dying / (e.dieMax||1.25))) * 4));
+    else if(e.atkT > 0) sfIdx = 4 + Math.min(3, Math.floor((1 - Math.max(0, e.atkT / (e.atkDur||0.55))) * 4));
+    else if(e.howlT <= 1.2) sfIdx = 8 + (Math.floor(time * 6) % 4);
+    else sfIdx = Math.floor(time * 5) % 4;
+    const scol = sfIdx % 4, srow = Math.floor(sfIdx / 4);
+    const drawW = e.drawH * 1.45, drawH = e.drawH * 1.45;
+    ctx.save();
+    if(flip){ ctx.translate(x, y + e.r*0.3); ctx.scale(-1, 1); ctx.drawImage(BOSS_SORCERER_SHEET, scol*ssw, srow*ssh, ssw, ssh, -drawW/2, -drawH*0.85, drawW, drawH); }
+    else { ctx.drawImage(BOSS_SORCERER_SHEET, scol*ssw, srow*ssh, ssw, ssh, x - drawW/2, y + e.r*0.3 - drawH*0.85, drawW, drawH); }
+    ctx.restore();
+   } else if((e.type === 'vedmaT' || (e.elite && e.shaman)) && typeof BOSS_BABAYAGA_SHEET !== 'undefined' && BOSS_BABAYAGA_SHEET.complete && BOSS_BABAYAGA_SHEET.naturalWidth){
+    // БАБА ЯГА / ВЕДЬМА ЧЁРНЫХ ТОПЕЙ (4x4 Атлас 768x512)
+    const bsw = Math.floor(BOSS_BABAYAGA_SHEET.naturalWidth / 4), bsh = Math.floor(BOSS_BABAYAGA_SHEET.naturalHeight / 4);
+    let bfIdx = 0;
+    if(e.dying > 0) bfIdx = 12 + Math.min(3, Math.floor((1 - Math.max(0, e.dying / (e.dieMax||1.25))) * 4));
+    else if(e.fireT > 0) bfIdx = 4 + (Math.floor(time * 6) % 4);
+    else if(e.telegraphT > 0) bfIdx = 8 + (Math.floor(time * 6) % 4);
+    else bfIdx = Math.floor(time * 5) % 4;
+    const bcol = bfIdx % 4, brow = Math.floor(bfIdx / 4);
+    const drawW = e.drawH * 1.4, drawH = e.drawH * 1.4;
+    ctx.save();
+    if(flip){ ctx.translate(x, y + e.r*0.3); ctx.scale(-1, 1); ctx.drawImage(BOSS_BABAYAGA_SHEET, bcol*bsw, brow*bsh, bsw, bsh, -drawW/2, -drawH*0.85, drawW, drawH); }
+    else { ctx.drawImage(BOSS_BABAYAGA_SHEET, bcol*bsw, brow*bsh, bsw, bsh, x - drawW/2, y + e.r*0.3 - drawH*0.85, drawW, drawH); }
     ctx.restore();
    } else if(!((e.atkFrames&&drawBeastFrame(e,x,y+e.r*0.3,flip))||(_leshiyFrameReady&&e.frames&&drawSprite(e.frames,x,y+e.r*0.3,e.drawH,flip,e.at||0,e)))){
     const sz=e.r*(e.size||1);

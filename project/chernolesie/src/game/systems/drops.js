@@ -49,7 +49,9 @@ function killDrops(e){
   log('🔥 Шаман пал — орда в ярости!','warn');
   shake=Math.max(shake,6);
   let _raged=0;
-  for(const en of enemies){
+  // FIX v7.38: используем spatial hash вместо перебора всех врагов — O(1) вместо O(n)
+  const nearShaman = enemiesNear(e.x, e.y, 300);
+  for(const en of nearShaman){
    if(!en.alive||en.hp<=0||en===e)continue;
    if(dist2(en.x-e.x,en.y-e.y)<300*300){
     en.spd=(en.spd||90)*1.35;en.dmgMod=(en.dmgMod||1)*1.3;en.rageT=6;_raged++;
@@ -100,29 +102,47 @@ function killDrops(e){
  // ❄️ ЭФФЕКТ РАСКАЛЫВАНИЯ ЛЬДА (ICE SHATTER)
  // ==========================================
  if(e.frozen>0){
-  const _iceCount=e.boss?20:e.mini?14:e.elite?10:6;
-  for(let i=0;i<_iceCount;i++){
-   const a=i/_iceCount*TAU+Math.random()*0.2, sp=rnd(100,240);
-   const p=spawnParticle(e.x,e.y-e.r*0.5,Math.cos(a)*sp,Math.sin(a)*sp,rnd(.4,.85),i%2?'#bfe0ff':'#e0f0ff',150,0);
-   if(p)p.ice=1;
+  // Раскалывание срабатывает на КАЖДОЙ смерти замороженного врага, а знахарка
+  // морозит всё поле: на плотной волне это десятки цепей за кадр, каждая со
+  // своим звуком, залпом частиц, записью в лог и вызовом hitEnemy по всем
+  // соседям. Отсюда рывок на каждом ударе. Урон цепи сохраняем полностью —
+  // ограничиваем только то, что его сопровождает.
+  const _icNow=Math.floor(performance.now()/16);
+  if(window._iceF!==_icNow){window._iceF=_icNow;window._iceFrame=0;}
+  const _icBudget=(window._iceFrame=(window._iceFrame||0)+1)<=3;
+  if(_icBudget){
+   const _iceCount=Math.max(3,Math.round((e.boss?20:e.mini?14:e.elite?10:6)*(typeof partMul!=='undefined'?partMul:1)));
+   for(let i=0;i<_iceCount;i++){
+    const a=i/_iceCount*TAU+Math.random()*0.2, sp=rnd(100,240);
+    const p=spawnParticle(e.x,e.y-e.r*0.5,Math.cos(a)*sp,Math.sin(a)*sp,rnd(.4,.85),i%2?'#bfe0ff':'#e0f0ff',150,0);
+    if(p)p.ice=1;
+   }
+   spawnFlash(e.x,e.y-e.r*0.5,0.6,'#bfe0ff');
   }
-  if(AC){
-   try{
-    tone(1500,0.12,'sine',0.05,2200);
-    setTimeout(()=>{try{tone(1900,0.10,'sine',0.03,1100)}catch(err){}},35);
-   }catch(err){}
+  // Звук — событие, а не фон: пара узлов Web Audio на каждый скол складывалась
+  // в сотню в секунду. Отложенный подзвон убран вместе с его setTimeout.
+  if(AC&&typeof tone==='function'){
+   const _ms=Date.now();
+   if(_ms-(window._iceSndMs||0)>110){window._iceSndMs=_ms;
+    try{tone(1500,0.12,'sine',0.05,2200);}catch(err){}}
   }
   const _shatterDmg=(10+(e.maxhp||e.hp||5)*0.12)*P.dmgMul;
   const _shatterR=e.r+80;
+  // Потолок на длину цепи: без него удар по толпе разворачивался в
+  // квадратичный обход, а разницы в ощущении между восемью задетыми и
+  // тридцатью нет.
   const _victims=aliveNear(e.x,e.y,_shatterR);
+  let _vn=0;
   for(const v of _victims){
    if(v===e)continue;
+   if(++_vn>8)break;
    hitEnemy(v,_shatterDmg,'frost',false);
    v.slow=Math.min(v.slow||1,0.65);
    v.frozen=Math.max(v.frozen||0,0.6);
   }
-  spawnFlash(e.x,e.y-e.r*0.5,0.6,'#bfe0ff');
-  log('❄ Раскалывание льда!','frost');
+  // Строка лога — запись в DOM. На волне их было по десятку в кадр.
+  if(Date.now()-(window._iceLogMs||0)>1500){window._iceLogMs=Date.now();
+   log('❄ Раскалывание льда!','frost');}
  }
 
  // ==========================================
@@ -156,12 +176,8 @@ function killDrops(e){
  }
 
  const isBoss=!!e.boss;
- if(isBoss){gold+=280;won=true;bossE=null;shake=8;flashScreen('#ffcf6a',0.7);slowmoHit(0.5,1.08);   // v6.61: падение Хранителя — заморозка + слоу-мо
-  // v6.24: полсекунды тишины на падении Хранителя. Это финал забега —
-  // единственное место, где длинная пауза не мешает, а работает на выдох.
-  evoPause=Math.max(evoPause,0.55);
+ if(isBoss){gold+=280;won=true;bossE=null;shake=4;flashScreen('#ffcf6a',0.5);
   bigText('ХРАНИТЕЛЬ ПАЛ','застава цела');
-  vibe(160);   // v6.17: хитстоп убран, вспышка усилена
   if(UI.bosshp)UI.bosshp.style.width='0%';
   const bp=EL('bossphase'); if(bp)bp.textContent='повержен';
   EL('bossbar').classList.remove('enrage');
@@ -183,13 +199,9 @@ function killDrops(e){
   else if(isW){warlordKills++;mini3BossE=null;}
   else{mglistKills++;mini2BossE=null;}
   gold+=isT?75:(isW?65:55);
-  // v6.24: мини-босс — веха на четверть забега, ей положен свой титр и стоп-кадр
-  evoPause=Math.max(evoPause,0.28);
   bigText(isT?'ДРЕВЕНЬ ПАЛ':(isW?'ВОЖАК ПАЛ':'СТРЫГА ИЗГНАНА'),'путь открыт',isT?'#8aff5a':(isW?'#b8e07a':'#c9ffe0'));
-  vibe(110);
-  slowmoHit(0.3,1.05);   // v6.61: мини-босс
-  shake=5;flashScreen(   // v6.17: хитстоп убран
-  isT?'#8aff5a':(isW?'#7fb04a':'#c9ffe0'),0.35);
+  shake=3;flashScreen(
+  isT?'#8aff5a':(isW?'#7fb04a':'#c9ffe0'),0.30);
   e.dying=e.dieMax||1.25;
   // Полосу HP прячем только если её не занял главный босс
   if(!bossE)EL('bossbar').style.display='none';

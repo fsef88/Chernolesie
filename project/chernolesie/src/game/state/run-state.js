@@ -40,8 +40,8 @@ let shake=0,hitstop=0,timeScale=1;
 // v6.61: СЛОУ-МО + ZOOM-PUNCH. slowmo — секунды (реальное время) замедления мира,
 // zoomPunch — множитель приближения камеры, плавно возвращается к 1.
 let slowmo=0,zoomPunch=1;
-const SLOWMO_SCALE=0.32;
-function slowmoHit(t,zp){slowmo=Math.max(slowmo,t);zoomPunch=Math.max(zoomPunch,zp||1.05);}
+const SLOWMO_SCALE=1.0;
+function slowmoHit(t,zp){zoomPunch=Math.max(zoomPunch,zp||1.03);}
 // v6.22 МУЛЬТИ-КИЛЛ. Каждая смерть обрабатывалась поштучно: убил одного или
 // двадцать — структура фидбэка одинаковая, и косьба толпы ничем не отличалась
 // от размена с одиночкой. Копим смерти за шаг физики и выдаём ОДИН жирный

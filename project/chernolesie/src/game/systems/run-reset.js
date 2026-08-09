@@ -64,6 +64,12 @@ directorP=1;directorT=0;directorLastKills=0;directorLogBand=0;directorGrace=0;  
  boonShown=false;
  // таймер туториала от прошлого забега мог «выстрелить» на новом
  for(const t of tutTimers)clearTimeout(t);tutTimers.length=0;   // v5.77: снимаем ВСЕ шаги, иначе подсказки прошлого забега всплывают в новом
+ // FIX v7.39: СБРОС ТАЙМЕРОВ UI — иначе после рестарта игры остаются висящие
+ // таймеры всплесков/эволюций/достижений, которые срабатывают на новом забеге.
+ if(_surgeTmr){clearTimeout(_surgeTmr);_surgeTmr=null;}
+ if(_evoTmr){clearTimeout(_evoTmr);_evoTmr=null;}
+ if(_evoInnerTmr){clearTimeout(_evoInnerTmr);_evoInnerTmr=null;}
+ if(_achTimeout){clearTimeout(_achTimeout);_achTimeout=null;}
  // зажатые клавиши/палец на джойстике не сбрасывались — персонаж
  // начинал новый забег уже бегущим (keyup не приходит при перезагрузке ввода)
  for(const k in keys)keys[k]=0;

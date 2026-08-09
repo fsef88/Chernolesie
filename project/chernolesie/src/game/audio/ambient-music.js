@@ -156,11 +156,19 @@ function tickMusic(){
 }
 
 let _flashTimeout=null,_weaponsKey='';
+// v7.41: вспышка перенесена с DOM-градиента (#hitFlash, растеризация
+// полноэкранного radial-gradient в ~3.7M px каждый вызов — вне GPU и вне
+// хронометра) на холст. Состояние хранится здесь и рисуется в draw()
+// рядом с mkFlash. Тот же градиент на холсте стоит микросекунды.
+let _flashColor='#ffffff',_flashA=0,_flashT=0,_flashDur=0.12;
+function flashColorToRGBA(c,a){
+ c=c.replace('#','');
+ if(c.length===3)c=c[0]+c[0]+c[1]+c[1]+c[2]+c[2];
+ const r=parseInt(c.substr(0,2),16),g=parseInt(c.substr(2,2),16),b=parseInt(c.substr(4,2),16);
+ return 'rgba('+r+','+g+','+b+','+a+')';
+}
 function flashScreen(color,alpha){
- const f=document.getElementById('hitFlash');
- f.style.background=`radial-gradient(ellipse at center,transparent 50%,${color}${Math.round(alpha*255).toString(16).padStart(2,'0')} 100%)`;
- f.style.opacity='1';
- if(_flashTimeout)clearTimeout(_flashTimeout);
- _flashTimeout=setTimeout(()=>{f.style.opacity='0';_flashTimeout=null;},120);
+ if(over||runEnded)return;
+ _flashColor=color;_flashA=alpha;_flashT=_flashDur;
 }
 

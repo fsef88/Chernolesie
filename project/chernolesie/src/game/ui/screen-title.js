@@ -4,8 +4,69 @@ function showTitleScreen(){
   const row=document.getElementById('tsRow');
   if(!ts||!row)return;
   row.innerHTML='';
+  // Данные накладываются на нарисованную UI-пластину главного экрана.
+  // У каждого пути свой короткий коммерческий "паспорт", чтобы выбор
+  // читался до старта, а не только по портрету.
+  const heroCards={
+   warrior:['УРОН: ВЫСОКИЙ','ЗАЩИТА: ВЫСОКАЯ','ТЕМП: СРЕДНИЙ'],
+   druid:['УРОН: СРЕДНИЙ','ЗАЩИТА: ВЫСОКАЯ','КОНТРОЛЬ: ВЫСОКИЙ'],
+   shaman:['УРОН: ВЫСОКИЙ','ЗАЩИТА: СРЕДНЯЯ','ДАЛЬНОСТЬ: ВЫСОКАЯ'],
+   rogue:['УРОН: ВЫСОКИЙ','ЗАЩИТА: НИЗКАЯ','ТЕМП: ВЫСОКИЙ'],
+   archer:['УРОН: ВЫСОКИЙ','ЗАЩИТА: СРЕДНЯЯ','ДАЛЬНОСТЬ: ВЫСОКАЯ'],
+   ognevik:['УРОН: ВЫСОКИЙ','ЗАЩИТА: НИЗКАЯ','ОБЛАСТЬ: ВЫСОКАЯ'],
+   groznik:['УРОН: ВЫСОКИЙ','ЗАЩИТА: СРЕДНЯЯ','ГРОЗА: ВЫСОКАЯ']
+  };
+  const titleScenes={
+   warrior:'@@A:art/screen-title/scene-warrior.webp@@',
+   druid:'@@A:art/screen-title/scene-druid.webp@@',
+   shaman:'@@A:art/screen-title/scene-shaman.webp@@',
+   archer:'@@A:art/screen-title/scene-archer.webp@@',
+   rogue:'@@A:art/screen-title/scene-rogue.webp@@',
+   ognevik:'@@A:art/screen-title/scene-ognevik.webp@@',
+   groznik:'@@A:art/screen-title/scene-groznik.webp@@'
+  };
+  // Сцена ставится переменной, а не background-image: на широком экране
+  // картинку рисует #titlescreen::after, а поля — размытая копия в
+  // ::before, и до псевдоэлементов инлайновый стиль не достаёт. Переменная
+  // в них наследуется, поэтому один вызов кроет все три слоя сразу и поля
+  // размываются по текущему герою, а не вечно по воину.
+  // Переменная ставится всегда, включая воина: тогда слоям в 84 не нужен
+  // свой запасной url, и картинка не инлайнится в сборку лишний раз —
+  // каждое вхождение токена разворачивается в отдельную копию base64.
+  const applyScene=(id)=>{
+   const src=titleScenes[id]||titleScenes.warrior;
+   ts.style.setProperty('--ts-scene','url("'+src+'")');
+  };
+  const renderHeroPassport=(c)=>{
+   // У каждого доступного пути свой нарисованный главный экран: выбор меняет
+   // не только цифры справа, но и героя на самой сцене.
+   applyScene(c.id);
+   const featured=document.getElementById('tsFeaturedHero');
+   const featuredArt=CLASS_ART[c.id]&&CLASS_ART[c.id].src;
+   if(featured)featured.innerHTML=featuredArt?'<img src="'+featuredArt+'" alt="">':'';
+   const name=document.getElementById('tsHeroName');
+   const arch=document.getElementById('tsHeroArch');
+   const desc=document.getElementById('tsHeroDesc');
+   const stats=document.getElementById('tsHeroStats');
+   if(name)name.textContent=c.name;
+   if(arch)arch.textContent=c.arch;
+   if(desc)desc.textContent=c.desc;
+   if(stats)stats.innerHTML=(heroCards[c.id]||heroCards.warrior).map((s,i)=>'<span><b>'+['⚔','◈','✦'][i]+'</b>'+s+'</span>').join('');
+   {const hp=document.querySelector('.ts-hero-panel');if(hp)hp.classList.remove('locked');}
+  };
+  const selectTitleClass=(c,d)=>{
+   if(!classUnlocked(c.id))return;
+   currentClass=c.id;
+   row.querySelectorAll('.classcard').forEach(x=>x.classList.remove('sel'));
+   d.classList.add('sel');
+   renderHeroPassport(c);
+   // После каждого выбора центрируем текущий класс между соседями.
+   if(typeof paintDeck==='function')paintDeck();
+   try{sfxFlip();}catch(e){}
+  };
   CLASSES.forEach(c=>{
    const d=document.createElement('div');
+   d.dataset.titleClass=c.id;
    // v6.26: закрытый класс показываем, но приглушённым и с условием —
    // спрятать его совсем значило бы лишить игрока цели.
    const open_=classUnlocked(c.id);
@@ -15,7 +76,9 @@ function showTitleScreen(){
    const portrait=CLASS_ART[c.id]&&CLASS_ART[c.id].src?`<img class="classportrait" src="${CLASS_ART[c.id].src}" alt="">`:'';
    if(open_){
     d.innerHTML=`${portrait}<h3>${c.name}</h3><p class="arch">${c.arch}</p><p>${c.desc}</p><span class="fxRunes"></span><span class="fxEdge"></span><span class="fxDust"></span>`;
-    d.onclick=()=>{currentClass=c.id;document.querySelectorAll('#tsRow .classcard').forEach(x=>x.classList.remove('sel'));d.classList.add('sel');sfxFlip();};
+    d.onclick=()=>selectTitleClass(c,d);
+    // На мобильном WebView pointerup надёжнее синтезированного click.
+    d.addEventListener('pointerup',ev=>{ev.preventDefault();selectTitleClass(c,d);},{passive:false});
    }else{
     const _f=Math.round(classLockFrac(c.id)*100);
     const _u=CLASS_UNLOCKS[c.id];
@@ -34,11 +97,115 @@ function showTitleScreen(){
    }
    row.appendChild(d);
   });
+  renderHeroPassport(CLASSES.find(c=>c.id===currentClass)||CLASSES[0]);
+  // На телефоне герои перелистываются кнопками по три — без нативного
+  // горизонтального скролла и без спрятанных свайпом карточек.
+  let deckPage=0;
+  const deckPages=Math.ceil(CLASSES.length/3);
+  const paintDeck=()=>{
+   const mobile=window.matchMedia&&window.matchMedia('(max-width:760px)').matches;
+   const opened=CLASSES.filter(x=>classUnlocked(x.id));
+   let active=opened.findIndex(x=>x.id===currentClass);
+   if(active<0)active=0;
+   const visible=opened.length>2
+    ? [opened[(active+opened.length-1)%opened.length],opened[active],opened[(active+1)%opened.length]]
+    : opened;
+   Array.from(row.children).forEach(card=>{
+    const pos=visible.findIndex(x=>x.id===card.dataset.titleClass);
+    card.style.display=(!mobile||pos>=0)?'flex':'none';
+    card.style.order=pos>=0?String(pos):'9';
+    card.classList.toggle('sel',card.dataset.titleClass===currentClass);
+   });
+   const dots=document.getElementById('tsDeckPages');
+   if(dots)dots.innerHTML='';
+  };
+  const prev=document.getElementById('tsDeckPrev'),next=document.getElementById('tsDeckNext');
+  // v12.1 (аудит): стрелки раньше крутили неиспользуемый deckPage — теперь листают
+  // пути точно как свайп: закрытые показывают превью, открытые выбираются.
+  if(prev)prev.onclick=()=>{showDeckClass(liveIndex-1);try{sfxFlip();}catch(e){}};
+  if(next)next.onclick=()=>{showDeckClass(liveIndex+1);try{sfxFlip();}catch(e){}};
+  paintDeck();
+  // Свайп по нижней колоде листает доступных защитников. Это отдельный
+  // touch-обработчик, поэтому на телефоне не зависит от маленьких стрелок.
+  let swipeX=0;
+  row.addEventListener('touchstart',ev=>{swipeX=ev.changedTouches[0].clientX;},{passive:true});
+  row.addEventListener('touchend',ev=>{
+   const dx=ev.changedTouches[0].clientX-swipeX;
+   if(Math.abs(dx)<36)return;
+   const opened=CLASSES.filter(x=>classUnlocked(x.id));
+   if(!opened.length)return;
+   let idx=opened.findIndex(x=>x.id===currentClass);
+   if(idx<0)idx=0;
+   idx=(idx+(dx<0?1:-1)+opened.length)%opened.length;
+   const chosen=opened[idx];
+   const tile=row.querySelector('[data-title-class="'+chosen.id+'"]');
+   if(tile)selectTitleClass(chosen,tile);
+  },{passive:true});
+
+  // Независимая нижняя колода. В отличие от нарисованного задника, она
+  // действительно листает все семь путей и не зависит от фона сцены.
+  const liveDeck=document.getElementById('tsLiveDeck');
+  let liveIndex=Math.max(0,CLASSES.findIndex(x=>x.id===currentClass));
+  const showDeckClass=(idx)=>{
+   liveIndex=(idx+CLASSES.length)%CLASSES.length;
+   const c=CLASSES[liveIndex];
+   if(classUnlocked(c.id)){
+    const tile=row.querySelector('[data-title-class="'+c.id+'"]');
+    if(tile)selectTitleClass(c,tile);
+   }else{
+    // Закрытый путь тоже получает свой арт-превью, но не становится игровым классом.
+    applyScene(c.id);
+    const name=document.getElementById('tsHeroName');
+    const arch=document.getElementById('tsHeroArch');
+    const desc=document.getElementById('tsHeroDesc');
+    const stats=document.getElementById('tsHeroStats');
+    // v12.3: паспорт закрытого героя той же структуры, что у открытого, —
+    // текст не прыгает при листании: имя (2 строки), архетип, сердца, 3 стата.
+    if(name)name.textContent=c.name;
+    if(arch)arch.textContent=c.arch;   // v12.4: роль как у открытых — панель пиксель-в-пиксель как эталон
+    if(desc)desc.textContent='Закрыто: '+classLockHint(c.id);
+    if(stats)stats.innerHTML=(heroCards[c.id]||heroCards.warrior).map((s,i)=>'<span><b>'+['⚔','◈','✦'][i]+'</b>'+s+'</span>').join('');
+    {const hp=document.querySelector('.ts-hero-panel');if(hp)hp.classList.add('locked');}
+    try{sfxFlip();}catch(e){}
+   }
+   renderLiveDeck();
+  };
+  const renderLiveDeck=()=>{
+   if(!liveDeck)return;
+   liveDeck.innerHTML='';
+   // Метка выбора остаётся на том пути, которым игрок реально пойдёт в бой.
+   // Центр колоды — это только просмотр: на закрытом пути он подсвечивает
+   // карточку, но выбранным классом её не делает, иначе экран обещал бы
+   // героя, которого «В БОЙ» всё равно не запустит.
+   const selId=currentClass||(CLASSES[0]&&CLASSES[0].id);
+   [-1,0,1].forEach(offset=>{
+    const i=(liveIndex+offset+CLASSES.length)%CLASSES.length;
+    const c=CLASSES[i],open_=classUnlocked(c.id);
+    const b=document.createElement('button');
+    b.type='button';b.className='liveHero'+(c.id===selId?' current':'')+(offset===0?' focus':'')+(open_?'':' locked');
+    b.dataset.hero=c.id;
+    const source=CLASS_ART[c.id]&&CLASS_ART[c.id].src;
+    const art=source?`<img src="${source}" alt="">`:'';
+    b.innerHTML=art+'<span>'+c.name+'</span>'+(open_?'':'<i>🔒</i>');
+    b.onclick=()=>showDeckClass(i);
+    liveDeck.appendChild(b);
+   });
+  };
+  if(liveDeck){
+   let deckStart=0;
+   liveDeck.addEventListener('touchstart',ev=>{deckStart=ev.changedTouches[0].clientX;},{passive:true});
+   liveDeck.addEventListener('touchend',ev=>{
+    const dx=ev.changedTouches[0].clientX-deckStart;
+    if(Math.abs(dx)>=36)showDeckClass(liveIndex+(dx<0?1:-1));
+   },{passive:true});
+   renderLiveDeck();
+  }
+  // Обновление баланса золота Заставы на титульнике
+  {const mg=document.getElementById('tsMetaGoldVal');
+   if(mg)mg.textContent=typeof metaGold!=='undefined'?metaGold:0;}
   // Строка-приманка: сколько ещё осталось открыть.
   {const sub=document.getElementById('tsSub');
-   if(sub){const n=lockedClassCount();
-    sub.textContent=n?('Защитник Заставы \u2014 открыто '+(CLASSES.length-n)+' из '+CLASSES.length+' путей')
-                     :'Защитник Заставы \u2014 выбери свой путь';}}
+   if(sub)sub.textContent='Защитник Заставы';}
   // v6.25: переключатель длительности. Рисуем здесь же, чтобы состояние
   // подхватывалось при каждом показе титульника (в т.ч. после забега).
   const mrow=document.getElementById('tsMode');
@@ -89,6 +256,22 @@ function showTitleScreen(){
      crow.appendChild(hint);
     }
    }}
+  // Вторичные пункты главного меню используют уже существующие игровые окна.
+  // Обработчик назначается при каждом показе титульника, поэтому не хранит
+  // устаревших ссылок после возврата из забега.
+  ts.querySelectorAll('[data-title-action]').forEach(menuBtn=>{
+   const handleAction=(ev)=>{
+    if(ev){ev.stopPropagation();}
+    const action=menuBtn.dataset.titleAction;
+    if(action==='stats'&&typeof openStats==='function')openStats();
+    else if(action==='achievements'&&typeof openAch==='function')openAch();
+    else if(action==='journal'&&typeof openJournal==='function')openJournal();
+    else if(action==='tree'&&typeof openTree==='function')openTree();
+    try{sfxFlip();}catch(e){}
+   };
+   menuBtn.onclick=handleAction;
+   menuBtn.ontouchend=handleAction;
+  });
   const btn=document.getElementById('btnStartPoohd');
   // v5.93: ts и row проверены выше, а btn — нет. Титульник показывается строкой
   // ниже, поэтому при отсутствии кнопки игрок увидел бы экран без работающего

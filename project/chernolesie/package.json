@@ -12,7 +12,8 @@
     "serve": "node tools/serve.mjs",
     "check": "node tools/check.mjs",
     "docs": "node tools/docmap.mjs",
-    "split": "node tools/split.mjs"
+    "split": "node tools/split.mjs",
+    "rebase": "node tools/rebase.mjs"
   },
   "engines": { "node": ">=18" }
 }

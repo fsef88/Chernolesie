@@ -148,8 +148,8 @@ function showChest(prizes){
     artwrap.innerHTML = `<img src="${CHEST_ART.src}" alt="Сундук">`;
   }
   ov.style.display='flex';
-  flashScreen('#ffcf6a',prizes.length>=5?0.55:0.35);
-  shake=Math.max(shake,prizes.length>=5?10:5);
+  flashScreen('#ffcf6a',prizes.length>=5?0.35:0.22);
+   shake=Math.max(shake,3);
   gemPop(P.x,P.y,'#ffcf6a',1.4);
   sfxAnomaly&&sfxAnomaly();
   sfxChestFanfare(prizes.length, hasEvo);

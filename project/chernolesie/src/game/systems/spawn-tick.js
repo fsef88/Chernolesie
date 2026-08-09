@@ -12,10 +12,11 @@ function updateSpawning(dt){
   // (при 3 тиках × 15 врагов = 45 лишних итераций/кадр). Новые враги всегда
   // спавнятся ЗА nearR (dist >= max(W,H)/2+100) — счётчик в цикле не меняется.
   const nearR=Math.max(W,H)*0.4;
-  const nearR2=nearR*nearR;
+  // FIX v7.38: используем spatial hash вместо перебора всех врагов — O(1) вместо O(n)
+  const nearEnemies = enemiesNear(P.x, P.y, nearR);
   let nearCount=0;
-  for(const e of enemies){
-   if(e.hp>0&&!(e.dying>0)&&dist2(e.x-P.x,e.y-P.y)<nearR2)nearCount++;
+  for(const e of nearEnemies){
+   if(e.hp>0&&!(e.dying>0))nearCount++;
   }
   const _cap=enemyCap(time),_near=nearCap(time);   // v5.64: капы растут со временем
   while(spawnTimer<=0){
@@ -75,11 +76,14 @@ if(specialCharge<specialMax){const add=dt*0.017*(P.sealChargeMul||1);specialChar
    UI.spechud.style.opacity='1';
    UI.spechud.style.setProperty('--spec-c', si.color);
    if(ready)UI.spechud.classList.add('ready');else UI.spechud.classList.remove('ready');
-   if(UI.speclabel)UI.speclabel.textContent=ready?('ГОТОВО'+(banked>1?' ×'+banked:'')+' · '+si.name):('ПЕЧАТЬ · '+si.name);
-   if(UI.specicon){UI.specicon.style.color=si.color;UI.specicon.style.borderColor=si.color;UI.specicon.innerHTML=si.svg||ICONS.get(si.iconId);}
+   if(UI.speclabel&&__HUDW.lbl!==(ready?1:0)+si.name){__HUDW.lbl=(ready?1:0)+si.name;UI.speclabel.textContent=ready?('ГОТОВО'+(banked>1?' ×'+banked:'')+' · '+si.name):('ПЕЧАТЬ · '+si.name);}
+   // v7.40: иконка Печати меняется раз за забег — кэшируем по значению,
+   // чтобы не пересобирать innerHTML + строку градиента 136 раз в секунду.
+   if(UI.specicon&&__HUDW.ic!==si.iconId){__HUDW.ic=si.iconId;UI.specicon.style.color=si.color;UI.specicon.style.borderColor=si.color;UI.specicon.innerHTML=si.svg||ICONS.get(si.iconId);}
    if(UI.specfill){
     const _spw=Math.round(pct*100);if(__HUDW.sp!==_spw){__HUDW.sp=_spw;UI.specfill.style.width=_spw+'%';}
-    UI.specfill.style.background=ready?('linear-gradient(90deg,'+si.color+','+(si.accent||'#fff')+')'):('linear-gradient(90deg,#4a3a18,'+si.color+')');
+    const _sb=ready?('linear-gradient(90deg,'+si.color+','+(si.accent||'#fff')+')'):('linear-gradient(90deg,#4a3a18,'+si.color+')');
+    if(__HUDW.sb!==_sb){__HUDW.sb=_sb;UI.specfill.style.background=_sb;}
    }
   }
   if(ready && !window._sealReadyTold){

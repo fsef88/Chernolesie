@@ -55,7 +55,21 @@
   }).then(function(data){
    if(saveQueued&&!savePending)flush();   // сейв, накопленный до готовности player
    var raw=data&&data.cl_progress;if(!raw)return;
-   var obj=JSON.parse(raw),changed=0;
+   // FIX v7.39: БЕЗОПАСНЫЙ JSON.parse — защищаемся от XSS через облачные сохранения.
+   // Если злоумышленник запишет в leaderboard HTML-теги, они могут исполниться при загрузке.
+   // Проверяем тип данных перед парсингом и ловим исключения.
+   var obj;
+   try{
+    obj=JSON.parse(raw);
+    if(!obj||typeof obj!=='object'||Array.isArray(obj)){
+     console.warn('[Яндекс] некорректный формат облачного прогресса');
+     return;
+    }
+   }catch(e){
+    console.warn('[Яндекс] ошибка парсинга облачного прогресса:',e);
+    return;
+   }
+   var changed=0;
    for(var k in obj){
     if(!Object.prototype.hasOwnProperty.call(obj,k))continue;
     try{if(localStorage.getItem(k)!==obj[k]){localStorage.setItem(k,obj[k]);changed++;}}catch(e){}

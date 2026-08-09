@@ -124,8 +124,25 @@ function drawWeaponTrails(px, py){
     ctx.restore();
   }
 }
+// Нагрузка светового слоя за кадр, 0..1. 'lighter' складывает источники без
+// потолка: к пятому уровню десяток вспышек и зон сливался в сплошное молоко,
+// в котором не читались ни герой, ни враги. Считаем один раз за кадр — этим же
+// числом пользуется карман читаемости вокруг героя.
+let _fxLoad=0;
+function calcFxLoad(){
+ const f=(typeof ACTIVE!=='undefined'&&ACTIVE.flashes)?ACTIVE.flashes.length:0;
+ const z=(typeof zones!=='undefined'&&zones)?zones.length:0;
+ const h=(typeof hazards!=='undefined'&&hazards)?hazards.length:0;
+ // Зоны весят больше: они держатся секундами и светят постоянно, а вспышка гаснет.
+ _fxLoad=Math.min(1,(f+z*1.6+h)/18);
+ return _fxLoad;
+}
+function fxLoad(){return _fxLoad;}
 function drawGlowLayer(){
  const S=Math.max(1,Math.min(2.4,1/(ZOOM||1)*0.85));
+ // Чем больше источников, тем тише каждый. Одиночная вспышка бьёт в полную
+ // силу, а сотня — уже нет: суммарная яркость слоя перестаёт расти в белое.
+ const DIM=1-0.58*_fxLoad;
  ctx.save();
  ctx.globalCompositeOperation='lighter';
  // v6.50 ЗАРЕВО СЕРИИ. В VS ощущение мощи РАСТЁТ по ходу забега: чем гуще
@@ -137,14 +154,14 @@ function drawGlowLayer(){
    const k=Math.min(1,(kc-3)/45);
    const cv=(typeof CLASS_VISUALS!=='undefined'?(CLASS_VISUALS[currentClass]||CLASS_VISUALS.warrior):null);
    const r=(46+70*k)*S;
-   ctx.globalAlpha=0.10+0.20*k;
+   ctx.globalAlpha=(0.10+0.20*k)*DIM;
    ctx.drawImage(glowSprite(cv?cv.color:'#ffcf6a'),P.x-cam.x-r,P.y-cam.y-r,r*2,r*2);
   }}
  // вспышки — самый мощный источник
  for(const f of ACTIVE.flashes){
   const a=f.t/f.max, w=(f.w!=null?f.w:(f.big?1:0));
   const r=(30+40*w)*(0.5+0.5*(1-a))*S;
-  ctx.globalAlpha=Math.min(0.52,a*(0.26+0.30*w));
+  ctx.globalAlpha=Math.min(0.52,a*(0.26+0.30*w))*DIM;
   const sp=glowSprite(f.color);
   ctx.drawImage(sp,f.x-cam.x-r,f.y-cam.y-r,r*2,r*2);
  }
@@ -154,14 +171,14 @@ function drawGlowLayer(){
   const col=z._bell?'#ffd77d':z._fire?'#ff9a3c':z._ring?'#9fd8ff':
             z._seed?'#9ad06a':z._dew?'#8fff8a':z._whirl?'#a8d8f0':'#9ad06a';
   const r=z.r*0.95;
-  ctx.globalAlpha=k*0.16;
+  ctx.globalAlpha=k*0.16*DIM;
   ctx.drawImage(glowSprite(col),z.x-cam.x-r,z.y-cam.y-r,r*2,r*2);
  }
  // ловушки чащи — опасность должна светиться
  for(const h of hazards){
   if(h.state!=='active'||(h.dmg|0)<=0)continue;
   const r=h.r*0.9;
-  ctx.globalAlpha=0.22;
+  ctx.globalAlpha=0.22*DIM;
   ctx.drawImage(glowSprite('#ff8a3c'),h.x-cam.x-r,h.y-cam.y-r,r*2,r*2);
  }
  ctx.restore();

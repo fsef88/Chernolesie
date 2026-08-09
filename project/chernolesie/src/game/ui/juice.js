@@ -12,8 +12,6 @@ function bigText(main,sub,color){
  if(!el)return;
  el.innerHTML='<div class="bt1">'+main+'</div>'+(sub?'<div class="bt2">'+sub+'</div>':'');
  if(color){const h=el.querySelector('.bt1');if(h)h.style.color=color;}
- el.classList.remove('show');
- void el.offsetWidth;
  el.classList.add('show');
  if(_btTmr)clearTimeout(_btTmr);
  _btTmr=setTimeout(()=>{el.classList.remove('show');},2400);

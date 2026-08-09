@@ -79,7 +79,7 @@ function unlockAch(a){
    notifyAch(a);
    sfxAch();
   }
-  LS.set('cl_ach',JSON.stringify(achData));
+  LS.setLater('cl_ach',JSON.stringify(achData));   // вне кадра: см. LS.setLater
   // v6.31: классы больше не привязаны к достижениям — они открываются
   // по пожизненным счётчикам, см. commitLife() в endRun().
  }

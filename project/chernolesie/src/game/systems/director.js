@@ -101,7 +101,7 @@ function enemyHpMul(t,diff){
  // набирается за 130 секунд вместо 200. Всё, что после второй минуты, — как было.
  const early=1+1.3*Math.min(1,Math.max(0,t)/130);
  const m=(1+BALANCE.hpPerStep*Math.floor(t/BALANCE.hpStepSec))*early;
- return Math.min(BALANCE.hpMax,m)*directorHpMul()*(isFinite(diff)?diff:1);
+ return Math.min(BALANCE.hpMax,m*directorHpMul()*(isFinite(diff)?diff:1));
 }
 // v6.25: было const — короткий режим не мог сдвинуть выход босса.
 // Теперь значение задаётся applyRunMode() при старте забега.

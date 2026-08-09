@@ -173,60 +173,27 @@ function drawProps(){
    continue;
   }
 if(z._bell){
-   // v6.42 НАБАТ. У колокола вообще НЕ БЫЛО своей ветки отрисовки — он падал
-   // в общий else и рисовался зелёной лужей, как ядовитая зона. Оружие, которое
-   // ставит резонирующий круг и бьёт по таймеру, выглядело как чужой эффект.
-   // Теперь пульс привязан к _bt (таймеру удара, 1.2 с): игрок ВИДИТ, когда
-   // будет следующий звон, и может завести врагов в круг к нужному моменту.
+   // v12.0 (аудит): процедурный «вайрфрейм» колокола УДАЛЁН по просьбе автора:
+   // ровные окружности, расходящиеся волны, лучи-спицы и насечки поверх поля
+   // читались как отладочная сетка. Теперь зона видна только мягким золотым
+   // дыханием (без единой линии) + арт-мандала выше, если она декодировалась.
    const bt=z._bt||0;
-   const ph=1-Math.min(1,bt/1.2);          // 0 сразу после удара → 1 к следующему
-   const beat=Math.pow(ph,3);               // взвод: медленно, затем рывком
-   const col=z._evo?'#ffe6a0':'#ffd77d';
+   const ph=1-Math.min(1,bt/1.2);
+   const beat=Math.pow(ph,3);
    ctx.globalCompositeOperation='lighter';
-   // (1) заливка-дыхание: круг «набирает воздух» перед ударом
    ctx.globalAlpha=k*(0.10+beat*0.16);
    const gb=ctx.createRadialGradient(zx,zy,z.r*0.15,zx,zy,z.r);
    gb.addColorStop(0,'rgba(255,225,150,0.35)');
    gb.addColorStop(0.75,z._evo?'rgba(255,190,90,0.22)':'rgba(220,170,70,0.18)');
    gb.addColorStop(1,'rgba(80,50,10,0)');
    ctx.fillStyle=gb;ctx.beginPath();ctx.arc(zx,zy,z.r,0,TAU);ctx.fill();
-   // (2) кромка круга — граница зоны читается всегда, толщина дышит с ударом
-   ctx.globalAlpha=k*(0.5+beat*0.5);
-   ctx.strokeStyle=col;ctx.lineWidth=1.8+beat*3.4;
-   ctx.beginPath();ctx.arc(zx,zy,z.r,0,TAU);ctx.stroke();
-   // (3) три волны, расходящиеся ОТ ЦЕНТРА к кромке — звон, а не статичный круг.
-   //     Сдвиг фазы на треть периода: одна ушла, вторая на середине, третья родилась.
-   for(let i=0;i<3;i++){
-    const wp=(ph+i/3)%1;
-    ctx.globalAlpha=k*(1-wp)*0.55;
-    ctx.lineWidth=1.2+(1-wp)*2.2;
-    ctx.beginPath();ctx.arc(zx,zy,z.r*(0.12+wp*0.9),0,TAU);ctx.stroke();
-   }
-   // (4) язык колокола: в момент удара из центра бьёт вспышка и лучи-спицы
-   if(beat>0.72){
-    const s=(beat-0.72)/0.28;
-    ctx.globalAlpha=k*s*0.85;ctx.fillStyle='#fff';
-    ctx.beginPath();ctx.arc(zx,zy,4+s*9,0,TAU);ctx.fill();
-    ctx.globalAlpha=k*s*0.6;ctx.strokeStyle='#fff';ctx.lineWidth=1.6;
-    for(let i=0;i<8;i++){
-     const an=i*0.7854+z.x*0.01;
-     ctx.beginPath();
-     ctx.moveTo(zx+Math.cos(an)*z.r*0.2,zy+Math.sin(an)*z.r*0.2);
-     ctx.lineTo(zx+Math.cos(an)*z.r*(0.35+s*0.6),zy+Math.sin(an)*z.r*(0.35+s*0.6));
-     ctx.stroke();
-    }
-   }
-   // (5) насечки по кромке — «зубцы звона», медленно вращаются: круг живой
-   ctx.globalAlpha=k*(0.25+beat*0.4);ctx.lineWidth=1.4+beat*1.6;
-   const nn=z._evo?14:10;
-   for(let i=0;i<nn;i++){
-    const an=i*(TAU/nn)+time*0.6;
-    ctx.beginPath();
-    ctx.moveTo(zx+Math.cos(an)*z.r*0.93,zy+Math.sin(an)*z.r*0.93);
-    ctx.lineTo(zx+Math.cos(an)*z.r*(1.04+beat*0.06),zy+Math.sin(an)*z.r*(1.04+beat*0.06));
-    ctx.stroke();
-   }
-  }else if(z._ring){
+   ctx.restore();
+   continue;
+  }
+else{ctx.restore();continue;}   // v12.0 (аудит): процедурные контурные фолбэки зон отключены — остаётся мягкое свечение нижнего слоя
+  if(false){ // мёртвая ветка: бывший «вайрфрейм» (кольца/лучи/спирали)
+  }
+  else if(z._ring){
    // v6.17: ОБЕРЕГ — расходящееся кольцо-волна
    ctx.globalCompositeOperation='lighter';ctx.globalAlpha=k*0.75;
    ctx.strokeStyle=z._evo?'#ffd27a':'#9fd8ff';ctx.lineWidth=z._evo?5:3;

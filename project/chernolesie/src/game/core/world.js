@@ -50,7 +50,7 @@ const DECO_SRC=[
 /*v5.24 deco 29*/"@@A:art/world/gcj9pafpl9hzgaaaabjru5erkjggg.png@@",
 /*v5.24 deco 30*/"@@A:art/world/bzt6us0nacb2aaaaaelftksuqmcc.png@@"
 ];
-const GT=new Image();GT.src='@@A:art/world/or8ekkyu2begaaaaasuvork5cyii.jpg@@';let GTpat=null;
+const GT=new Image();GT.src='@@A:art/world/ground-tile.webp@@';let GTpat=null;
 
 window.addEventListener('error',(e)=>{
  const t=Date.now();

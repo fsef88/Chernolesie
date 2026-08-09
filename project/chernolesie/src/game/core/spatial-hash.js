@@ -43,10 +43,10 @@ function buildGrid(){
 // Пишем сразу в один массив.
 // v10.0 COMMERCIAL ENGINE ARCHITECTURE (Zero-GC Spatial Query Pool & Inline Euclidean):
 // Заменяем аллокацию новых массивов const out = [] при каждом боевом запросе на статический пул переиспользуемых буферов.
-const _nearPool = [ [], [], [], [], [], [], [], [] ];
+const _nearPool = Array.from({length: 32}, () => []);
 let _nearPoolIdx = 0;
 function _getNearBuf(){
- const buf = _nearPool[(_nearPoolIdx++) & 7];
+ const buf = _nearPool[(_nearPoolIdx++) & 31];
  buf.length = 0;
  return buf;
 }

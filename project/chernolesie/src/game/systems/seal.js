@@ -14,10 +14,8 @@ function useSpecial(){
  P.spdBoostT = 4.0;
  // v6.23: печать — самое редкое событие забега, ей положен собственный кадр
  // остановки и белая вспышка. 0.13с: заметно, но не выбивает из ритма боя.
- evoPause=Math.max(evoPause,0.13);
- flashScreen('#ffe0a8',0.5);
- vibe(60);
- P.specialFx=HERO_CLIPS.ult.dur;heroAnimPlay('ult');HA.onHit=function(){shake=7;HA.onHit=null;};sfxEvo();   // v6.19: self-clearing callback
+ flashScreen('#ffe0a8',0.35);
+ P.specialFx=HERO_CLIPS.ult.dur;heroAnimPlay('ult');HA.onHit=function(){shake=Math.max(shake,3);HA.onHit=null;};sfxEvo();   // v6.19: self-clearing callback
  // v6.40 ПЕЧАТЬ — САМОЕ РЕДКОЕ ДЕЙСТВИЕ ИГРОКА, а выглядела как обычный удар:
  // одна вспышка на класс. Копится она ~15 секунд, тратится осознанно, поэтому
  // должна читаться мгновенно. Общий «взрыв печати» поверх классового эффекта:
@@ -149,7 +147,9 @@ function useSpecial(){
   const R=430,hw=64;
   const ex=P.x+Math.cos(base)*R,ey=P.y+Math.sin(base)*R;
   const dx=ex-P.x,dy=ey-P.y,dd=dx*dx+dy*dy;
-  for(const e of enemies){
+  // FIX v7.38: используем spatial hash вместо перебора всех врагов — O(1) вместо O(n)
+  const nearLine = enemiesNear(P.x, P.y, R);
+  for(const e of nearLine){
    if(!e.alive||e.hp<=0)continue;
    const t=clamp(((e.x-P.x)*dx+(e.y-P.y)*dy)/dd,0,1);
    const px=P.x+dx*t,py=P.y+dy*t;

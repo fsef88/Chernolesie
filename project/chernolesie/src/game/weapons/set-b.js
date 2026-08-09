@@ -92,7 +92,7 @@ function updateIdols(dt){
   let inside=(p)=>{let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){
    if(((poly[i].y>p.y)!=(poly[j].y>p.y))&&(p.x<(poly[j].x-poly[i].x)*(p.y-poly[i].y)/(poly[j].y-poly[i].y)+poly[i].x))c=!c;}return c;};
   const ld=(22+4*nwLvl('idol'))*wDmg('idol')*0.5;
-  for(const e of enemiesNear(poly[0].x,poly[0].y,1e9)){
+  for(const e of enemies){
    if(e.hp<=0||e.dying>0)continue;
    if(inside(e)){hitEnemy(e,ld,'elec',false);
     if(Math.random()<0.3)spawnParticle(e.x,e.y,rnd(-10,10),-rnd(10,30),rnd(.15,.35),'#ffd27a',0,0);}

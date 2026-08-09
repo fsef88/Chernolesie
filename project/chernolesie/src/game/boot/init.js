@@ -26,6 +26,42 @@ try{
  // v5.34 (C1): ТИТУЛЬНЫЙ ЭКРАН вместо «бой сразу + попап выбора».
  // Игрок видит меню выбора героя ДО старта. Бой не идёт, пока не нажата «В бой».
  // applyClassPassive отложен до нажатия кнопки (currentClass выбран на титульнике).
+ // v12.5 ПИКСЕЛЬНАЯ КАЛИБРОВКА ШАПКИ ПО АРТУ.
+ // vw/vh-кегли прыгали от размера окна и кэша. Теперь блок заголовка и кегль
+ // вычисляются из реальной геометрии сцены 768x1376: баннер = x155..615, y66..113.
+ (function(){
+  const ART_W=768, ART_H=1376, BX=155, BY=66, BW=460, BH=47;
+  const cal=()=>{
+   const ts=document.getElementById('titlescreen');
+   const lock=document.querySelector('.ts-title-lockup');
+   const h1=lock&&lock.querySelector('h1');
+   if(!ts||!lock||!h1)return;
+   const r=ts.getBoundingClientRect();
+   if(r.width<10||r.height<10)return;
+   const scale=Math.max(r.width/ART_W, r.height/ART_H);   // cover
+   const offX=(r.width-ART_W*scale)/2, offY=(r.height-ART_H*scale)/2;
+   lock.style.top=(offY+BY*scale)+'px';
+   lock.style.left=(offX+BX*scale)+'px';
+   lock.style.width=(BW*scale)+'px';
+   lock.style.height=(BH*scale)+'px';
+   // кегль: вписаться в 86% ширины баннера и 80% его высоты
+   const cap=BH*scale*0.80, wTarget=BW*scale*0.86;
+   let lo=10, hi=cap;
+   h1.style.fontSize=hi+'px';
+   if(h1.scrollWidth<=wTarget){lo=hi;}
+   else{
+    for(let i=0;i<14;i++){
+     const m=(lo+hi)/2; h1.style.fontSize=m+'px';
+     if(h1.scrollWidth>wTarget)hi=m;else lo=m;
+    }
+   }
+   h1.style.fontSize=lo+'px';
+  };
+  addEventListener('resize',()=>{clearTimeout(cal._t);cal._t=setTimeout(cal,120);});
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(cal);
+  setTimeout(cal,0); setTimeout(cal,300);
+  window.__calTitle=cal;
+ })();
  showTitleScreen();
  // startLoop() вызовет requestAnimationFrame сам; здесь НЕ дублируем (был баг — два rAF)
  // requestAnimationFrame(frame);

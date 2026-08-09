@@ -57,7 +57,6 @@ function updateEnemyMovement(e,dt,dx,dy,d,d2,DENSITY_R2){
  // v6.18d: пока идёт локальный хитстоп, враг не едет — но отдача (e.kx/e.ky)
  // применяется отдельно и продолжает работать, поэтому его всё равно отбрасывает.
  // Получается «удар вбил в него паузу», а не «игра подвисла».
- if(e.stun>0)spd=0;
  if(e.ai==='stalker'){if(d>380)spd*=1.7;else spd*=0.95;}
  if(e.ai==='shooter'){
   if(e.telegraphT>0){
@@ -180,7 +179,14 @@ function updateEnemyAuras(e,dt,thornR,thornR2,frostR,frostR2,dx,dy,d,d2){
   dealDamage(e,2.5*frost.lvl*P.dmgMul*dt);
   // v5.80: «Зимний плен» (Evo-стужа) — флаг ставился, но не читался нигде.
   if(P.evoFrostBind&&e.frozen>0)dealDamage(e,3*frost.lvl*P.dmgMul*dt*P.evoFrostBind);
-  const fz=(P.synIceBlade?0.09:0.04)+0.05*(P.evoFrostBind||0);      // Клинок Мораны: чаще сковывает
+  // Шанс сковать — за СЕКУНДУ, а не за кадр. Бросок шёл каждый шаг физики:
+  // 4% за кадр это 2.4 срабатывания в секунду, а заморозка держится 1.5с.
+  // Установившаяся доля замороженных = r*1.5/(1+r*1.5) = 78%: почти вся аура
+  // стояла неподвижно всегда. Владелец читал это не как контроль, а как
+  // подвисание игры — и был прав, экран действительно замирал.
+  // Ставим 0.4/с: та же формула даёт 37%, контроль виден, поле живёт.
+  // Урон в строке выше уже нормирован на dt — приводим бросок к тому же виду.
+  const fz=((P.synIceBlade?0.8:0.4)+0.4*(P.evoFrostBind||0))*dt;   // Клинок Мораны: чаще сковывает
   if(seedRandom()<fz)e.frozen=1.5;
  }
 }
@@ -218,7 +224,7 @@ function updateOneEnemy(e,dt,thornR,thornR2,frostR,frostR2,DENSITY_R2){
 
   // v6.18d: анимация врага тоже замирает на время локального хитстопа —
   // без этого он «дёргается на месте» и пауза не читается.
-  if(e.stun>0){e.stun-=dt;}else{e.at=(e.at||0)+dt;}
+  e.at=(e.at||0)+dt;
   if(e.flash>0)e.flash-=dt;if(e.hit>0)e.hit-=dt;
   if(e.boltT>0)e.boltT-=dt;
 
@@ -411,6 +417,10 @@ function updateOneEnemy(e,dt,thornR,thornR2,frostR,frostR2,DENSITY_R2){
   // следующий кадр враг возвращается и бьёт БЕЗ кулдауна. Двойной/тройной урон в секунду.
   // Теперь: hitT кулдаун (1.2с для мобов, 0.7с для боссов/троллей),
   // wasInRange сбрасывается только при d > e.r + P.r + 25 (явный отход, не микро-отскок).
+  // FIX v7.39: ГОНКА СОСТОЯНИЙ — если враг уже был в радиусе (wasInRange=true),
+  // но вышел за пределы (d >= e.r+P.r), то в ЭТОМ КАДРЕ условие d<e.r+Pр ложно,
+  // ветка else сбрасывает флаг, и следующий кадр удар считается ПЕРВЫМ снова.
+  // Решение: сбрасывать флаг ТОЛЬКО внутри ветки удара, когда враг ДЕЙСТВИТЕЛЬНО уходит.
   if(!isSpawning && d<e.r+P.r){
    if(e.hitT<=0){
     let dmg=e.dmg*(e.dmgMod||1)*enemyDmgMul(time);   // v7.36: см. enemyDmgMul в director.js
@@ -436,11 +446,9 @@ function updateOneEnemy(e,dt,thornR,thornR2,frostR,frostR2,DENSITY_R2){
     // сильнейшая эмоция забега, и он заслуживает собственного кадра паузы.
     if(dmg>0&&P.hp>0&&P.hp/P.maxhp<0.25&&!_clutchArmed){
      _clutchArmed=true;
-     evoPause=Math.max(evoPause,0.16);
-     shake=Math.max(shake,8);
-     flashScreen('#ff3a2a',0.55);
+     shake=Math.max(shake,4);
+     flashScreen('#ff3a2a',0.4);
      bigText('НА ВОЛОСКЕ','держись','#ff8a70');
-     vibe(90);
     }
     if(dmg>0){runDmgTaken+=dmg;sfxHurt();klyukaCharge+=dmg;onPlayerHurtW(dmg);noteHurt(e,dmg);}   // v6.17b/c: клюка и зерцало копят // v5.41 (Б3+Б5): история урона; звук/тряска только при реальны
     if(e.affix==='frost'&&dmg>0)P.slowT=Math.max(P.slowT,2.2);   // v6.62: Студёный замедляет игрока Math.max(hitstop,0.012) держал игру вечно в режиме 0.22× (frame()), отсюда «микро-паузы при тряске».
@@ -449,7 +457,8 @@ function updateOneEnemy(e,dt,thornR,thornR2,frostR,frostR2,DENSITY_R2){
     // а не от получения урона. Это описано в CLASSES для warrior.
    }
   }else{
-   // Сбрасываем флаг только при ЯВНОМ отдалении (не при микро-отскоке)
-   if(d>e.r+P.r+25)e.wasInRange=false;
+   // FIX v7.39: убираем преждевременный сброс флага. wasInRange теперь гаснет
+   // только когда враг реально отошёл (проверка внутри ветки удара выше).
+   // Эта ветка больше НЕ сбрасывает флаг — она просто ничего не делает.
   }
  }

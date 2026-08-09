@@ -75,6 +75,22 @@ document.getElementById('btnTree').onclick=openTree;
 // активна, оверлей #jourov ложится поверх и убирается кнопкой «Закрыть» (btnJourClose).
 document.getElementById('btnJournal2').onclick=openJournal;
 document.getElementById('btnTreeClose').onclick=()=>{closeOverlay('treeov');};
+const _btr=document.getElementById('btnTreeReset');
+if(_btr)_btr.onclick=()=>{
+ let refund=0;
+ for(const k in TREE){
+  TREE[k].nodes.forEach(n=>{
+   const lvl=tree[n.id]||0;
+   for(let l=1;l<=lvl;l++)refund+=n.cost*l;
+   tree[n.id]=0;
+  });
+ }
+ metaGold=(metaGold||0)+refund;
+ LS.set('cl_gold',metaGold);
+ LS.set('cl_tree',JSON.stringify(tree));
+ sfxUpgrade();
+ openTree();
+};
 function applyTree(){
  for(const k in TREE)for(const n of TREE[k].nodes){
   const lvl=tree[n.id]||0;

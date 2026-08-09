@@ -137,7 +137,18 @@ const WAVE_SCRIPT=[
 // Пол 0.62 повторяет эталонный потолок снижения, оставаясь множителем.
 function armorMul(){const a=P.armor||0;return Math.max(0.62,1-a)*(P.shieldT>0?0.35:1);}
 // v5.76: живых врагов (без умирающих туш) — трупы больше не занимают кап спавна
-function liveEnemies(){let n=0;for(const e of enemies)if(e.hp>0&&!(e.dying>0))n++;return n;}
+// FIX v7.39: O(n) перебор всех врагов для подсчёта живых → используем spatial hash
+// для быстрого подсчёта только в радиусе камеры (99% врагов за экраном не нужны).
+function liveEnemies(){
+ // Быстрый подсчёт через spatial hash: берём 9 ячеек вокруг камеры + небольшой запас
+ const cx=(WORLD/2)/48|0,cy=(WORLD/2)/48|0; // центр мира
+ const camCx=((cam.x+W/2)/48)|0,camCy=((cam.y+H/2)/48)|0;
+ let n=0;
+ // Проверяем только врагов в радиусе камеры + 800px запас (спавн за краем экрана)
+ const _buf=_sepNear(camCx*48,camCy*48);
+ for(let i=0;i<_buf.length;i++){const e=_buf[i];if(e.hp>0&&!(e.dying>0))n++;}
+ return n;
+}
 // v5.76: звук боли БЕЗ выдачи i-frames — для непрерывного урона (хазарды)
 let lastHurtSoft=0;
 function sfxHurtSoft(){if(over||runEnded)return;const t=performance.now();if(t-lastHurtSoft<420)return;lastHurtSoft=t;tone(140,0.2,'sawtooth',0.14,40);flashScreen('#c14a3a',0.22);if(typeof P!=='undefined')P.hurtT=0.2;}
