@@ -14,7 +14,7 @@ function endRun(victory){
   try{musicGain.gain.cancelScheduledValues(AC.currentTime);musicGain.gain.linearRampToValueAtTime(0,AC.currentTime+0.5);}catch(e){swallow('music.fadeout',e);}
  }
  document.getElementById('pauseov').style.display='none';
- if(UI.spechud)UI.spechud.style.opacity='0.35';
+ if(UI.spechud){__HUDW.shOp='0.35';UI.spechud.style.opacity='0.35';}
 
  document.getElementById('bossbar').style.display='none';
  document.getElementById('lowHpVignette').style.opacity='0';

@@ -107,20 +107,34 @@ if(P.invuln>0)P.invuln-=dt; // v5.36 (C2): тик i-frames
  // Классовая реакция игрока: короткий след и импульс не зависят от оружия.
  if(P.atk>0&&(P.classFxAtkT||0)<=0){P.classFxAtkT=.08;const _ac=(CLASS_VISUALS[currentClass]||CLASS_VISUALS.warrior).accent;for(let _i=0;_i<2;_i++){const _a=Math.atan2(P.fy,P.fx)+rnd(-.5,.5);spawnParticle(P.x+P.fx*20,P.y+P.fy*20,Math.cos(_a)*rnd(70,150),Math.sin(_a)*rnd(70,150),rnd(.18,.34),_ac,120,0);}}else P.classFxAtkT=(P.classFxAtkT||0)-dt;
   // v6.23 (B2): фазовый онбординг первых 60с (десктоп, где #hint виден).
-  if(!isMobile&&time<60){const _h=document.getElementById('hint');if(_h&&_h.style.display!=='none'){
-   _h.innerHTML = time<10 ? 'WASD — ход · Esc — пауза · <b style="color:#c9a04a">Q — Печать класса</b> (когда полоска полна)'
-    : time<30 ? 'Выбирай карты разных типов — не только +% урона'
-    : 'Первая волна близко — держи дистанцию и коси толпу';
-  }}
+  // v7.42: подсказка меняется ТРИ РАЗА за забег (на 10-й и 30-й секунде), а
+  // innerHTML присваивался каждый шаг физики — 60 разборов HTML в секунду всю
+  // первую минуту. Замер на живом бою давал по #hint 38 правок DOM в секунду.
+  if(!isMobile&&time<60){
+   const _hp=time<10?0:time<30?1:2;
+   if(__HUDW.hint!==_hp){
+    const _h=document.getElementById('hint');
+    if(_h&&_h.style.display!=='none'){
+     __HUDW.hint=_hp;
+     _h.innerHTML = _hp===0 ? 'WASD — ход · Esc — пауза · <b style="color:#c9a04a">Q — Печать класса</b> (когда полоска полна)'
+      : _hp===1 ? 'Выбирай карты разных типов — не только +% урона'
+      : 'Первая волна близко — держи дистанцию и коси толпу';
+    }
+   }
+  }
   if(P.regen&&P.hp<P.maxhp){
   P.hp=Math.min(P.maxhp,P.hp+P.regen*dt);
   // реген-пульсация — используем кэшированный UI.regen
-  if(UI.regen){UI.regen.style.opacity=P.regen>0?'1':'0';UI.regen.textContent='+'+P.regen.toFixed(1);}
+  if(UI.regen){
+   const _ro=P.regen>0?'1':'0',_rt='+'+P.regen.toFixed(1);
+   if(__HUDW.regO!==_ro){__HUDW.regO=_ro;UI.regen.style.opacity=_ro;}
+   if(__HUDW.regT!==_rt){__HUDW.regT=_rt;UI.regen.textContent=_rt;}
+  }
  }
  // иначе зелёная надпись "+1.5" навечно застывает над полной полоской.
  // Раньше этот блок был вложен в if(regen && hp<maxhp) — как только HP заполнялось,
  // мы просто переставали заходить и не сбрасывали opacity в '0'.
- if(UI.regen&&(!(P.regen>0&&P.hp<P.maxhp)))UI.regen.style.opacity='0';
+ if(UI.regen&&(!(P.regen>0&&P.hp<P.maxhp))&&__HUDW.regO!=='0'){__HUDW.regO='0';UI.regen.style.opacity='0';}
  // ТАЙМЕР БАФФА СПЕЦАТАКИ — привязан к игровому времени, не к real-time
  if(P.specialBuffT>0){
   P.specialBuffT-=dt;

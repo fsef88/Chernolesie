@@ -4,6 +4,8 @@
 const cv=document.getElementById('c'),ctx=cv.getContext('2d');
 const miniCv=document.getElementById('minicanvas'),miniCtx=miniCv.getContext('2d');
 let W=0,H=0,DPR=1;
+// Размер миникарты в CSS-пикселях: считается в resize(), читается в отрисовке.
+let _miniW=0,_miniH=0;
 // v6.8 ОБЗОР. Масштаба в игре не было вообще: мир рисовался один к одному в
 // пикселях экрана. На телефоне в портрете это 412 px по ширине при росте героя
 // 115 px — видно ТРИ С ПОЛОВИНОЙ роста героя. В играх этого жанра поле зрения
@@ -75,7 +77,12 @@ function resize(){
  cv.style.width=cssW+'px';cv.style.height=cssH+'px';
  ctx.setTransform(DPR*ZOOM,0,0,DPR*ZOOM,0,0);
  const mm=miniCv.parentElement;
- miniCv.width=mm.clientWidth*DPR;miniCv.height=mm.clientHeight*DPR;
+ // v7.42: размер миникарты запоминается здесь. Читать clientWidth в самой
+ // отрисовке нельзя: чтение геометрии заставляет браузер СЕЙЧАС досчитать
+ // стили и раскладку всей страницы, посреди кадра. Меняется он только при
+ // изменении окна, то есть ровно здесь.
+ _miniW=mm.clientWidth;_miniH=mm.clientHeight;
+ miniCv.width=_miniW*DPR;miniCv.height=_miniH*DPR;
  miniCtx.setTransform(DPR,0,0,DPR,0,0);
 }
 let resizeT=null;

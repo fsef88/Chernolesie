@@ -46,6 +46,9 @@ gemPops.length=0;absorbGlow=0;   // v6.42
 directorP=1;directorT=0;directorLastKills=0;directorLogBand=0;directorGrace=0;   // v6.58: сброс директора между забегами
  if(UI.lowHpV)UI.lowHpV.classList.remove('crit');window._sealReadyTold=false;_thudMs=0;   // v6.19: сброс таймера низкого подслоя удара
  if(typeof P==='object'&&P){P._shadowOrbBase=null;P._orbBase=null;P._warQBoost=0;P._warQT=0;}
+ // v7.42: кэш значений HUD чистится вместе с самим забегом. Иначе после
+ // рестарта кэш помнил бы прошлые значения и первую правку пропустил.
+ __HUDW={};
  if(UI.spechud)UI.spechud.style.opacity='1';
  P.specialBuffT=0;HA.px=null;HA.py=null;HA.onHit=null;   // v6.19: сброс предыдущей позиции и callback анимации
  time=0;kills=0;gold=0;level=1;xp=0;xpNext=6;paused=false;over=false;won=false;runEnded=false;pendingLevelUps=0; // v6.74: сброс очереди окон прокачки между забегами

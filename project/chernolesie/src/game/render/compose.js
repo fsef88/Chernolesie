@@ -41,9 +41,18 @@ function syncHud(){
  if(UI._kills !== kills){ UI._kills = kills; UI.killsEl.textContent = kills; }
  if(UI._gold !== gold){ UI._gold = gold; UI.goldEl.textContent = gold; }
  const _hpw=Math.round(Math.max(0,P.hp/P.maxhp*100));if(__HUDW.hp!==_hpw){__HUDW.hp=_hpw;UI.hp.style.width=_hpw+'%';}
- if(P.hp/P.maxhp<0.3)UI.hp.classList.add('hp-low');else UI.hp.classList.remove('hp-low');
- if(UI.hpNum)UI.hpNum.textContent=Math.max(0,Math.round(P.hp));
- UI.hpText.textContent=Math.max(0,Math.round(P.hp))+'/'+Math.round(P.maxhp);
+ // v7.42: и здесь тоже по значению. Замер MutationObserver'ом на живом бою:
+ // 311 правок DOM в секунду, из них #hpnum, #hptext и #bosstimer давали по 38
+ // каждый — ровно частоту отрисовки. Присваивание textContent сносит текстовый
+ // узел и создаёт новый ДАЖЕ когда строка та же самая, а это метка «пересчитай
+ // стиль и раскладку» на весь верхний HUD. Наш хронометр этого не видит:
+ // присваивание в JS мгновенно, работа идёт позже, в шаге отрисовки браузера.
+ const _hplow=P.hp/P.maxhp<0.3;
+ if(__HUDW.hplow!==_hplow){__HUDW.hplow=_hplow;if(_hplow)UI.hp.classList.add('hp-low');else UI.hp.classList.remove('hp-low');}
+ const _hpr=Math.max(0,Math.round(P.hp));
+ if(UI.hpNum&&__HUDW.hpn!==_hpr){__HUDW.hpn=_hpr;UI.hpNum.textContent=_hpr;}
+ const _hpt=_hpr+'/'+Math.round(P.maxhp);
+ if(__HUDW.hpt!==_hpt){__HUDW.hpt=_hpt;UI.hpText.textContent=_hpt;}
  const _xpw=Math.round(xp/xpNext*100);if(__HUDW.xp!==_xpw){__HUDW.xp=_xpw;UI.xpFill.style.width=_xpw+'%';}
  // (#11) иконки оружий пересоздавались КАЖДЫЙ КАДР (innerHTML=''
  // + createElement × N при 60 FPS = 120+ DOM-мутаций/сек). Перестраиваем
@@ -61,7 +70,13 @@ function syncHud(){
    UI.weaponsEl.appendChild(el);
   }
  }
- if(bossSpawned){UI.bosseft.style.display='none';}else{UI.bosseft.style.display='';UI.bosstimer.textContent=fmt(Math.max(0,bossT-time));}
+ // Обратный отсчёт до босса меняется РАЗ В СЕКУНДУ, а переписывался каждый кадр.
+ if(bossSpawned){if(__HUDW.bft!=='none'){__HUDW.bft='none';UI.bosseft.style.display='none';}}
+ else{
+  if(__HUDW.bft!==''){__HUDW.bft='';UI.bosseft.style.display='';}
+  const _bt=fmt(Math.max(0,bossT-time));
+  if(__HUDW.bt!==_bt){__HUDW.bt=_bt;UI.bosstimer.textContent=_bt;}
+ }
  if(bossE&&!bossE.dead)UI.bosshp.style.width=Math.max(0,bossE.hp/bossE.maxhp*100)+'%';
  // Если главный босс ещё не явился, полосу занимают мини-боссы (приоритет Древню)
  else if(miniBossE&&!miniBossE.dead&&miniBossE.hp>0)UI.bosshp.style.width=Math.max(0,miniBossE.hp/miniBossE.maxhp*100)+'%';
@@ -89,9 +104,14 @@ function syncHud(){
   }
  }
  // v5.72: обновляем слот-информацию
- const slotEl=document.getElementById('slotshud');
- if(slotEl&&!paused){
-  slotEl.textContent=slotsLine();
+ // v7.42: строка «Оружие 3/6 · Пассивки 2/6» меняется на подборе, то есть
+ // несколько раз за забег. Считалась и переписывалась каждый кадр — вместе с
+ // ownedWSlots(), который на каждый кадр собирал Set. Ссылка на элемент тоже
+ // бралась getElementById'ом заново.
+ if(!paused){
+  if(__HUDW.slotEl===undefined)__HUDW.slotEl=document.getElementById('slotshud');
+  const _sl=slotsLine();
+  if(__HUDW.slotEl&&__HUDW.sl!==_sl){__HUDW.sl=_sl;__HUDW.slotEl.textContent=_sl;}
  }
  renderSynergyHud();   // v5.72: полоска активных синергий
  if(!paused)renderEvoHud();   // v6.18: телеграф рецептов эволюций
@@ -232,8 +252,8 @@ function draw(){ // v6.16
 }
 function drawMinimap(){
  if(currentCurse==='blind')return;
- const mm=miniCv.parentElement;
- const mw=mm.clientWidth,mh=mm.clientHeight;
+ const mw=_miniW,mh=_miniH;
+ if(!mw||!mh)return;
  miniCtx.fillStyle='rgba(10,14,8,.75)';
  miniCtx.fillRect(0,0,mw,mh);
  const scale=Math.min(mw/W,mh/H)*0.6;

@@ -56,9 +56,14 @@ if(specialCharge<specialMax){const add=dt*0.017*(P.sealChargeMul||1);specialChar
   const pct=ready?1:Math.max(0,Math.min(1,specialCharge));   // v5.78: полоса = прогресс до ОДНОГО заряда
   const banked=Math.floor(specialCharge);
   if(UI.tbtnSpecial){
-   if(ready)UI.tbtnSpecial.classList.add('ready');else UI.tbtnSpecial.classList.remove('ready');
-   UI.tbtnSpecial.style.setProperty('--spec-c', si.color);
-   UI.tbtnSpecial.title=(si.name||'Печать')+' (Q)';
+   // v7.42: класс, переменная цвета и подсказка меняются раз за забег (цвет —
+   // от класса, «готово» — раз в минуту). Писались же каждый шаг физики, и
+   // MutationObserver считал по 38 правок в секунду на каждую из трёх. Запись
+   // атрибута — метка «пересчитай стиль», даже когда значение то же самое.
+   if(__HUDW.tbReady!==ready){__HUDW.tbReady=ready;if(ready)UI.tbtnSpecial.classList.add('ready');else UI.tbtnSpecial.classList.remove('ready');}
+   if(__HUDW.tbColor!==si.color){__HUDW.tbColor=si.color;UI.tbtnSpecial.style.setProperty('--spec-c', si.color);}
+   const _tt=(si.name||'Печать')+' (Q)';
+   if(__HUDW.tbTitle!==_tt){__HUDW.tbTitle=_tt;UI.tbtnSpecial.title=_tt;}
    // v6.20: кадр медальона = pct*19; два слоя кроссфейдят соседние кадры,
    // поэтому набор выглядит непрерывным, а не 20 ступеньками
    if(UI.ultA&&UI.ultB){
@@ -73,9 +78,11 @@ if(specialCharge<specialMax){const add=dt*0.017*(P.sealChargeMul||1);specialChar
    if(UI.tbtnSpecIcon){UI.tbtnSpecIcon.style.display='none';}
   }
   if(UI.spechud){
-   UI.spechud.style.opacity='1';
-   UI.spechud.style.setProperty('--spec-c', si.color);
-   if(ready)UI.spechud.classList.add('ready');else UI.spechud.classList.remove('ready');
+   // Прозрачность здесь ставится в 1 «на всякий случай» — её гасит экран смерти
+   // и возвращает resetRun. Кэш сбрасывается там же, вместе с остальным HUD.
+   if(__HUDW.shOp!=='1'){__HUDW.shOp='1';UI.spechud.style.opacity='1';}
+   if(__HUDW.shColor!==si.color){__HUDW.shColor=si.color;UI.spechud.style.setProperty('--spec-c', si.color);}
+   if(__HUDW.shReady!==ready){__HUDW.shReady=ready;if(ready)UI.spechud.classList.add('ready');else UI.spechud.classList.remove('ready');}
    if(UI.speclabel&&__HUDW.lbl!==(ready?1:0)+si.name){__HUDW.lbl=(ready?1:0)+si.name;UI.speclabel.textContent=ready?('ГОТОВО'+(banked>1?' ×'+banked:'')+' · '+si.name):('ПЕЧАТЬ · '+si.name);}
    // v7.40: иконка Печати меняется раз за забег — кэшируем по значению,
    // чтобы не пересобирать innerHTML + строку градиента 136 раз в секунду.
