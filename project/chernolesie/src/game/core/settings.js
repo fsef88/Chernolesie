@@ -30,7 +30,7 @@ document.getElementById('fpscap').onchange=(e)=>{fpsCap=+e.target.value;};
 // для отладки. Заодно вычищаем старое сохранённое значение cl_prof.
 let __PROF_ON=false;
 try{__PROF_ON=/[?&]prof=1/.test(location.search);if(/[?&](?:boss|dev|prof)=1/.test(location.search)){const _br=document.getElementById('devBossRushWrap');if(_br)_br.style.display='block';}localStorage.removeItem('cl_prof');}catch(e){swallow('prof.flag',e);}
-const PROF={acc:{},_t:{},frames:0,draws:0,jank:0,gapMax:0,_gap:0,fps:0};
+const PROF={acc:{},_t:{},frames:0,draws:0,jank:0,gapMax:0,_gap:0,fps:0,miss:0,jsMax:0};
 // v7.36 ВЫКЛЮЧАТЕЛИ СЛОЁВ. Хронометр меряет только время записи команд в JS,
 // а холст рисует их позже — поэтому три гипотезы подряд промахнулись. Ищем
 // вычитанием: гасим слой, смотрим FPS. Панель появляется вместе с хронометром.
@@ -114,8 +114,26 @@ setInterval(()=>{
  const _jd=' joy  down '+JDBG.down+' move '+JDBG.move+' id '+JDBG.lastId+'\n'+
            ' touch '+touchMove.x.toFixed(2)+','+touchMove.y.toFixed(2)+' act '+(touchMove.active?1:0)+'\n'+
            ' move  '+JDBG.mx+','+JDBG.my+'  spd '+JDBG.spd+'  zoom '+ZOOM+'\n';
+ // Пропущенные развёртки — главное число панели. Ровный ход это 0; всё
+ // остальное игрок видит как замирание, даже когда средний FPS выглядит
+ // прилично. Порог рывка тоже в развёртках, а не в миллисекундах: на 147 Гц
+ // прежние 25 мс — это три с половиной пропущенных кадра, то есть порог
+ // срабатывал уже сильно позже, чем рывок становился заметен.
+ const _vsMs=__vsPeriod||16.7;
+ // Пик держится 5 секунд, а не гаснет каждые полсекунды: рывки редкие, и при
+ // обнулении на каждом тике снимок панели их почти никогда не заставал.
+ // Считается ДО сборки строк — иначе панель показывает пик прошлого тика,
+ // а на первом снимке всегда ноль.
+ if(PROF.gapMax>(PROF.gapHold||0)){PROF.gapHold=PROF.gapMax;PROF.gapHoldT=10;}
+ else if((PROF.gapHoldT=(PROF.gapHoldT||0)-1)<=0)PROF.gapHold=0;
+ // Накопительно за забег: по мгновенному числу редкий рывок легко не застать.
+ PROF.missAll=(PROF.missAll||0)+(PROF.miss||0);
  const rows=['FPS '+String(PROF.fps).padStart(3)+'  rAF '+String(PROF.raf).padStart(3)+'  экран '+(__vsPeriod?Math.round(1000/__vsPeriod):0)+'Гц',
-            'jank '+PROF.jank+'/'+(PROF.jankAll||0)+'  maxgap '+PROF.gapMax.toFixed(1)+'  пик5с '+(PROF.gapHold||0).toFixed(1)+'ms'+((PROF.gapHold||0)>25?'  <<< РЫВОК':'')];
+            'проп '+String(Math.round((PROF.miss||0)*2)).padStart(3)+'/с  всего '+(PROF.missAll||0)+
+            '  maxgap '+PROF.gapMax.toFixed(1)+' ('+(PROF.gapMax/_vsMs).toFixed(1)+' разв.)'+
+            (PROF.gapMax>_vsMs*2.5?'  <<< РЫВОК':''),
+            'пик5с '+(PROF.gapHold||0).toFixed(1)+'ms  наш JS макс '+(PROF.jsMax||0).toFixed(1)+'ms'+
+            ((PROF.gapHold||0)>_vsMs*2.5&&(PROF.jsMax||0)<_vsMs*1.5?'  <- не наш код':'')];
  for(const k of ['upd','ground','world','atmos','hud','mini','rtotal']){
   const ms=(PROF.acc[k]||0)/(k==='upd'?nfF:nfD);
   rows.push(k.padEnd(6)+' '+ms.toFixed(2)+'ms'+(ms>8?'  <<<':''));
@@ -138,13 +156,7 @@ setInterval(()=>{
            '  slowmo '+(typeof slowmo!=='undefined'?slowmo.toFixed(2):'?')+'\n'+
            ' враги '+_en+'  идут '+pc(_mv)+'  мёрзлых '+pc(_fz)+'  вязнут '+pc(_st)+'\n';
  __profEl.textContent=rows.join('\n')+'\n'+_wd+_jd;   // v6.14: строки ввода
- // Пик держится 5 секунд, а не гаснет каждые полсекунды: рывки редкие, и
- // при обнулении на каждом тике снимок панели их почти никогда не заставал.
- PROF.jankAll=(PROF.jankAll||0)+PROF.jank;
- if(PROF.gapMax>(PROF.gapHold||0))
-  {PROF.gapHold=PROF.gapMax;PROF.gapHoldT=10;}
- else if((PROF.gapHoldT=(PROF.gapHoldT||0)-1)<=0)PROF.gapHold=0;
- PROF.frames=0;PROF.draws=0;PROF.acc={};PROF.jank=0;PROF.gapMax=0;
+ PROF.frames=0;PROF.draws=0;PROF.acc={};PROF.jank=0;PROF.gapMax=0;PROF.miss=0;PROF.jsMax=0;
 },500);
 // v6.4: переключатель хронометра прямо в настройках. Раньше он включался только
 // через ?prof=1 в адресе или запись в localStorage, и флаг читался ОДИН раз при
