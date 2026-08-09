@@ -178,11 +178,16 @@ function showTitleScreen(){
    // карточку, но выбранным классом её не делает, иначе экран обещал бы
    // героя, которого «В БОЙ» всё равно не запустит.
    const selId=currentClass||(CLASSES[0]&&CLASSES[0].id);
-   [-1,0,1].forEach(offset=>{
-    const i=(liveIndex+offset+CLASSES.length)%CLASSES.length;
+   // v7.42: на телефоне колода показывает тройку вокруг выбранного и листается,
+   // на широком экране места хватает на все семь сразу — и порядок там не
+   // крутится вокруг выбранного, а постоянный: путь всегда лежит на своём месте.
+   const wide=window.matchMedia&&window.matchMedia('(min-width:761px)').matches;
+   const idxs=wide?CLASSES.map((_,i)=>i)
+                 :[-1,0,1].map(o=>(liveIndex+o+CLASSES.length)%CLASSES.length);
+   idxs.forEach(i=>{
     const c=CLASSES[i],open_=classUnlocked(c.id);
     const b=document.createElement('button');
-    b.type='button';b.className='liveHero'+(c.id===selId?' current':'')+(offset===0?' focus':'')+(open_?'':' locked');
+    b.type='button';b.className='liveHero'+(c.id===selId?' current':'')+(i===liveIndex?' focus':'')+(open_?'':' locked');
     b.dataset.hero=c.id;
     const source=CLASS_ART[c.id]&&CLASS_ART[c.id].src;
     const art=source?`<img src="${source}" alt="">`:'';
@@ -199,6 +204,17 @@ function showTitleScreen(){
     if(Math.abs(dx)>=36)showDeckClass(liveIndex+(dx<0?1:-1));
    },{passive:true});
    renderLiveDeck();
+   // Смена ширины окна меняет саму раскладку колоды: тройка с листанием на
+   // телефоне, все семь на широком. Подписка вешается один раз за сессию —
+   // showTitleScreen зовётся после каждого забега.
+   window.__tsRenderDeck=renderLiveDeck;
+   if(!window.__tsDeckResizeBound){
+    window.__tsDeckResizeBound=true;
+    addEventListener('resize',()=>{
+     clearTimeout(window.__tsDeckT);
+     window.__tsDeckT=setTimeout(()=>{try{window.__tsRenderDeck&&window.__tsRenderDeck();}catch(e){}},150);
+    });
+   }
   }
   // Обновление баланса золота Заставы на титульнике
   {const mg=document.getElementById('tsMetaGoldVal');

@@ -36,6 +36,15 @@ try{
    const lock=document.querySelector('.ts-title-lockup');
    const h1=lock&&lock.querySelector('h1');
    if(!ts||!lock||!h1)return;
+   // v7.42: подгонка считает место заголовка из геометрии нарисованной плашки
+   // 768x1376 при cover. На широком экране плашки под панелями больше нет:
+   // сцена там задник плюс колонка с героем, а шапка стоит в своей колонке из
+   // CSS. Инлайновые значения тут только мешали бы, поэтому снимаем их.
+   if(matchMedia('(min-width:761px)').matches){
+    lock.style.top=lock.style.left=lock.style.width=lock.style.height='';
+    h1.style.fontSize='';
+    return;
+   }
    const r=ts.getBoundingClientRect();
    if(r.width<10||r.height<10)return;
    const scale=Math.max(r.width/ART_W, r.height/ART_H);   // cover

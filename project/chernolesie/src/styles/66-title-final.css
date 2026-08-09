@@ -70,86 +70,143 @@
 .liveHero[data-hero="rogue"] img{content:url("@@A:ui/deck-rogue.webp@@")}
 .liveHero[data-hero="archer"] img{content:url("@@A:ui/deck-archer.webp@@")}
 .liveHero[data-hero="ognevik"] img{content:url("@@A:ui/deck-ognevik.webp@@")}
-.liveHero[data-hero="groznik"] img{content:url("@@A:ui/deck-groznik.webp@@")}
-/* ==================================================================
-   Титульный экран на широком экране.
+.liveHero[data-hero="groznik"] img{content:url("@@A:ui/deck-groznik.webp@@")}/* ==================================================================
+   ТИТУЛЬНЫЙ ЭКРАН НА ШИРОКОМ ЭКРАНЕ.
 
-   Сцена — нарисованная плашка 768x1376, и рамки под кнопки режимов и
-   панель героя вшиты в саму картинку. Кадрировать её под ландшафт
-   нельзя: при background-size:cover расстояние между этими рамками
-   выходит 783 px при высоте вьюпорта 768 — обе одновременно не
-   помещаются ни при каком background-position.
+   Сцена нарисована вертикальной плашкой 768x1376, экран горизонтальный.
+   Растянуть её на 16:9 нельзя: это 3.2 раза по одной оси, герой
+   расплывается. Кадрировать по cover — тоже: в кадр влезает 31% высоты
+   плашки, а герой занимает 49%, то есть остался бы торс без головы и ног.
 
-   Поэтому сцена показывается целиком: #titlescreen ужимается в
-   центральную колонку ровно того же соотношения, что и арт, а поля
-   закрывает размытая копия той же картинки. Все проценты раскладки из
-   82-title-final.css при этом попадают в свои нарисованные рамки без
-   единой правки — колонка отличается от телефона только масштабом.
+   Прежнее решение — ужать весь титульник в вертикальную колонку по
+   пропорции плашки и размыть поля. На мониторе 2560x1440 это колонка
+   803 px и два размытых поля по 878 px: две трети экрана не заняты ничем.
 
-   Слои внутри колонки: ::before — размытый фон на весь вьюпорт (он же
-   прячет игровой HUD, который иначе виден по бокам от колонки),
-   ::after — сама сцена поверх него. Оба нужны отдельными псевдо-
-   элементами: собственный фон #titlescreen рисуется раньше вложенных
-   слоёв и был бы закрыт размытием.
+   Здесь сцена работает ДВУМЯ слоями, оба без искажения пропорций:
+     ::before — та же картинка на весь экран задником. Сильное размытие
+                обязательно: при cover в кадр попадает торс нарисованного
+                героя, и без размытия он читался бы вторым героем посреди
+                панелей.
+     ::after  — левая колонка с ГЕРОЕМ в исходных пропорциях. Масштаб задан
+                высотой: герой занимает y 22.5%..71.2% плашки, то есть 48.7%
+                её высоты. Чтобы он влез в экран целиком, вся плашка должна
+                быть вдвое выше экрана — отсюда background-size: auto 205%.
+                Проценты в background-position совмещают одинаковые
+                относительные точки картинки и рамки, поэтому 53% 47% ставит
+                героя в центр колонки на любом разрешении, без вычислений.
 
-   Оба берут картинку из --ts-scene, которую ставит screen-title.js, —
-   без своего запасного url. Поэтому поля размываются по текущему герою,
-   а сама картинка инлайнится в сборку на одно вхождение меньше.
+   Нарисованные рамки под панели уходят за кадр вместе с правой половиной
+   плашки. Панели поэтому строятся своими рамками — в том же бирюзовом
+   языке, что и кнопки меню на телефоне. Нового арта не требуется.
    ================================================================== */
 @media(min-width:761px){
  #titlescreen{
-  left:calc(50% - 50vh*768/1376)!important;
-  right:auto!important;
-  width:calc(100vh*768/1376)!important;
+  left:0!important;right:0!important;width:auto!important;
   background:#04101a none!important;
-  box-shadow:0 0 0 1px rgba(120,214,226,.22),0 0 64px rgba(0,0,0,.72)!important;
+  box-shadow:none!important;
  }
- /* inset отрицательный: blur размывает и края самого слоя, у границы он
-    становится полупрозрачным. При inset:0 сквозь верхнюю кромку просвечивал
-    игровой HUD (#hud, z-index 20, первые 43 px экрана). Слой уводится за
-    вьюпорт, чтобы вся видимая часть осталась непрозрачной. */
+ /* Задник. inset отрицательный: размытие съедает края слоя, и при inset:0
+    сквозь верхнюю кромку просвечивал бы игровой HUD. */
  #titlescreen::before{
-  content:'';display:block!important;position:fixed;inset:-80px;z-index:0;
-  background:#04101a var(--ts-scene) center/cover no-repeat;
-  filter:blur(34px) brightness(.34) saturate(.72);
+  content:'';display:block!important;position:fixed;inset:-60px;z-index:0;
+  background:#04101a var(--ts-scene) center 24%/cover no-repeat;
+  filter:blur(26px) brightness(.34) saturate(.7);
  }
+ /* Герой во весь рост. Ширина колонки ограничена и долей экрана, и его
+    высотой: на ультравайде доля дала бы колонку шире самой картинки. */
+ /* Ширина колонки отмерена по самой плашке: герой занимает x 1%..60% её
+    ширины, а сразу за ним, с 62%, начинается нарисованная рамка под панель.
+    Колонка показывает ровно 61% ширины картинки — рамка остаётся за кадром.
+    Позиция 0% по горизонтали прижимает левый край картинки к левому краю
+    колонки, поэтому окно и лежит на 0..61%, а не посередине.
+    По вертикали: герой занимает y 23.8%..70.0% плашки (46.2% её высоты), при
+    size auto 205% окно показывает 48.8% — позиция 44% ставит его так, что
+    сверху и снизу остаётся по 1.3% запаса. */
  #titlescreen::after{
-  content:'';display:block!important;position:absolute;inset:0;z-index:1;
-  background:var(--ts-scene) center/contain no-repeat;
+  content:'';display:block!important;position:absolute;
+  left:0;top:0;bottom:0;width:min(39%,70vh);z-index:1;
+  background:var(--ts-scene) 0% 44%/auto 205% no-repeat;
+  -webkit-mask-image:linear-gradient(90deg,#000 88%,transparent 100%);
+  mask-image:linear-gradient(90deg,#000 88%,transparent 100%);
  }
- /* Заголовок в 82 масштабируется от ширины вьюпорта, а не колонки:
-    на широком экране он упирался в 44px и обрезался. Здесь та же доля,
-    но от ширины колонки, которая задана высотой окна. */
- .ts-title-lockup h1{font-size:max(24px,3.35vh)!important}
- /* Кнопки режимов раскладывались в столбец и вылезали из нарисованных
-    рамок: у #tsMode осталось flex-wrap:wrap из ранних слоёв, а базис
-    #tsMode .modebtn{flex:1 1 44%} перебивает .ts-run-modes .modebtn{flex:1}
-    из 82 по специфичности (id + класс против двух классов). На телефоне
-    44% умещались в строку, в узкой колонке — уже нет. */
- #tsMode{flex-wrap:nowrap!important}
- #tsMode .modebtn{flex:1 1 0!important;min-width:0!important}
+ /* Правая колонка: одна вертикаль для всех панелей. */
+ .ts-title-lockup,.ts-sidebar,.ts-run-modes,.ts-hero-panel,.ts-class-deck,#tsFooter{
+  left:47%!important;width:50%!important;
+ }
+ /* Общая рамка панелей — тот же бирюзовый набор, что у кнопок меню. */
+ .ts-sidebar,.ts-run-modes,.ts-hero-panel,.ts-class-deck{
+  box-sizing:border-box!important;
+  background:linear-gradient(180deg,rgba(8,30,44,.86),rgba(4,14,24,.93))!important;
+  border:1px solid rgba(121,232,237,.32)!important;
+  border-radius:10px!important;
+  box-shadow:0 12px 34px rgba(0,0,0,.55),inset 0 1px 0 rgba(190,245,250,.09)!important;
+ }
+ /* Заголовок. Кегль от высоты окна: ширина колонки ей пропорциональна,
+    а инлайновую подгонку из init.js на широком экране мы выключаем. */
+ .ts-title-lockup{
+  top:4%!important;height:auto!important;
+  align-items:flex-start!important;text-align:left!important;
+ }
+ .ts-title-lockup h1{font-size:min(6.4vh,4.6vw)!important;letter-spacing:.06em!important}
+ .ts-title-lockup #tsSub{font-size:min(1.8vh,1.3vw)!important;letter-spacing:.22em!important}
+ .ts-title-lockup #tsMetaGold{position:static!important;margin:6px 0 0!important;font-size:min(2vh,1.4vw)!important}
 
- /* Вся типографика в 82 задана в px под колонку телефона (~390 px) и на
-    широком экране не росла: при высоте 1080 колонка уже 603 px, а текст
-    оставался семипиксельным. Здесь те же доли, пересчитанные от ширины
-    колонки: 1 px при 390 px соответствует 0.1432vh. Исходные значения
-    оставлены нижней границей, чтобы в низком окне ничего не сплющилось. */
- .ts-title-lockup #tsSub{font-size:max(9px,1.29vh)!important}
- .ts-run-modes .modebtn{font-size:max(8px,1.12vh)!important}
- .ts-run-modes .modebtn .mico{font-size:max(15px,2.15vh)}
- .ts-run-modes .modebtn.sel::after{font-size:max(11px,1.57vh)}
- .ts-hero-panel h2{font-size:max(12px,1.93vh)}
- .ts-hero-role{font-size:max(7px,1vh)}
- .ts-hearts{font-size:max(11px,1.57vh)}
- .ts-hero-stats span{font-size:max(7px,1vh)}
- .ts-hero-stats{min-height:calc(3.5vh + 10px)}
- .ts-hero-stats b{width:max(11px,1.57vh)}
- .ts-class-deck::before{font-size:max(7px,1vh)}
- .liveHero span{font-size:max(7px,1vh)}
- .liveHero.current::before{font-size:max(10px,1.43vh)}
- .liveHero.locked i{font-size:max(12px,1.72vh)}
- #btnStartPoohd{font-size:max(20px,3.85vh)!important}
+ /* Меню заставы: четыре кнопки в ряд. */
+ .ts-sidebar{
+  top:19.5%!important;height:6.4%!important;
+  grid-template-columns:repeat(4,1fr)!important;
+  gap:8px!important;padding:6px!important;
+ }
+ .ts-sidebar .ts-nav-btn{padding:0 4px!important;font-size:min(1.6vh,1.1vw)!important}
+ .ts-sidebar .nav-ico{font-size:min(1.8vh,1.2vw)!important}
+
+ /* Длительность похода: кнопки получают свои рамки — нарисованных больше нет. */
+ .ts-run-modes{top:28%!important;height:11%!important;padding:8px!important}
+ #tsMode{flex-wrap:nowrap!important;gap:8px!important}
+ .ts-run-modes .modebtn{
+  flex:1 1 0!important;min-width:0!important;
+  padding:0 6px!important;
+  background:linear-gradient(180deg,rgba(12,38,54,.9),rgba(5,18,28,.95))!important;
+  border:1px solid rgba(121,232,237,.3)!important;border-radius:8px!important;
+  font-size:min(1.9vh,1.3vw)!important;
+ }
+ .ts-run-modes .modebtn .mico{font-size:min(2.6vh,1.8vw);margin:0 0 4px}
+ .ts-run-modes .modebtn.sel{
+  border-color:rgba(150,244,248,.75)!important;
+  box-shadow:inset 0 0 16px rgba(121,232,237,.16),0 0 14px rgba(121,232,237,.25)!important;
+ }
+ .ts-run-modes .modebtn.sel::after{font-size:min(1.7vh,1.2vw)}
+
+ /* Паспорт героя. */
+ .ts-hero-panel{top:41%!important;height:19.5%!important;padding:14px 18px!important}
+ .ts-hero-panel h2{font-size:min(3.4vh,2.4vw)!important;min-height:0;margin:0 0 6px}
+ .ts-hero-role{font-size:min(1.6vh,1.1vw)!important;margin:0 0 8px}
+ .ts-hearts{font-size:min(2.2vh,1.5vw)!important;margin:0 0 8px}
+ .ts-hero-stats{gap:6px!important;min-height:0!important;padding-top:8px!important}
+ .ts-hero-stats span{font-size:min(1.6vh,1.1vw)!important}
+ .ts-hero-stats b{width:min(2.2vh,1.5vw)!important}
+ .ts-hero-trait p{font-size:min(1.6vh,1.1vw)!important}
+
+ /* Колода: на широком экране влезают все семь путей сразу, поэтому
+    прозрачные зоны клика поверх нарисованных стрелок не нужны. */
+ .ts-class-deck{top:63.5%!important;height:18%!important;padding:24px 10px 10px!important}
+ .ts-class-deck::before{font-size:min(1.5vh,1vw);top:7px}
+ .ts-arrow-hit{display:none!important}
+ #tsLiveDeck{grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:8px!important;padding-top:0!important}
+ .liveHero span{font-size:min(1.4vh,.95vw)!important}
+ .liveHero.current::before{font-size:min(1.8vh,1.2vw)!important}
+ .liveHero.locked i{font-size:min(1.8vh,1.2vw)!important}
+
+ /* Главное действие: своя рамка вместо нарисованного баннера. */
+ #tsFooter{top:85%!important;height:9.5%!important}
+ #btnStartPoohd{
+  border:1px solid rgba(140,240,246,.5)!important;border-radius:10px!important;
+  background:linear-gradient(180deg,rgba(14,48,66,.94),rgba(5,20,32,.96))!important;
+  box-shadow:0 10px 30px rgba(0,0,0,.6),inset 0 0 22px rgba(121,232,237,.12)!important;
+  font-size:min(4.2vh,3vw)!important;
+ }
+ #btnStartPoohd:hover{
+  border-color:rgba(190,252,255,.85)!important;
+  box-shadow:0 10px 34px rgba(0,0,0,.6),inset 0 0 28px rgba(121,232,237,.22),0 0 26px rgba(121,232,237,.3)!important;
+ }
 }
-
-
-
